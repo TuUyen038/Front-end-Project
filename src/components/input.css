@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap');
+
+/*Ẩn icon mặc định*/
+input[type="password"]::-ms-reveal, 
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-textfield-decoration-container {
+    display: none;
+}
+
+.input-container {
+    margin-bottom: 20px;
+}
+
+.input-container label {
+    text-align: left;
+    margin-bottom: 5px;
+    font-size: 15px;
+    font-family: 'Roboto Flex', sans-serif;
+}
+
+.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
+    border-color: red; /*Viền đỏ khi có lỗi*/
+}
+
+.MuiFormHelperText-root.Mui-error {
+    border-color: red;
+}
