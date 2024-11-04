@@ -1,0 +1,48 @@
+
+.login-signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to right, #2D9596, #9AD0C2);
+}
+
+.login-signup-form {
+    background-color: white;
+    padding: 1.875rem;
+    padding-top: 0.625rem;
+    border-radius: 1.25rem;
+    box-shadow: 0rem 0.25rem 0.625rem rgba(0, 0, 0, 0.397);
+    width: 350px;
+}
+
+.login-signup-title {
+    text-align: center;
+    margin-bottom: 1.25rem;
+    font-size: 2.5rem;
+    font-weight: bold;
+    font-family: 'Roboto Flex', sans-serif;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-signup-button {
+    display: inline-flex;
+    background-color: #2D9596;
+    color: white;
+    border-radius: 0.3125rem;
+    border: none;
+    padding: 0.625rem 1.25rem;
+    text-align: center;
+    font-size: 1.125rem;
+    cursor: pointer;
+    font-family: 'Roboto Flex', sans-serif;
+}
+
+.login-signup-button:hover {
+    background-color: rgb(11, 109, 84);
+}

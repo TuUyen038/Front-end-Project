@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap');
+
+.form-footer-login {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.625rem;
+}
+
+.form-footer-login a {
+    font-size: 0.9375rem;
+    color: #2D9596;
+    text-decoration: none;
+    font-family: 'Roboto Flex', sans-serif;
+    transition: color 0.3s ease;    
+}
+
+.form-footer-login a:hover {
+    color: rgb(11, 109, 84);
+    text-decoration: underline;
+}
