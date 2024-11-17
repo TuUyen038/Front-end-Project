@@ -87,6 +87,7 @@ export default function Column(props) {
           className="Main"
           sx={{
             height: 'auto',
+            paddingTop: 2,
           }}
         >
           {tasks.map((task) => {
