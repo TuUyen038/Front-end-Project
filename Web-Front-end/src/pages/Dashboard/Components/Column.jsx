@@ -7,12 +7,13 @@ import Task from './Task';
 import PropTypes from 'prop-types';
 import DeletePopUp from '../../../components/DeletePopUp/DeletePopUp';
 import AddNewTask from './AddNewTask';
+import { getTasks } from '../../../Data/task_service';
 // import { DndProvider } from 'react-dnd';
 // import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export default function Column(props) {
   const [title, setTitle] = useState(props.title || 'New');
-  const [tasks, setTasks] = useState(props.tasks || []);
+  const [tasks, setTasks] = useState(getTasks(props.column_id) || []);
   const [openDeletePopUp, setOpenDeletePopUp] = useState(false);
   const [openTaskPopUp, setOpenTaskPopUp] = useState(false);
   const [tempTask, setTempTask] = useState('');
@@ -126,7 +127,7 @@ export default function Column(props) {
       <DeletePopUp
         open={openDeletePopUp}
         onClose={CloseDeletePopUp}
-        onDelete={props.delete}
+        onDelete={props.handleDelete}
       />
       <AddNewTask
         open={openTaskPopUp}
@@ -140,6 +141,6 @@ export default function Column(props) {
 
 Column.propTypes = {
   title: PropTypes.string,
-  tasks: PropTypes.array,
-  delete: PropTypes.func,
+  column_id: PropTypes.string,
+  handleDelete: PropTypes.func,
 };

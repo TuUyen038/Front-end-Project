@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-const project_count = 1;
+const project_count = 4;
 const project_ids = Array.from({ length: project_count }, () => uuidv4());
 
 const board_count = 4;
@@ -18,6 +18,24 @@ export const projects = [
     user_id: 1,
     name: 'Lap trinh truc quan',
     slug: 'lap-trinh-truc-quan',
+  },
+  {
+    id: project_ids[1],
+    user_id: 1,
+    name: 'Nhap mon mang may tinh',
+    slug: 'nhap-mon-mang-may-tinh',
+  },
+  {
+    id: project_ids[2],
+    user_id: 1,
+    name: 'Co so du lieu',
+    slug: 'co-so-du-lieu',
+  },
+  {
+    id: project_ids[3],
+    user_id: 1,
+    name: 'He-dieu-hanh',
+    slug: 'he-dieu-hanh',
   },
 ];
 

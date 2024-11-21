@@ -4,7 +4,7 @@ import { boards } from './data';
 export const getBoards = (project_id) =>
   boards.filter((board) => board.project_id === project_id);
 
-export const getBoard = (id) => boards.filter((board) => board.id === id);
+export const getBoard = (id) => boards.find((board) => board.id === id);
 
 export const postBoard = (board, project_id) => {
   const newBoard = {

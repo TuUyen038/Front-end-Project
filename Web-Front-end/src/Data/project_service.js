@@ -1,11 +1,13 @@
 import { deleteBoards } from './board_service';
 import { projects } from './data';
 
-export const getProjects = (user_id, id) => {
-  return projects.filter(
-    (project) => project.user_id === user_id && (id ? project.id === id : true)
-  );
-};
+export const getProjects = (user_id) =>
+  projects.filter((project) => project.user_id === user_id);
+
+export const getProject = (id) => projects.find((project) => project.id === id);
+
+export const getProjectBySlug = (slug) =>
+  projects.find((project) => project.slug === slug);
 
 export const postProject = (project, user_id) => {
   const newProject = {

@@ -4,7 +4,7 @@ import { deleteTasks } from './task_service';
 export const getColumns = (board_id) =>
   columns.filter((column) => column.board_id === board_id);
 
-export const getColumn = (id) => columns.filter((column) => column.id === id);
+export const getColumn = (id) => columns.find((column) => column.id === id);
 
 export const postColumn = (column, board_id) => {
   const newColumn = {

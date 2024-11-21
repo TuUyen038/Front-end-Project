@@ -1,17 +1,15 @@
 /* eslint-disable react/prop-types */
-import style from "./ListItem.module.css";
-import Item from "../Item";
-import { v4 as uuidv4 } from "uuid";
-import { Link } from "react-router-dom";
+import style from './ListItem.module.css';
+import Item from '../Item';
+// import { v4 as uuidv4 } from 'uuid';
+import { Link } from 'react-router-dom';
 const ListItem = ({ list }) => {
   return (
-    
     <div>
-      
       <ul className={style.Listitem}>
         {list.map((item) => (
-          <li key={uuidv4()} >
-            <Link to={"/:projectName/*"} className={style.link}>
+          <li key={item.id}>
+            <Link to={`/${item.slug}`} className={style.link}>
               <Item name={item.name} img={item.img} />
             </Link>
           </li>

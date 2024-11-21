@@ -113,6 +113,7 @@ export default function Task(task) {
         <TaskOpen
           delete={task.delete}
           onClose={Close}
+          task={task}
           sx={{ position: 'relative' }}
         />
       </Modal>

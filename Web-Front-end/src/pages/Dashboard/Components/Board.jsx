@@ -3,9 +3,10 @@ import { useState } from 'react';
 import Column from './Column';
 import AddIcon from '@mui/icons-material/Add';
 import PropTypes from 'prop-types';
+import { getColumns } from '../../../Data/column_service';
 
-export default function Board(props) {
-  const [columns, setColumns] = useState(props.columns || []);
+export default function Board({ board_id }) {
+  const [columns, setColumns] = useState(getColumns(board_id));
 
   const AddColumn = () => {
     setColumns((prevColumns) => [
@@ -32,9 +33,9 @@ export default function Board(props) {
         {columns.map((column) => {
           return (
             <Column
-              title={column.title}
+              title={column.name}
               key={column.id}
-              tasks={column.tasks}
+              column_id={column.id}
               delete={() => DeleteColumn(column.id)}
             ></Column>
           );
@@ -59,5 +60,5 @@ export default function Board(props) {
 }
 
 Board.propTypes = {
-  columns: PropTypes.array,
+  board_id: PropTypes.string,
 };

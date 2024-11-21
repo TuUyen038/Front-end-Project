@@ -3,7 +3,7 @@ import { tasks } from './data';
 export const getTasks = (column_id) =>
   tasks.filter((task) => task.column_id === column_id);
 
-export const getTask = (id) => tasks.filter((task) => task.id === id);
+export const getTask = (id) => tasks.find((task) => task.id === id);
 
 export const postTask = (task, column_id) => {
   const newTask = {

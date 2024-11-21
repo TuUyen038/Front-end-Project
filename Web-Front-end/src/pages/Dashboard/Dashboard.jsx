@@ -1,16 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Board from './Components/Board';
 import { MenuItem, Select, Stack } from '@mui/material';
-import PropTypes from 'prop-types';
+import { useOutletContext } from 'react-router-dom';
+import { getBoards } from '../../Data/board_service';
 // import { useParams } from 'react-router-dom';
 
-export default function Dashboard({ boards }) {
-  // const { projectName } = useParams();
-  // depend on projectName to get relevant {boards} instead of using props inside
-  const [boardId, setBoardID] = useState(1);
+export default function Dashboard() {
+  const { project_id } = useOutletContext();
+  const boards = getBoards(project_id);
+  const [boardId, setboardId] = useState(boards[0].id);
+
+  useEffect(() => {
+    console.log(project_id);
+    console.log(boards);
+  }, [boardId]);
 
   const handleChange = (e) => {
-    setBoardID(e.target.value);
+    setboardId(e.target.value);
   };
   return (
     <div>
@@ -29,18 +35,14 @@ export default function Dashboard({ boards }) {
             {boards.map((board) => {
               return (
                 <MenuItem key={board.id} value={board.id}>
-                  {board.title}
+                  {board.name}
                 </MenuItem>
               );
             })}
           </Select>
         </Stack>
-        <Board key={boardId} columns={boards[boardId - 1].columns}></Board>
+        <Board key={boardId} board_id={boardId} />
       </div>
     </div>
   );
 }
-
-Dashboard.propTypes = {
-  boards: PropTypes.array,
-};

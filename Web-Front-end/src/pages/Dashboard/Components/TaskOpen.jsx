@@ -225,6 +225,7 @@ TaskOpen.propTypes = {
   onClose: PropTypes.func,
   onChange: PropTypes.func,
   onSave: PropTypes.func,
+  task: PropTypes.object,
 };
 TaskOpen.displayName = 'TaskOpen';
 
