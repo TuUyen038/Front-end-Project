@@ -3,7 +3,7 @@ import {
   Box,
   Button,
   IconButton,
-  Input,
+  // Input,
   Stack,
   TextField,
 } from '@mui/material';
@@ -20,16 +20,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import { forwardRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
-const TaskOpen = forwardRef((task, ref) => {
-  // const navigate = useNavigate();
-  // const location = useLocation();
+const TaskOpen = forwardRef((props, ref) => {
   const [openDelete, setOpenDelete] = useState(false);
   const handleDelete = () => {
+    console.log(props);
     setOpenDelete(true);
   };
   const Close = () => {
-    // const baseUri = location.pathname.split('/')[1];
-    // navigate(`/${baseUri}`); // navigate user to previous page
     setOpenDelete(false);
   };
   return (
@@ -44,7 +41,7 @@ const TaskOpen = forwardRef((task, ref) => {
         }}
       >
         <IconButton
-          onClick={task.onClose}
+          onClick={props.onClose}
           sx={{
             // border: 'orange solid 1px',
             position: 'absolute',
@@ -61,8 +58,8 @@ const TaskOpen = forwardRef((task, ref) => {
             padding: '1rem 4rem 0 4rem',
           }}
         >
-          <Stack className="task-header" direction="row">
-            <Input onChange={task.onChange}>New task</Input>
+          <Stack className="props-header" direction="row">
+            <input onChange={props.onChange}></input>
           </Stack>
           <Stack
             className="task-body"
@@ -199,13 +196,13 @@ const TaskOpen = forwardRef((task, ref) => {
               <DeletePopUp
                 open={openDelete}
                 onClose={Close}
-                onDelete={task.delete}
+                onDelete={props.task.delete}
               />
             </Stack>
           </Stack>
         </Stack>
         <Button
-          onClick={task.onSave}
+          onClick={props.onSave}
           variant="contained"
           sx={{
             backgroundColor: '#2D9596',

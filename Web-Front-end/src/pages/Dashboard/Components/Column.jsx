@@ -127,7 +127,7 @@ export default function Column(props) {
       <DeletePopUp
         open={openDeletePopUp}
         onClose={CloseDeletePopUp}
-        onDelete={props.handleDelete}
+        onDelete={props.delete}
       />
       <AddNewTask
         open={openTaskPopUp}
@@ -142,5 +142,5 @@ export default function Column(props) {
 Column.propTypes = {
   title: PropTypes.string,
   column_id: PropTypes.string,
-  handleDelete: PropTypes.func,
+  delete: PropTypes.func,
 };
