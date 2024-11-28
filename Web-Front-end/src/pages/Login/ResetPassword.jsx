@@ -22,7 +22,7 @@ function ResetPassword() {
     const isConfirmPasswordValid = password === confirmPassword;
 
     setPasswordError(!isPasswordValid);
-    setConfirmPasswordError(!isConfirmPasswordValid); // Kiểm tra mật khẩu xác nhận khớp
+    setConfirmPasswordError(!isConfirmPasswordValid); // Kiểm tra mật khẩu xác nhận khớp với mật khẩu trên
 
     if (isPasswordValid && isConfirmPasswordValid) {
       navigate("/login");
@@ -41,9 +41,6 @@ function ResetPassword() {
             onChange={(e) => setPassword(e.target.value)}
             error={passwordError}
           />
-          {passwordError && (
-            <p className="error-text">Invalid password format</p>
-          )}
 
           <p className="label-for-pass">Confirm password</p>
           <PasswordInput

@@ -37,7 +37,7 @@ function VerifyAccount() {
 
     if (enteredOtp === otp) {
       setAlert({ severity: "success", message: "OTP verified successfully!" });
-      setTimeout(() => navigate("/reset_password"), 2000); //2 giây
+      setTimeout(() => navigate("/reset_password"), 2000); //chuyển đến trang reset_password trong 2 giây
     } else {
       setAlert({
         severity: "error",
