@@ -11,20 +11,10 @@ input[type="password"]::-webkit-textfield-decoration-container {
     margin-bottom: 1.5rem;
 }
 
-/* Định dạng lại nhãn cho phù hợp với Material-UI */
 .input-container .MuiInputLabel-root {
     align-items: center;
     text-align: center;
     margin-bottom: 0.3125rem;
     font-size: 2rem;
     font-family: 'Roboto Flex', sans-serif;
-}
-
-/* Viền đỏ khi có lỗi */
-.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
-    border-color: red;
-}
-
-.MuiFormHelperText-root.Mui-error {
-    color: red; /* Đặt màu chữ lỗi thành đỏ */
 }

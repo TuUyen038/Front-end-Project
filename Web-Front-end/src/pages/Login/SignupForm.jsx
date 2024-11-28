@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import UsernameInput from "./components/UsernameInput";
 import EmailInput from "./components/EmailInput";
 import PasswordInput from "./components/PasswordInput";
+import { UserAPI } from "../../apis";
+import { Alert } from "@mui/material";
 import "./components/form.css";
 
 function SignupForm({ onLoginSuccess }) {
@@ -12,6 +13,8 @@ function SignupForm({ onLoginSuccess }) {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
+  const [alert, setAlert] = useState({ severity: "", message: "" });
 
   //Hàm kiểm tra email hợp lệ hay không
   const validateEmail = (email) => {
@@ -19,11 +22,15 @@ function SignupForm({ onLoginSuccess }) {
     return emailRegex.test(email);
   };
 
-  //Xử lí sự kiện khi nhấn nút Signup
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  //Hàm kiểm tra password không được chứa dấu cách và phải hơn 7 kí tự
+  const validatePassword = (password) => {
+    const passwordRegex = /^[A-Za-z0-9!@#$%^&*()_+=-]{7,}$/;
+    return passwordRegex.test(password);
+  };
 
-    setEmailError(false);
+  //Xử lí sự kiện khi nhấn nút Signup
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     const isEmailValid = validateEmail(email);
     if (!isEmailValid) {
@@ -31,17 +38,35 @@ function SignupForm({ onLoginSuccess }) {
       return;
     }
 
-    console.log("Username: ", username);
-    console.log("Email: ", email);
-    console.log("Password: ", password);
-    localStorage.setItem("isLoggedIn", "true");
-    onLoginSuccess();
-    navigate("/");
+    const isPasswordValid = validatePassword(password);
+    if (!isPasswordValid) {
+      setPasswordError(true);
+      return;
+    }
+
+    //ĐĂNG KÝ
+    const res = await UserAPI.register(username, email, password);
+    if (res.ok) {
+      //Đăng ký thành công
+      const userData = await res.json();
+      localStorage.setItem("token", userData.token);
+      localStorage.setItem("user", JSON.stringify(userData.user));
+      localStorage.setItem("isLoggedIn", "true");
+      onLoginSuccess();
+      navigate("/");
+    } else {
+      setAlert({ severity: "error", message: "Failed to register!" });
+    }
   };
 
   return (
     <div className="login-signup-container">
       <div className="login-signup-form">
+        {alert.message && (
+          <Alert severity={alert.severity} style={{ fontSize: "1.4rem" }}>
+            {alert.message}
+          </Alert>
+        )}
         <h2 className="login-signup-title">Sign Up</h2>
         <form onSubmit={handleSubmit} noValidate>
           <UsernameInput
@@ -56,6 +81,7 @@ function SignupForm({ onLoginSuccess }) {
           <PasswordInput
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            error={passwordError}
           />
 
           <div className="button-container">

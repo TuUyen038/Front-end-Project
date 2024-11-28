@@ -14,6 +14,9 @@ import SignupForm from "./pages/Login/SignupForm";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import { useState, useEffect } from "react";
 import ProtectedRoute from "./pages/Login/components/ProtectedRoute";
+import ForgotPassword from "./pages/Login/ForgotPassword";
+import VerifyAccount from "./pages/Login/VerifyAccount";
+import ResetPassword from "./pages/Login/ResetPassword";
 
 function App() {
   const users = [
@@ -509,6 +512,9 @@ function App() {
             path="/signup"
             element={<SignupForm onLoginSuccess={() => setIsLoggedIn(true)} />}
           />
+          <Route path="/forgot_password" element={<ForgotPassword />} />
+          <Route path="/verify_account" element={<VerifyAccount />} />
+          <Route path="/reset_password" element={<ResetPassword />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       ) : (

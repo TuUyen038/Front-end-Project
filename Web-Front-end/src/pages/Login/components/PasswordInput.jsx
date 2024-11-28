@@ -5,10 +5,11 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import "./input.css";
 
-function PasswordInput({ value, onChange }) {
+function PasswordInput({ value, onChange, error }) {
   const [showPassword, setShowPassword] = React.useState(false);
 
   // Hàm chuyển đổi giữa chế độ ẩn/hiện mật khẩu
@@ -18,7 +19,7 @@ function PasswordInput({ value, onChange }) {
 
   return (
     <div className="input-container">
-      <FormControl variant="outlined" fullWidth>
+      <FormControl variant="outlined" fullWidth error={error}>
         <InputLabel htmlFor="outlined-password">Password*</InputLabel>
         <OutlinedInput
           sx={{
@@ -49,6 +50,14 @@ function PasswordInput({ value, onChange }) {
           }
           label="Password"
         />
+        {error && (
+          <FormHelperText sx={{ fontSize: "1.3rem" }}>
+            - Password must have at least 8 characters.
+            <br />
+            - Password without spaces or accent marks.
+            <br />
+          </FormHelperText>
+        )}
       </FormControl>
     </div>
   );
