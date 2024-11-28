@@ -1,53 +1,53 @@
 import ListItem from "./ListItem";
 import style from "./Workspace.module.css";
 import ListDeadline from "./ListDeadline";
-import React, { useState, useEffect } from "react";
-import { FormControl, InputLabel, Input, FormHelperText } from "@mui/material";
+import { getProject, getListProject } from "./services";
+import { useState, useEffect, useRef } from "react";
+import Add from "./AddFunc";
 // eslint-disable-next-line react/prop-types
-function Workspace({ list }) {
-  const [item, setItem] = useState({
-    name: "",
-    img: "",
-  });
-  const [items, setItems] = useState(() => {
-    // Retrieve items from localStorage if available
-    const storedItems = localStorage.getItem("items");
-    return storedItems ? JSON.parse(storedItems) : [];
-  });
 
-  const handleAdd = () => {
-    if (item.trim() === "") return; // Prevent adding empty items
-    setItems((prev) => {
-      const newItems = [...prev, item];
-      // Save updated list to localStorage
-      localStorage.setItem("items", JSON.stringify(newItems));
-      return newItems;
-    });
-    setItem(""); // Reset input after adding
+function Workspace() {
+  const [ls, setLs] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const refInput = useRef({});
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const projectIds = await getListProject();
+        const projects = await Promise.all(
+          projectIds.map((id) => getProject(id))
+        );
+        setLs(projects);
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu: ", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const openForm = () => {
+    setOpen(true);
   };
+
   return (
     <>
-      {/* {<FormControl style={{ background: "orange", padding: "30px 30px" }}>
-        <input
-          value={item.name}
-          onChange={(e) => setItem(e.target.value)}
-          placeholder="Enter item"
-        />
-        <button onClick={handleAdd}>Add</button>
-        <FormHelperText id="my-helper-text">
-          We'll never share your email.
-        </FormHelperText>
-      </FormControl>} */}
-
+      {open && <Add setLs={setLs} open={open} setOpen={setOpen} />}
       <div className={style.Container}>
         <div className={style.Workspaces}>
-          <h1>YOUR WORKSPACES</h1>
+          <div className={style.AddGroup}>
+            <h1>YOUR WORKSPACES</h1>
+            <button className={style.BAdd} onClick={openForm}>
+              +
+            </button>
+          </div>
           <section>
-            <ListItem list={list} />
+            <ListItem list={ls} setLs={setLs} />
           </section>
           <h1 className={style.AllDeadline}>DEADLINES</h1>
           <section>
-            <ListDeadline list={list} />
+            <ListDeadline list={ls} />
           </section>
         </div>
       </div>

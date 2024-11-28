@@ -19,48 +19,6 @@ import VerifyAccount from "./pages/Login/VerifyAccount";
 import ResetPassword from "./pages/Login/ResetPassword";
 
 function App() {
-  const deadline = [
-    {
-      img: "../image/img1.jfif",
-      isHaveDeadline: true,
-      time: "29-10-2024",
-      name: "Lap trinh truc quan",
-    },
-    {
-      img: "../image/img2.jfif",
-      isHaveDeadline: true,
-      time: "28-10-2024",
-      name: "Dennis Robin(1) Dennis Robin(2) Dennis Robin(3)",
-    },
-    {
-      img: "../image/img4.jfif",
-      isHaveDeadline: true,
-      time: "01-12-2024",
-      name: "Nhập môn mạng",
-    },
-    {
-      img: "../image/img5.jfif",
-      isHaveDeadline: false,
-      name: "Trường đại học công nghệ thông tin - Đại học quốc gia thành phố Hồ Chí Minh",
-    },
-    {
-      img: "../image/img5.jfif",
-      isHaveDeadline: false,
-      name: "Khoa Công nghệ phần mềm - Trường đại học công nghệ thông tin",
-    },
-    {
-      img: "../image/img5.jfif",
-      isHaveDeadline: true,
-      time: "01-12-2024",
-      name: "Khoa Hệ thống thông tin - Trường đại học công nghệ thông tin",
-    },
-    {
-      img: "../image/img5.jfif",
-      isHaveDeadline: true,
-      time: "20-11-2024",
-      name: "Khoa Mạng máy tính và truyền thông - Trường đại học công nghệ thông tin",
-    },
-  ];
   const users = [
     {
       id: "001",
@@ -542,7 +500,6 @@ function App() {
       localStorage.setItem("isLoggedIn", "false");
     }
   }, [isLoggedIn, navigate]);
-
   return (
     <>
       {!isLoggedIn ? (
@@ -567,7 +524,7 @@ function App() {
 
           <Routes>
             <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Workspace list={deadline} />} />
+              <Route path="/" element={<Workspace />} />
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/:projectName/*" element={<AppBar users={users} />}>
                 <Route index element={<Dashboard boards={boards} />} />

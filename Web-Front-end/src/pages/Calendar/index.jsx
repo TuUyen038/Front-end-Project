@@ -14,10 +14,6 @@ function getRandomNumber(min, max) {
   return Math.round(Math.random() * (max - min) + min);
 }
 
-/**
- * Mô phỏng fetch với AbortController.
- * ⚠️ Không hỗ trợ IE11.
- */
 function fakeFetch(date, { signal }) {
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
@@ -122,6 +118,7 @@ export default function Calendar() {
 //   };}
 
   return (
+    
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateCalendar
         defaultValue={initialValue}

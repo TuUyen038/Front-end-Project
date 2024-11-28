@@ -3,16 +3,14 @@ import style from "./ListItem.module.css";
 import Item from "../Item";
 import { v4 as uuidv4 } from "uuid";
 import { Link } from "react-router-dom";
-const ListItem = ({ list }) => {
+const ListItem = ({ list, setLs }) => {
   return (
-    
     <div>
-      
       <ul className={style.Listitem}>
         {list.map((item) => (
-          <li key={uuidv4()} >
-            <Link to={"/:projectName/*"} className={style.link}>
-              <Item name={item.name} img={item.img} />
+          <li key={uuidv4()}>
+            <Link to={`${item.title}`} className={style.link}>
+              <Item setLs={setLs} item={item} />
             </Link>
           </li>
         ))}
