@@ -31,3 +31,67 @@
     width: 230px;
     bottom: 40px;
 }
+
+.AddGroup {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.BAdd {
+    width: 35px;
+    height: 35px;
+    border-radius: 5px;
+    border: none;
+    background: hsla(163, 36%, 71%, 0.288);
+}
+
+.BAdd:hover {
+    border: 1.5px solid #2D9596;
+}
+
+
+
+.main-content:first-child {
+    padding-top: 70px;
+}
+
+.close {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border: none;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 7px;
+    border-radius: 2px;
+    padding-bottom: 5px;
+}
+
+.close:hover {
+    background: red;
+    color: white;
+}
+
+.btn {
+    background: #fff;
+    border: 1px solid #999;
+    margin-top: 30px;
+    display: block;
+    margin-left: auto;
+}
+
+.btn:hover {
+    background: #9999;
+}
+
+.btnn {
+    font-size: 1.5rem;
+    width: 100px;
+    background: #fff;
+    border: none;
+    padding: 5px 0px;
+    border-bottom: 1px solid #999;
+}
