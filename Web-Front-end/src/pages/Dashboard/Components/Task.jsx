@@ -10,7 +10,7 @@ import { Avatar, AvatarGroup, Box, Stack, Typography } from '@mui/material';
 import DeadlineIcon from '@mui/icons-material/AccessAlarm';
 import DiscussIcon from '@mui/icons-material/Forum';
 
-export default function Task(task) {
+export default function Task({ task, onDelete }) {
   // const { taskId } = useParams();
   // using taskId to get Info of one task
 
@@ -111,9 +111,10 @@ export default function Task(task) {
         }}
       >
         <TaskOpen
-          delete={task.delete}
+          // delete={task.delete}
           onClose={Close}
           task={task}
+          onDelete={onDelete}
           sx={{ position: 'relative' }}
         />
       </Modal>
@@ -122,6 +123,6 @@ export default function Task(task) {
 }
 
 Task.propTypes = {
-  title: PropTypes.string,
-  delete: PropTypes.func,
+  task: PropTypes.object,
+  onDelete: PropTypes.func,
 };

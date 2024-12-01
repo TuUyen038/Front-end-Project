@@ -19,15 +19,21 @@ import DeletePopUp from '../../../components/DeletePopUp/DeletePopUp';
 import CloseIcon from '@mui/icons-material/Close';
 import { forwardRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { deleteTask } from '../../../Data/task_service';
 
-const TaskOpen = forwardRef((props, ref) => {
+const TaskOpen = forwardRef(({ task, onClose, onDelete }, ref) => {
   const [openDelete, setOpenDelete] = useState(false);
   const handleDelete = () => {
-    console.log(props);
+    console.log(task);
     setOpenDelete(true);
   };
   const Close = () => {
     setOpenDelete(false);
+  };
+  const saveDelete = () => {
+    deleteTask(task.id);
+    onDelete();
+    // setOpenDelete(false);
   };
   return (
     <div className="TaskOpen" ref={ref} tabIndex={-1}>
@@ -41,7 +47,7 @@ const TaskOpen = forwardRef((props, ref) => {
         }}
       >
         <IconButton
-          onClick={props.onClose}
+          onClick={onClose}
           sx={{
             // border: 'orange solid 1px',
             position: 'absolute',
@@ -59,7 +65,7 @@ const TaskOpen = forwardRef((props, ref) => {
           }}
         >
           <Stack className="props-header" direction="row">
-            <input onChange={props.onChange}></input>
+            <h1>{task.title}</h1>
           </Stack>
           <Stack
             className="task-body"
@@ -196,13 +202,13 @@ const TaskOpen = forwardRef((props, ref) => {
               <DeletePopUp
                 open={openDelete}
                 onClose={Close}
-                onDelete={props.task.delete}
+                onDelete={saveDelete}
               />
             </Stack>
           </Stack>
         </Stack>
         <Button
-          onClick={props.onSave}
+          // onClick={props.onSave}
           variant="contained"
           sx={{
             backgroundColor: '#2D9596',
@@ -220,7 +226,7 @@ const TaskOpen = forwardRef((props, ref) => {
 
 TaskOpen.propTypes = {
   onClose: PropTypes.func,
-  onChange: PropTypes.func,
+  onDelete: PropTypes.func,
   onSave: PropTypes.func,
   task: PropTypes.object,
 };

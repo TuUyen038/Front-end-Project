@@ -58,7 +58,7 @@ export default function Column(props) {
     setOpenTaskPopUp(false);
   };
 
-  const DeleteTask = (id) => {
+  const DeleteTaskFromColumn = (id) => {
     setTasks((preTasks) => preTasks.filter((task) => task.id !== id));
     console.log(tasks);
   };
@@ -94,11 +94,10 @@ export default function Column(props) {
           {tasks.map((task) => {
             return (
               <Task
-                title={task.title}
                 key={task.id}
-                id={task.id}
+                task={task}
                 className="Task"
-                delete={() => DeleteTask(task.id)}
+                onDelete={() => DeleteTaskFromColumn(task.id)}
               ></Task>
             );
           })}
