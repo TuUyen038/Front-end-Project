@@ -1,5 +1,5 @@
 import { Button, Input, Stack } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreIcon from '@mui/icons-material/MoreHoriz';
@@ -7,12 +7,16 @@ import Task from './Task';
 import PropTypes from 'prop-types';
 import DeletePopUp from '../../../components/DeletePopUp/DeletePopUp';
 import AddNewTask from './AddNewTask';
-// import { DndProvider } from 'react-dnd';
-// import { HTML5Backend } from 'react-dnd-html5-backend';
+import { addCard, deleteCard, getCardList } from '../service/card_service';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Column(props) {
   const [title, setTitle] = useState(props.title || 'New');
-  const [tasks, setTasks] = useState(props.tasks || []);
+  const [tasks, setTasks] = useState([]);
+  useEffect(() => {
+    setTasks(getCardList(props.column_id));
+  }, []);
+
   const [openDeletePopUp, setOpenDeletePopUp] = useState(false);
   const [openTaskPopUp, setOpenTaskPopUp] = useState(false);
   const [tempTask, setTempTask] = useState('');
@@ -43,27 +47,26 @@ export default function Column(props) {
 
   const AddTask = () => {
     if (tempTask != '') {
-      setTasks((preTasks) => [
-        ...preTasks,
-        {
-          id: preTasks.length + 1,
+      setTasks(
+        addCard({
+          ...tasks,
+          id: uuidv4(),
           title: tempTask,
-        },
-      ]);
-      // console.log(tasks);
+        })
+      );
+
       setTempTask('');
     }
     // else pop up sth like "make a new task unsuccess cause of null error"
     setOpenTaskPopUp(false);
   };
 
-  const DeleteTask = (id) => {
-    setTasks((preTasks) => preTasks.filter((task) => task.id !== id));
+  const DeleteTaskFromColumn = (id) => {
+    setTasks(deleteCard(id));
     console.log(tasks);
   };
 
   return (
-    // <DndProvider backend={HTML5Backend}>
     <Stack
       className="Column"
       draggable
@@ -87,16 +90,16 @@ export default function Column(props) {
           className="Main"
           sx={{
             height: 'auto',
+            paddingTop: 2,
           }}
         >
           {tasks.map((task) => {
             return (
               <Task
-                title={task.title}
                 key={task.id}
-                id={task.id}
+                task={task}
                 className="Task"
-                delete={() => DeleteTask(task.id)}
+                onDelete={() => DeleteTaskFromColumn(task.id)}
               ></Task>
             );
           })}
@@ -139,6 +142,6 @@ export default function Column(props) {
 
 Column.propTypes = {
   title: PropTypes.string,
-  tasks: PropTypes.array,
+  column_id: PropTypes.string,
   delete: PropTypes.func,
 };

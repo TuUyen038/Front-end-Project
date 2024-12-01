@@ -3,16 +3,23 @@ import ShareIcon from '@mui/icons-material/ShareOutlined';
 import MoreIcon from '@mui/icons-material/MoreHoriz';
 import { Link, Outlet, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
+import { getProject } from '../../Workspace/services';
 
-export default function AppBar(props) {
-  const { projectName } = useParams();
+export default function AppBar({ users }) {
+  const { projectSlug } = useParams();
+  let project = null;
+
+  useEffect(() => {
+    project = getProject(projectSlug);
+  }, []);
   return (
     <>
       <div className="AppBar">
         <div className="LeftSide">
           <div className="ProjectTitle">
             <Link to="" className="ProjectName">
-              <h2>{projectName}</h2>
+              <h2>{project.name}</h2>
             </Link>
           </div>
           <div className="Others">
@@ -26,7 +33,7 @@ export default function AppBar(props) {
         </div>
         <div className="RightSide">
           <div className="AvatarContainer">
-            {props.users.map((user) => {
+            {users.map((user) => {
               return (
                 <Avatar
                   key={user.id}
@@ -43,7 +50,7 @@ export default function AppBar(props) {
           </div>
         </div>
       </div>
-      <Outlet />
+      <Outlet context={{ project_id: project.id }} />
     </>
   );
 }
