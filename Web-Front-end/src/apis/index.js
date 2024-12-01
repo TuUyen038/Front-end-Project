@@ -1,4 +1,6 @@
-const baseURL = "http://localhost:8017/v1";
+import { BACKEND_ENDPOINT } from '../../setting/globalVariable';
+
+const baseURL = BACKEND_ENDPOINT;
 
 export const UserAPI = {
   login: (email, password) => {
@@ -9,9 +11,9 @@ export const UserAPI = {
         password,
       };
       const res = fetch(url, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),
       });
@@ -30,9 +32,9 @@ export const UserAPI = {
         password,
       };
       const res = fetch(url, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),
       });
@@ -46,9 +48,9 @@ export const UserAPI = {
     try {
       const url = `${baseURL}/users`;
       const res = fetch(url, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`, //token để biết user nào đang login
           //request nào có protect thì phải có token
         },
