@@ -508,10 +508,7 @@ function App() {
             path="/login"
             element={<LoginForm onLoginSuccess={() => setIsLoggedIn(true)} />}
           />
-          <Route
-            path="/signup"
-            element={<SignupForm onLoginSuccess={() => setIsLoggedIn(true)} />}
-          />
+          <Route path="/signup" element={<SignupForm />} />
           <Route path="/forgot_password" element={<ForgotPassword />} />
           <Route path="/verify_account" element={<VerifyAccount />} />
           <Route path="/reset_password" element={<ResetPassword />} />

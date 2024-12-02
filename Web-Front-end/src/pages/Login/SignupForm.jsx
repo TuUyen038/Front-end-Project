@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import UsernameInput from "./components/UsernameInput";
 import EmailInput from "./components/EmailInput";
@@ -7,7 +7,7 @@ import { UserAPI } from "../../apis";
 import { Alert } from "@mui/material";
 import "./components/form.css";
 
-function SignupForm({ onLoginSuccess }) {
+function SignupForm() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -15,6 +15,7 @@ function SignupForm({ onLoginSuccess }) {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [alert, setAlert] = useState({ severity: "", message: "" });
+  //const [isEmailVerified, setIsEmailVerified] = useState(true);
 
   //Hàm kiểm tra email hợp lệ hay không
   const validateEmail = (email) => {
@@ -47,15 +48,17 @@ function SignupForm({ onLoginSuccess }) {
     //ĐĂNG KÝ
     const res = await UserAPI.register(username, email, password);
     if (res.ok) {
-      //Đăng ký thành công
-      const userData = await res.json();
-      localStorage.setItem("token", userData.token);
-      localStorage.setItem("user", JSON.stringify(userData.user));
-      localStorage.setItem("isLoggedIn", "true");
-      onLoginSuccess();
-      navigate("/");
+      setAlert({
+        severity: "success",
+        message: "Registration successful! Please check your email to verify.",
+      });
+      navigate("/login");
     } else {
-      setAlert({ severity: "error", message: "Failed to register!" });
+      const error = await res.json();
+      setAlert({
+        severity: "error",
+        message: error.message || "Failed to register!",
+      });
     }
   };
 

@@ -60,4 +60,34 @@ export const UserAPI = {
       throw new Error(err);
     }
   },
+
+  confirmUserEmail: (email, verificationToken) => {
+    try {
+      const url = `${baseURL}/confirmation/${email}/${verificationToken}`
+      const res = fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return res;
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
+
+  resendVerification: (email) => {
+    try {
+      const url = `${baseURL}/resendverificationlink/${email}`
+      const res = fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return res;
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
 };
