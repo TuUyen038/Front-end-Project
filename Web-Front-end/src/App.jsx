@@ -111,7 +111,7 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<Workspace />} />
               <Route path="/calendar" element={<Calendar />} />
-              <Route path="/:projectName/*" element={<AppBar users={users} />}>
+              <Route path="/:projectSlug/*" element={<AppBar users={users} />}>
                 <Route index element={<Dashboard />} />
                 <Route path="meeting" element={<Meeting />}></Route>
                 <Route path="filemanager" element={<FileManager />}></Route>

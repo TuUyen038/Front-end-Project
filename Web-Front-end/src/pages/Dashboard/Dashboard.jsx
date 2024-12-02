@@ -4,7 +4,7 @@ import { MenuItem, Select, Stack } from '@mui/material';
 import { useOutletContext } from 'react-router-dom';
 import { getBoardList } from './service/board_service';
 
-// import { useParams } from 'react-router-dom';
+//Khi khoi tao mot dashboard thi luon luon co trc 1 board
 
 export default function Dashboard() {
   const { project_id } = useOutletContext();
@@ -13,12 +13,16 @@ export default function Dashboard() {
 
   useEffect(() => {
     setBoards(getBoardList(project_id));
-    setboardId(boards[0].id);
   }, []);
 
   const handleChange = (e) => {
     setboardId(e.target.value);
   };
+
+  if (boards) {
+    setboardId(boards[0].id);
+  }
+
   return (
     <div>
       <div className="main">
@@ -47,3 +51,9 @@ export default function Dashboard() {
     </div>
   );
 }
+
+/*
+  1. Them button AddBoard
+  2. Them button EditBoard
+  3. Them button DeleteBoard (thao tac nay chi co owner dc quyen)
+*/

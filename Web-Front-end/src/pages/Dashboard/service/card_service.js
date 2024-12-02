@@ -17,7 +17,8 @@ export const getCardList = async (columnId) => {
   }
 
   const data = await res.json();
-  return data.cardOrderIds;
+  const cards = await Promise.all(data.cardOrderIds.map((id) => getCard(id)));
+  return cards;
 };
 
 export const getCard = async (cardId) => {

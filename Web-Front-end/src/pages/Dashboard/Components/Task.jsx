@@ -26,6 +26,8 @@ export default function Task({ task, onDelete }) {
     { name: 'A', color: 'green' },
     { name: 'B', color: 'blue' },
     { name: 'C', color: 'orange' },
+
+    // se chuyen thanh members = task.userOrderIds
   ];
 
   useEffect(() => {});

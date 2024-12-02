@@ -16,7 +16,10 @@ export const getBoardList = async (projectId) => {
     alert('can not get board list');
   }
   const data = await res.json();
-  return data.boardOrderIds;
+  const boards = await Promise.all(
+    data.boardOrderIds.map((id) => getBoard(id))
+  );
+  return boards;
 };
 
 export const getBoard = async (boardId) => {
