@@ -1,7 +1,7 @@
 import { PROJECT_ENDPOINT } from '../../setting/globalVariable';
 
 export const getProjectBySlug = async (slug, onFail) => {
-  const url = PROJECT_ENDPOINT; // sua cai nay hoy ne
+  const url = PROJECT_ENDPOINT + `${slug}`; // sua cai nay hoy ne
   const res = await fetch(url, {
     method: 'GET',
     headers: {
