@@ -47,6 +47,7 @@ function LoginForm({ onLoginSuccess }) {
     const res = await UserAPI.login(email, password);
     if (res.ok) {
       //console.log("token: ", data.token)
+      const data = await res.json();
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("isLoggedIn", "true");

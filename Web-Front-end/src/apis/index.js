@@ -46,7 +46,7 @@ export const UserAPI = {
 
   getUser: (token) => {
     try {
-      const url = `${baseURL}/users`;
+      const url = `${baseURL}/users/me`;
       const res = fetch(url, {
         method: 'GET',
         headers: {
@@ -63,7 +63,7 @@ export const UserAPI = {
 
   confirmUserEmail: (email, verificationToken) => {
     try {
-      const url = `${baseURL}/confirmation/${email}/${verificationToken}`
+      const url = `${baseURL}/users/confirmation/${email}/${verificationToken}`
       const res = fetch(url, {
         method: 'GET',
         headers: {
@@ -78,7 +78,7 @@ export const UserAPI = {
 
   resendVerification: (email) => {
     try {
-      const url = `${baseURL}/resendverificationlink/${email}`
+      const url = `${baseURL}/users/resendverificationlink/${email}`
       const res = fetch(url, {
         method: 'GET',
         headers: {

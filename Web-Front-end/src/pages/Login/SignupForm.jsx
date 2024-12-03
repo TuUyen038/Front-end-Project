@@ -15,7 +15,8 @@ function SignupForm() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [alert, setAlert] = useState({ severity: "", message: "" });
-  //const [isEmailVerified, setIsEmailVerified] = useState(true);
+  const [timerCount, setTimerCount] = useState(60);
+  const [disableResend, setDisableResend] = useState(true);
 
   //Hàm kiểm tra email hợp lệ hay không
   const validateEmail = (email) => {
@@ -50,17 +51,55 @@ function SignupForm() {
     if (res.ok) {
       setAlert({
         severity: "success",
-        message: "Registration successful! Please check your email to verify.",
+        message:
+          "Registration successful! Please check your email to verify and convert to login page.",
       });
-      navigate("/login");
     } else {
-      const error = await res.json();
+      const err = await res.json();
       setAlert({
         severity: "error",
-        message: error.message || "Failed to register!",
+        message: err.message || "Failed to register!",
       });
     }
   };
+
+  //Xử lí khi nhấn resend email
+  const handleResendEmail = async () => {
+    const res = await UserAPI.resendVerification(email);
+    if (res.ok) {
+      const data = await res.text();
+      setAlert({
+        severity: "info",
+        message:
+          data.message ||
+          "A new OTP has been sent to your email. Please check and convert to login page!",
+      });
+      setTimerCount(60);
+      setDisableResend(true);
+    } else {
+      const err = await res.json();
+      setAlert({
+        severity: "error",
+        message: err.message || "Failed send to your email!",
+      });
+      setTimerCount(60);
+      setDisableResend(true);
+    }
+  };
+
+  // Đếm ngược thời gian
+  useEffect(() => {
+    if (timerCount > 0) {
+      const interval = setInterval(() => {
+        setTimerCount((prev) => {
+          if (prev === 1) setDisableResend(false);
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [timerCount]);
 
   return (
     <div className="login-signup-container">
@@ -91,12 +130,25 @@ function SignupForm() {
             <button className="login-signup-button">Sign Up</button>
           </div>
 
+          <div className="resend-container">
+            <span>Didn't receive the email?</span>
+            <span
+              onClick={!disableResend ? handleResendEmail : undefined}
+              className="resend-content"
+              disabled={disableResend}
+            >
+              {disableResend
+                ? `Resend email in ${timerCount}s`
+                : "Resend email"}
+            </span>
+          </div>
+
           <div
             className="form-footer-signup"
             style={{
               display: "flex",
-              justifyContent: "flex-end",
-              marginTop: "0.625rem",
+              justifyContent: "center",
+              marginTop: "1rem",
             }}
           >
             <Link to="/login" className="footer-link">
