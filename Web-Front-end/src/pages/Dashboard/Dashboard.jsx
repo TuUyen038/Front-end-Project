@@ -40,7 +40,7 @@ export default function Dashboard() {
             {boards.map((board) => {
               return (
                 <MenuItem key={board.id} value={board.id}>
-                  {board.name}
+                  {board.title}
                 </MenuItem>
               );
             })}

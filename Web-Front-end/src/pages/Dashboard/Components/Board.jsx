@@ -20,9 +20,8 @@ export default function Board({ board_id }) {
   const AddColumn = () => {
     setColumns(
       addColumn({
-        id: uuidv4(), // Tạo id mới dựa trên độ dài mảng // tạm thời hoy
+        id: uuidv4(),
         title: 'NEW',
-        tasks: [],
       })
     );
     console.log(columns);
@@ -38,7 +37,7 @@ export default function Board({ board_id }) {
         {columns.map((column) => {
           return (
             <Column
-              title={column.name}
+              title={column.title}
               key={column.id}
               column_id={column.id}
               delete={() => DeleteColumn(column.id)}

@@ -27,7 +27,7 @@ export default function AppBar() {
           <div className="LeftSide">
             <div className="ProjectTitle">
               <Link to="" className="ProjectName">
-                <h2>{project.name}</h2>
+                <h2>{project.title}</h2>
               </Link>
             </div>
             <div className="Others">

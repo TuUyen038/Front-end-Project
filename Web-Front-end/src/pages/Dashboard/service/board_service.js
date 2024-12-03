@@ -4,38 +4,56 @@ import {
 } from '../../../../setting/globalVariable';
 
 export const getBoardList = async (projectId) => {
-  const url = PROJECT_ENDPOINT + `${projectId}`;
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  try {
+    const url = PROJECT_ENDPOINT + `${projectId}`;
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-  if (!res.ok) {
-    alert('can not get board list');
+    if (!res.ok) {
+      throw new Error('Failed to fetch board list');
+    }
+
+    const data = await res.json();
+
+    if (!data.boardOrderIds || !Array.isArray(data.boardOrderIds)) {
+      throw new Error('Invalid response format for board list');
+    }
+
+    const boards = await Promise.all(
+      data.boardOrderIds.map((id) => getBoard(id))
+    );
+
+    return boards;
+  } catch (error) {
+    console.error('Error in getBoardList:', error);
+    throw error; // Hoặc xử lý lỗi theo cách bạn muốn
   }
-  const data = await res.json();
-  const boards = await Promise.all(
-    data.boardOrderIds.map((id) => getBoard(id))
-  );
-  return boards;
 };
 
 export const getBoard = async (boardId) => {
-  const url = BOARD_ENDPOINT + `${boardId}`;
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  try {
+    const url = BOARD_ENDPOINT + `${boardId}`;
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-  if (!res.ok) {
-    alert('can not get info of this board');
+    if (!res.ok) {
+      throw new Error('Failed to fetch board info');
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error('Error in getBoard:', error);
+    throw error; // Hoặc xử lý lỗi theo cách bạn muốn
   }
-  const data = await res.json();
-  return data;
 };
 
 // lam them thao tac them board va xoa board nua (front-end)
