@@ -3,26 +3,27 @@ import Deadline from "../Deadline";
 
 const ListItem = ({ list }) => {
   if (list.length === 0) {
-    return <p>Not have deadline</p>;
+    return <p>No deadlines available.</p>;
   }
-  let countDeadline = 0;
+  let count = 0;
+  const currentDay = new Date();
   return (
     <div>
       <ul>
         {list.map((item) => {
-          if (item.isHaveDeadline) {
-            countDeadline++;
-            if (countDeadline <= 4) {
-              return (
-                <li key={item.id}>
-                  <Deadline name={item.name} time={item.time} />
-                </li>
-              );
-            }
-            return null;
+          count++;
+          const deadline = item.deadline ? new Date(item.deadline) : null;
+          if (count <= 4 && deadline && deadline >= currentDay) {
+            const formattedDeadline = deadline.toLocaleString();
+            return (
+              <li key={item.id}>
+                <Deadline title={item.title} time={formattedDeadline} />
+              </li>
+            );
           }
           return null;
         })}
+        {console.log(count)}
       </ul>
     </div>
   );

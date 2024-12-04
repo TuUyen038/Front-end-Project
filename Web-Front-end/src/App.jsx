@@ -111,7 +111,6 @@ function App() {
                 <Route path="filemanager" element={<FileManager />}></Route>
               </Route>
               <Route path="*" element={<NotFoundPage />} />
-              <Route path="/:name" />
             </Route>
           </Routes>
         </ThemeProvider>

@@ -1,21 +1,30 @@
 /* eslint-disable react/prop-types */
 import style from "./ListItem.module.css";
 import Item from "../Item";
-import { v4 as uuidv4 } from "uuid";
 import { Link } from "react-router-dom";
-const ListItem = ({ list, setLs }) => {
+
+const ListItem = ({ list, setLs, searchKey }) => {
+  const filteredList = list.filter((item) =>
+    item.title.toLowerCase().includes(searchKey.toLowerCase())
+  );
+
   return (
     <div>
       <ul className={style.Listitem}>
-        {list.map((item) => (
-          <li key={uuidv4()}>
-            <Link to={`${item.title}`} className={style.link}>
-              <Item setLs={setLs} item={item} />
-            </Link>
-          </li>
-        ))}
+        {filteredList.length > 0 ? (
+          filteredList.map((item) => (
+            <li key={item._id}>
+              <Link to={`${item.slug}`} className={style.link}>
+                <Item setLs={setLs} item={item} />
+              </Link>
+            </li>
+          ))
+        ) : (
+          <p className="NoProject">No projects found</p>
+        )}
       </ul>
     </div>
   );
 };
+
 export default ListItem;
