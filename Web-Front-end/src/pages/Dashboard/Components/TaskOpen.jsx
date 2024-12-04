@@ -3,7 +3,7 @@ import {
   Box,
   Button,
   IconButton,
-  Input,
+  // Input,
   Stack,
   TextField,
 } from '@mui/material';
@@ -19,18 +19,21 @@ import DeletePopUp from '../../../components/DeletePopUp/DeletePopUp';
 import CloseIcon from '@mui/icons-material/Close';
 import { forwardRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { deleteCard } from '../service/card_service';
 
-const TaskOpen = forwardRef((task, ref) => {
-  // const navigate = useNavigate();
-  // const location = useLocation();
+const TaskOpen = forwardRef(({ task, onClose, onDelete }, ref) => {
   const [openDelete, setOpenDelete] = useState(false);
   const handleDelete = () => {
+    console.log(task);
     setOpenDelete(true);
   };
   const Close = () => {
-    // const baseUri = location.pathname.split('/')[1];
-    // navigate(`/${baseUri}`); // navigate user to previous page
     setOpenDelete(false);
+  };
+  const saveDelete = () => {
+    deleteCard(task.id);
+    onDelete();
+    // setOpenDelete(false);
   };
   return (
     <div className="TaskOpen" ref={ref} tabIndex={-1}>
@@ -44,7 +47,7 @@ const TaskOpen = forwardRef((task, ref) => {
         }}
       >
         <IconButton
-          onClick={task.onClose}
+          onClick={onClose}
           sx={{
             // border: 'orange solid 1px',
             position: 'absolute',
@@ -61,8 +64,8 @@ const TaskOpen = forwardRef((task, ref) => {
             padding: '1rem 4rem 0 4rem',
           }}
         >
-          <Stack className="task-header" direction="row">
-            <Input onChange={task.onChange}>New task</Input>
+          <Stack className="props-header" direction="row">
+            <h1>{task.title}</h1>
           </Stack>
           <Stack
             className="task-body"
@@ -199,13 +202,13 @@ const TaskOpen = forwardRef((task, ref) => {
               <DeletePopUp
                 open={openDelete}
                 onClose={Close}
-                onDelete={task.delete}
+                onDelete={saveDelete}
               />
             </Stack>
           </Stack>
         </Stack>
         <Button
-          onClick={task.onSave}
+          // onClick={props.onSave}
           variant="contained"
           sx={{
             backgroundColor: '#2D9596',
@@ -223,8 +226,9 @@ const TaskOpen = forwardRef((task, ref) => {
 
 TaskOpen.propTypes = {
   onClose: PropTypes.func,
-  onChange: PropTypes.func,
+  onDelete: PropTypes.func,
   onSave: PropTypes.func,
+  task: PropTypes.object,
 };
 TaskOpen.displayName = 'TaskOpen';
 

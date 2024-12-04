@@ -11,12 +11,14 @@ function VerifyAccount() {
   const [otp, setOtp] = useState(0);
   const [alert, setAlert] = useState({ severity: "", message: "" });
 
+  //Tạo hàm random otp để chạy thử code
   useEffect(() => {
     const generatedOtp = Math.floor(1000 + Math.random() * 9000);
     setOtp(generatedOtp);
     console.log(generatedOtp);
   }, []);
 
+  //Tự động gọi để chuyển đến input kế tiếp
   const handleChange = (index, e) => {
     const updatedOtp = [...otpInput];
     updatedOtp[index] = e.target.value;
@@ -47,7 +49,7 @@ function VerifyAccount() {
     }
   };
 
-  // Gửi lại OTP
+  // Gửi lại OTP và làm rỗng input, chỉnh thời gian,...
   const handleResendOtp = () => {
     const generatedOtp = Math.floor(1000 + Math.random() * 9000); // Tạo OTP mới khi gửi lại
     setOtp(generatedOtp);
@@ -61,7 +63,6 @@ function VerifyAccount() {
     });
   };
 
-  // Timer countdown
   useEffect(() => {
     if (timerCount > 0) {
       const interval = setInterval(() => {

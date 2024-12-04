@@ -46,15 +46,19 @@ function LoginForm({ onLoginSuccess }) {
     //ĐĂNG NHẬP
     const res = await UserAPI.login(email, password);
     if (res.ok) {
-      //Đăng nhập thành công
-      const userData = await res.json();
-      localStorage.setItem("token", userData.token);
-      localStorage.setItem("user", JSON.stringify(userData.user));
+      //console.log("token: ", data.token)
+      const data = await res.json();
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("isLoggedIn", "true");
       onLoginSuccess();
       navigate("/");
     } else {
-      setAlert({ severity: "error", message: "Failed to login!" });
+      const error = await res.json();
+      setAlert({
+        severity: "error",
+        message: error.message || "Failed to login!",
+      });
     }
   };
 
