@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import EmailInput from "./components/EmailInput";
@@ -14,6 +14,8 @@ function LoginForm({ onLoginSuccess }) {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [alert, setAlert] = useState({ severity: "", message: "" });
+  const [timerCount, setTimerCount] = useState(0);
+  const [disableResend, setDisableResend] = useState(false);
 
   //Hàm kiểm tra email phải bao gồm @ và dấu .
   const validateEmail = (email) => {
@@ -49,18 +51,63 @@ function LoginForm({ onLoginSuccess }) {
       //console.log("token: ", data.token)
       const data = await res.json();
       localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("email", data.email);
+      localStorage.setItem("name", data.name);
       localStorage.setItem("isLoggedIn", "true");
       onLoginSuccess();
       navigate("/");
     } else {
-      const error = await res.json();
+      const err = await res.json();
       setAlert({
         severity: "error",
-        message: error.message || "Failed to login!",
+        message: err.message || "Failed to login!",
       });
     }
   };
+
+  //Xử lí khi nhấn resend email
+  const handleResendEmail = async () => {
+    const isEmailValid = validateEmail(email);
+    if (!isEmailValid) {
+      setEmailError(true);
+      return;
+    }
+
+    const res = await UserAPI.resendVerification(email);
+    if (res.ok) {
+      const responce = await res.text();
+      setAlert({
+        severity: "info",
+        message:
+          responce ||
+          "A new OTP has been sent to your email. Please check and convert to login page!",
+      });
+      setTimerCount(60);
+      setDisableResend(true);
+    } else {
+      const err = await res.json();
+      setAlert({
+        severity: "error",
+        message: err.message || "Failed send to your email!",
+      });
+      setTimerCount(60);
+      setDisableResend(true);
+    }
+  };
+
+  // Đếm ngược thời gian
+  useEffect(() => {
+    if (timerCount > 0) {
+      const interval = setInterval(() => {
+        setTimerCount((prev) => {
+          if (prev === 1) setDisableResend(false);
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [timerCount]);
 
   return (
     <div className="login-signup-container">
@@ -87,12 +134,25 @@ function LoginForm({ onLoginSuccess }) {
             <button className="login-signup-button">Login</button>
           </div>
 
+          <div className="resend-container">
+            <span>Didn't receive the email?</span>
+            <span
+              onClick={!disableResend ? handleResendEmail : undefined}
+              className="resend-content"
+              disabled={disableResend}
+            >
+              {disableResend
+                ? `Resend email in ${timerCount}s`
+                : "Resend email"}
+            </span>
+          </div>
+
           <div
             className="form-footer-login"
             style={{
               display: "flex",
               justifyContent: "space-between",
-              marginTop: "0.625rem",
+              marginTop: "1.2rem",
             }}
           >
             <Link to="/signup" className="footer-link">
