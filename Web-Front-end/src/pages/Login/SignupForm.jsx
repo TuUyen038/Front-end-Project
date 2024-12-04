@@ -52,7 +52,7 @@ function SignupForm() {
         message:
           "Registration successful! Please check your email to verify and convert to login page.",
       });
-      navigate("/login");
+      setTimeout(() => navigate("/login"), 5500);
     } else {
       const err = await res.json();
       setAlert({

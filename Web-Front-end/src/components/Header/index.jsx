@@ -12,8 +12,8 @@ import {
 
 const info = {
   user: {
-    name: localStorage.getItem("email"),
-    email: localStorage.getItem("name"),
+    name: localStorage.getItem("name"),
+    email: localStorage.getItem("email"),
   },
 };
 
@@ -26,7 +26,10 @@ function Header({ checked, onChange }) {
       },
       signOut: () => {
         setLocalStorageAuth(null);
-        localStorage.setItem("isLoggedIn", "false");
+        localStorage.removeItem("token");
+        localStorage.removeItem("email");
+        localStorage.removeItem("name");
+        localStorage.setItem("isLoggedIn", btoa("false"));
         window.location.reload(); //load lại trang
       },
     };

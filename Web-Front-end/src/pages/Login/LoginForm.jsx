@@ -53,7 +53,7 @@ function LoginForm({ onLoginSuccess }) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("email", data.email);
       localStorage.setItem("name", data.name);
-      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("isLoggedIn", btoa("true"));
       onLoginSuccess();
       navigate("/");
     } else {
