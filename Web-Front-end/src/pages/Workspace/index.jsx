@@ -1,7 +1,7 @@
 import ListItem from "./ListItem";
 import style from "./Workspace.module.css";
 import ListDeadline from "./ListDeadline";
-import { getProject, getListProject } from "./services";
+import { getProject, getListProject, getListDeadline, getDeadline } from "./services";
 import { useState, useEffect } from "react";
 import Add from "./AddFunc";
 import Search from "./SearchF";
@@ -9,6 +9,7 @@ import Search from "./SearchF";
 
 function Workspace() {
   const [ls, setLs] = useState([]);
+  const [dl, setDl] = useState([]);
   const [open, setOpen] = useState(false);
   const [keySearch, setKeySearch] = useState("");
 
@@ -21,7 +22,16 @@ function Workspace() {
         );
         setLs(projects);
       } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu: ", error);
+        console.error("Lỗi khi lấy dữ liệu project: ", error);
+      }
+      try {
+        const deadlineIds = await getListDeadline();
+        const deadlines = await Promise.all(
+          deadlineIds.map((id) => getDeadline(id))
+        );
+        setDl(deadlines);
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu deadline: ", error);
       }
     };
     fetchData();
@@ -48,7 +58,7 @@ function Workspace() {
           </section>
           <h1 className={style.AllDeadline}>DEADLINES</h1>
           <section>
-            <ListDeadline list={ls} />
+            <ListDeadline list={dl} />
           </section>
         </div>
       </div>

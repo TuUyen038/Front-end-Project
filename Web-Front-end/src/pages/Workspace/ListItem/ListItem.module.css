@@ -28,3 +28,8 @@
 .link {
     display: flex;
 }
+.NoProject {
+    margin-left: 30px;
+    display: block;
+    margin-right: 30px;
+}

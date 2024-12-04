@@ -3,16 +3,18 @@
     margin-bottom: 4px;
     height: 41px;
 }
+
 .Name {
     height: 100%;
     line-height: 2.5;
     letter-spacing: 0.5px;
     font-size: 1.2rem;
     margin: 0 20px;
-    padding: 5px 15px;
+    padding: 5px 25px;
     border-radius: 30px;
     background: hsla(193, 43%, 82%, 0.466);
 }
+
 .Time {
     height: 100%;
     line-height: 2.5;

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useTransition } from "react";
 import dayjs from "dayjs";
 import Badge from "@mui/material/Badge";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -8,7 +8,8 @@ import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { DayCalendarSkeleton } from "@mui/x-date-pickers/DayCalendarSkeleton";
 import { red } from "@mui/material/colors";
-import "./Calendar.css"
+import "./Calendar.css";
+import { getDeadline, getListDeadline } from "../Workspace/services";
 
 function getRandomNumber(min, max) {
   return Math.round(Math.random() * (max - min) + min);
@@ -49,10 +50,10 @@ function ServerDay(props) {
           <span
             style={{
               display: "inline-block",
-              width: "0.5rem", 
-              height: "0.5rem", 
-              borderRadius: "50%", 
-              backgroundColor: red[500], 
+              width: "0.5rem",
+              height: "0.5rem",
+              borderRadius: "50%",
+              backgroundColor: red[500],
             }}
           />
         ) : undefined
@@ -63,12 +64,11 @@ function ServerDay(props) {
         outsideCurrentMonth={outsideCurrentMonth}
         day={day}
         sx={{
-          
           fontSize: "1.2rem",
-          border: '0.5px solid #9999', // Thêm border cho mỗi ngày (màu cam)
-          borderRadius: '50%',         // Tạo hình tròn cho border
-          '&:hover': {
-            borderColor: '#7777',   // Đổi màu border khi hover
+          border: "0.5px solid #9999",
+          borderRadius: "50%",
+          "&:hover": {
+            borderColor: "#7777",
           },
         }}
       />
@@ -80,6 +80,22 @@ export default function Calendar() {
   const requestAbortController = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [highlightedDays, setHighlightedDays] = useState([1, 2, 15]);
+  const [time, setTime] = useState("");
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const deadlineIds = await getListDeadline();
+        const deadlines = await Promise.all(
+          deadlineIds.map((id) => getDeadline(id))
+        );
+        setDl(deadlines);
+        setTime(deadlines.getDate());
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu deadline in calendar: ", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const fetchHighlightedDays = (date) => {
     const controller = new AbortController();
@@ -106,20 +122,19 @@ export default function Calendar() {
     return () => requestAbortController.current?.abort();
   }, []);
 
-// {  const handleMonthChange = (date) => {
-//     if (requestAbortController.current) {
-//       // Hủy bỏ yêu cầu không cần thiết nếu người dùng chuyển tháng nhanh chóng
-//       requestAbortController.current.abort();
-//     }
+  // {  const handleMonthChange = (date) => {
+  //     if (requestAbortController.current) {
+  //       // Hủy bỏ yêu cầu không cần thiết nếu người dùng chuyển tháng nhanh chóng
+  //       requestAbortController.current.abort();
+  //     }
 
-//     setIsLoading(true);
-//     setHighlightedDays([]);
-//     fetchHighlightedDays(date);
-//   };}
+  //     setIsLoading(true);
+  //     setHighlightedDays([]);
+  //     fetchHighlightedDays(date);
+  //   };}
 
   return (
-    
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} className="calendar">
       <DateCalendar
         defaultValue={initialValue}
         loading={isLoading}
@@ -134,10 +149,10 @@ export default function Calendar() {
           },
         }}
         sx={{
-          fontSize: '1.2rem',   // Tăng kích thước chữ
-          width: '300px',       // Tăng chiều rộng calendar
-          height: '700px',      // Tăng chiều cao calendar
-          maxWidth: '100%',     // Đảm bảo không vượt quá chiều rộng của container cha
+          fontSize: "1.2rem",
+          width: "300px",
+          height: "700px",
+          maxWidth: "100%",
         }}
       />
     </LocalizationProvider>

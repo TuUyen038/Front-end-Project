@@ -497,7 +497,7 @@ function App() {
     if (isLoggedIn) {
       localStorage.setItem("isLoggedIn", "true");
     } else {
-      localStorage.setItem("isLoggedIn", "false");
+      localStorage.setItem("isLoggedIn", "true");
     }
   }, [isLoggedIn, navigate]);
   return (
@@ -535,7 +535,6 @@ function App() {
                 ></Route>
               </Route>
               <Route path="*" element={<NotFoundPage />} />
-              <Route path="/:name" />
             </Route>
           </Routes>
         </ThemeProvider>

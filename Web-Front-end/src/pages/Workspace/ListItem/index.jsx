@@ -4,8 +4,8 @@ import Item from "../Item";
 import { Link } from "react-router-dom";
 
 const ListItem = ({ list, setLs, searchKey }) => {
-  const filteredList = list.filter(
-    (item) => item.title.toLowerCase().includes(searchKey.toLowerCase()) // Case insensitive search
+  const filteredList = list.filter((item) =>
+    item.title.toLowerCase().includes(searchKey.toLowerCase())
   );
 
   return (
@@ -14,13 +14,13 @@ const ListItem = ({ list, setLs, searchKey }) => {
         {filteredList.length > 0 ? (
           filteredList.map((item) => (
             <li key={item._id}>
-              <Link to={`${item.title}`} className={style.link}>
+              <Link to={`${item.slug}`} className={style.link}>
                 <Item setLs={setLs} item={item} />
               </Link>
             </li>
           ))
         ) : (
-          <p>No projects found</p>
+          <p className="NoProject">No projects found</p>
         )}
       </ul>
     </div>
