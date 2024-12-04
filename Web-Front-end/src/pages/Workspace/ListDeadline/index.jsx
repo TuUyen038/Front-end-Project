@@ -5,13 +5,15 @@ const ListItem = ({ list }) => {
   if (list.length === 0) {
     return <p>No deadlines available.</p>;
   }
+  let count = 0;
   const currentDay = new Date();
   return (
     <div>
       <ul>
         {list.map((item) => {
+          count++;
           const deadline = item.deadline ? new Date(item.deadline) : null;
-          if (deadline && deadline >= currentDay) {
+          if (count <= 4 && deadline && deadline >= currentDay) {
             const formattedDeadline = deadline.toLocaleString();
             return (
               <li key={item.id}>
@@ -21,6 +23,7 @@ const ListItem = ({ list }) => {
           }
           return null;
         })}
+        {console.log(count)}
       </ul>
     </div>
   );

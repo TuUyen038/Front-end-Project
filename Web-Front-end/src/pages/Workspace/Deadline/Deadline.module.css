@@ -16,6 +16,7 @@
 }
 
 .Time {
+    width: 180px;
     height: 100%;
     line-height: 2.5;
     letter-spacing: 0.5px;

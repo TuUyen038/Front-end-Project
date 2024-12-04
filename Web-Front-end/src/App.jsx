@@ -80,7 +80,7 @@ function App() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      localStorage.setItem("isLoggedIn", btoa("true"));
+      localStorage.setItem("isLoggedIn", ("true"));
     } else {
       localStorage.setItem("isLoggedIn", "false");
     }

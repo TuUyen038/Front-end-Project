@@ -1,10 +1,16 @@
 import ListItem from "./ListItem";
 import style from "./Workspace.module.css";
 import ListDeadline from "./ListDeadline";
-import { getProject, getListProject, getListDeadline, getDeadline } from "./services";
+import {
+  getProject,
+  getListProject,
+  getListDeadline,
+  getDeadline,
+} from "./services";
 import { useState, useEffect } from "react";
 import Add from "./AddFunc";
 import Search from "./SearchF";
+import Badge from "@mui/material/Badge";
 // eslint-disable-next-line react/prop-types
 
 function Workspace() {
@@ -12,7 +18,6 @@ function Workspace() {
   const [dl, setDl] = useState([]);
   const [open, setOpen] = useState(false);
   const [keySearch, setKeySearch] = useState("");
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -56,7 +61,14 @@ function Workspace() {
           <section>
             <ListItem list={ls} setLs={setLs} searchKey={keySearch} />
           </section>
-          <h1 className={style.AllDeadline}>DEADLINES</h1>
+          <Badge
+            badgeContent={dl.length}
+            sx={{ width: "110px" }}
+            color="primary"
+          >
+            <h1 className={style.AllDeadline}>DEADLINES</h1>
+          </Badge>
+
           <section>
             <ListDeadline list={dl} />
           </section>

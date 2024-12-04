@@ -19,8 +19,9 @@
 }
 
 .AllDeadline {
-    margin-top: 30px !important;
     position: relative;
+    margin: 0 0 20px !important;
+    line-height: 1.4 !important;
 }
 
 .AllDeadline::before {
@@ -29,7 +30,7 @@
     background: #888;
     height: 1px;
     width: 230px;
-    bottom: 40px;
+    bottom: 44px;
 }
 
 .AddGroup {
@@ -50,8 +51,6 @@
 .BAdd:hover {
     border: 1.5px solid #2D9596;
 }
-
-
 
 .main-content:first-child {
     padding-top: 70px;
@@ -96,3 +95,10 @@
     padding: 5px 0px;
     border-bottom: 1px solid #999;
 }
+
+.Workspaces .css-63ezxx-MuiBadge-root {
+    position: absolute !important;
+    left: 100px !important;
+}
+
+.Workspaces .css-1bfmfmm-MuiBadge-badge {}

@@ -8,7 +8,9 @@
     overflow-x: auto;
     border-radius: 3px;
     flex-wrap: wrap;
+    margin-bottom: 44px;
 }
+
 .bgr {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -18,16 +20,19 @@
     padding-bottom: 7px;
     overflow-x: auto;
     border-radius: 3px;
-    flex-wrap: wrap;   
+    flex-wrap: wrap;
 }
+
 .Listitem li {
     flex: calc(22% - 10px);
     margin-top: 10px;
     margin-bottom: 5px;
 }
+
 .link {
     display: flex;
 }
+
 .NoProject {
     margin-left: 30px;
     display: block;
