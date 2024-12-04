@@ -80,7 +80,7 @@ function App() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      localStorage.setItem("isLoggedIn", btoa("true"));
+      localStorage.setItem("isLoggedIn", ("true"));
     } else {
       localStorage.setItem("isLoggedIn", "false");
     }
@@ -115,7 +115,6 @@ function App() {
                 <Route path="filemanager" element={<FileManager />}></Route>
               </Route>
               <Route path="*" element={<NotFoundPage />} />
-              <Route path="/:name" />
             </Route>
           </Routes>
         </ThemeProvider>

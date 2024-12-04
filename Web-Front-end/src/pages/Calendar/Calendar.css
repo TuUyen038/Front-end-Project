@@ -1,31 +1,35 @@
-  .css-m6adnh-MuiDateCalendar-root{
-    max-height: 320px!important;
-    margin: 0 auto!important ;
+  .css-m6adnh-MuiDateCalendar-root {
+    max-height: 320px !important;
+    margin: 0 auto !important;
+  }
 
-}
   .css-17f9e7e-MuiTypography-root-MuiDayCalendar-weekDayLabel {
-    font-size: 1.2rem!important;
-    
-      }
-  .css-1n1xn3x-MuiPickersSlideTransition-root-MuiDayCalendar-slideTransition{
-    min-height: 220px!important;
+    font-size: 1.2rem !important;
+
+  }
+
+  .css-1n1xn3x-MuiPickersSlideTransition-root-MuiDayCalendar-slideTransition {
+    min-height: 220px !important;
     border: 1px solid #ddd;
     border-radius: 3px;
-    padding: 10px 10px!important;
-  }
-  .css-1rl1vrc-MuiDayCalendar-header {
-    border: 0.5px solid #9999!important;
-    border-radius: 3px;
-    font-weight: 700!important;
-  }
-  .css-17f9e7e-MuiTypography-root-MuiDayCalendar-weekDayLabel {
-    font-weight: 900!important;
-  }
-  .css-y1qs5y-MuiDateCalendar-root {
-    margin-left: 30px!important;
-  }
-  .css-1nxbkmn-MuiPickersCalendarHeader-root{
-    padding-left: 0!important;
-    padding-right: 0px!important;
+    padding: 10px 10px !important;
   }
 
+  .css-1rl1vrc-MuiDayCalendar-header {
+    border: 0.5px solid #9999 !important;
+    border-radius: 3px;
+    font-weight: 700 !important;
+  }
+
+  .css-17f9e7e-MuiTypography-root-MuiDayCalendar-weekDayLabel {
+    font-weight: 900 !important;
+  }
+
+  .css-y1qs5y-MuiDateCalendar-root {
+    margin-left: 30px !important;
+  }
+
+  .css-1nxbkmn-MuiPickersCalendarHeader-root {
+    padding-left: 0 !important;
+    padding-right: 0px !important;
+  }

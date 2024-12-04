@@ -12,10 +12,6 @@ export default function Update({ setLs, item }) {
     e.preventDefault();
     setShowForm(true);
   };
-  const handleClose = (e) => {
-    e.preventDefault();
-    setShowForm(false);
-  };
   const handleInputChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -27,6 +23,7 @@ export default function Update({ setLs, item }) {
   const handleSubmitUpdate = (e) => {
     e.preventDefault();
     handleUpdate(formData);
+    setShowForm(false);
   };
   const handleUpdate = async () => {
     const updatedProject = await updateProject(formData);
@@ -54,13 +51,16 @@ export default function Update({ setLs, item }) {
       </Button>
       {showForm && (
         <div className="form">
-          <div className="blur"></div>
+          <div
+            className="blur"
+            onClick={(e) => {
+              e.preventDefault();
+              setShowForm(false);
+            }}
+          ></div>
 
           <div className="add">
             <div className="main-content" onClick={(e) => e.preventDefault()}>
-              <button className="close" onClick={handleClose}>
-                x
-              </button>
               <div className="row">
                 <p>Name:</p>
                 <Input
