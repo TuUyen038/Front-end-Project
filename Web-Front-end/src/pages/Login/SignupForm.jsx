@@ -7,7 +7,7 @@ import { UserAPI } from "../../apis";
 import { Alert } from "@mui/material";
 import "./components/form.css";
 
-function SignupForm({ onLoginSuccess }) {
+function SignupForm() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -47,15 +47,18 @@ function SignupForm({ onLoginSuccess }) {
     //ĐĂNG KÝ
     const res = await UserAPI.register(username, email, password);
     if (res.ok) {
-      //Đăng ký thành công
-      const userData = await res.json();
-      localStorage.setItem("token", userData.token);
-      localStorage.setItem("user", JSON.stringify(userData.user));
-      localStorage.setItem("isLoggedIn", "true");
-      onLoginSuccess();
-      navigate("/");
+      setAlert({
+        severity: "success",
+        message:
+          "Registration successful! Please check your email to verify and convert to login page.",
+      });
+      setTimeout(() => navigate("/login"), 5500);
     } else {
-      setAlert({ severity: "error", message: "Failed to register!" });
+      const err = await res.json();
+      setAlert({
+        severity: "error",
+        message: err.message || "Failed to register!",
+      });
     }
   };
 
@@ -93,7 +96,7 @@ function SignupForm({ onLoginSuccess }) {
             style={{
               display: "flex",
               justifyContent: "flex-end",
-              marginTop: "0.625rem",
+              marginTop: "1rem",
             }}
           >
             <Link to="/login" className="footer-link">

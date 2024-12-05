@@ -1,9 +1,40 @@
 /* eslint-disable react/prop-types */
-import { Link } from "react-router-dom";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import style from "./Header.module.css";
 import Setting from "../../pages/Setting/Setting";
 import { Button } from "@mui/material";
+import { Account } from "@toolpad/core/Account";
+import {
+  AuthenticationContext,
+  SessionContext,
+} from "@toolpad/core/AppProvider";
+
+const info = {
+  user: {
+    name: localStorage.getItem("name"),
+    email: localStorage.getItem("email"),
+  },
+};
+
 function Header({ checked, onChange }) {
+  const [localStorageAuth, setLocalStorageAuth] = React.useState(info);
+  const authentication = React.useMemo(() => {
+    return {
+      signIn: () => {
+        setLocalStorageAuth(info);
+      },
+      signOut: () => {
+        setLocalStorageAuth(null);
+        localStorage.removeItem("token");
+        localStorage.removeItem("email");
+        localStorage.removeItem("name");
+        localStorage.setItem("isLoggedIn", btoa("false"));
+        window.location.reload(); //load lại trang
+      },
+    };
+  }, []);
+
   return (
     <>
       <header className={style.Header}>
@@ -42,7 +73,12 @@ function Header({ checked, onChange }) {
             <i className="fa-regular fa-bell"></i>
           </Button>
           <div className={style.Account}>
-            <p>M</p>
+            {/* <p>M</p> */}
+            <AuthenticationContext.Provider value={authentication}>
+              <SessionContext.Provider value={localStorageAuth}>
+                <Account />
+              </SessionContext.Provider>
+            </AuthenticationContext.Provider>
           </div>
         </div>
       </header>

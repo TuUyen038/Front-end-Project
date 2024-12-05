@@ -1,17 +1,23 @@
 import ListItem from "./ListItem";
 import style from "./Workspace.module.css";
 import ListDeadline from "./ListDeadline";
-import { getProject, getListProject } from "./services";
-import { useState, useEffect, useRef } from "react";
+import {
+  getProject,
+  getListProject,
+  getListDeadline,
+  getDeadline,
+} from "./services";
+import { useState, useEffect } from "react";
 import Add from "./AddFunc";
+import Search from "./SearchF";
+import Badge from "@mui/material/Badge";
 // eslint-disable-next-line react/prop-types
 
 function Workspace() {
   const [ls, setLs] = useState([]);
-  // eslint-disable-next-line no-unused-vars
-  const refInput = useRef({});
+  const [dl, setDl] = useState([]);
   const [open, setOpen] = useState(false);
-
+  const [keySearch, setKeySearch] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -21,7 +27,16 @@ function Workspace() {
         );
         setLs(projects);
       } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu: ", error);
+        console.error("Lỗi khi lấy dữ liệu project: ", error);
+      }
+      try {
+        const deadlineIds = await getListDeadline();
+        const deadlines = await Promise.all(
+          deadlineIds.map((id) => getDeadline(id))
+        );
+        setDl(deadlines);
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu deadline: ", error);
       }
     };
     fetchData();
@@ -41,13 +56,21 @@ function Workspace() {
             <button className={style.BAdd} onClick={openForm}>
               +
             </button>
+            <Search setKeySearch={setKeySearch} />
           </div>
           <section>
-            <ListItem list={ls} setLs={setLs} />
+            <ListItem list={ls} setLs={setLs} searchKey={keySearch} />
           </section>
-          <h1 className={style.AllDeadline}>DEADLINES</h1>
+          <Badge
+            badgeContent={dl.length}
+            sx={{ width: "110px" }}
+            color="primary"
+          >
+            <h1 className={style.AllDeadline}>DEADLINES</h1>
+          </Badge>
+
           <section>
-            <ListDeadline list={ls} />
+            <ListDeadline list={dl} />
           </section>
         </div>
       </div>
