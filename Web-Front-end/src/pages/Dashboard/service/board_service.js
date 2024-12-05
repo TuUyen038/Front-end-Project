@@ -27,11 +27,11 @@ export const getBoardList = async (projectId, onFail, onSucess) => {
     const boards = await Promise.all(
       data.boardOrderIds.map((id) => getBoard(id))
     );
-
+    console.log(boards);
     onSucess(boards);
   } catch (error) {
     console.error('Error in getBoardList:', error);
-    onFail(); // Hoặc xử lý lỗi theo cách bạn muốn
+    onFail();
   }
 };
 
