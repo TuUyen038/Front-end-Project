@@ -3,7 +3,7 @@ import {
   PROJECT_ENDPOINT,
 } from '../../../../setting/globalVariable';
 
-export const getBoardList = async (projectId) => {
+export const getBoardList = async (projectId, onFail, onSucess) => {
   try {
     const url = PROJECT_ENDPOINT + `${projectId}`;
     const res = await fetch(url, {
@@ -19,7 +19,10 @@ export const getBoardList = async (projectId) => {
 
     const data = await res.json();
 
-    if (!data.boardOrderIds || !Array.isArray(data.boardOrderIds)) {
+    if (
+      !data.boardOrderIds ||
+      !Array.isArray(data.boardOrderIds || data.boardOrderIds.length === 0)
+    ) {
       throw new Error('Invalid response format for board list');
     }
 
@@ -27,10 +30,10 @@ export const getBoardList = async (projectId) => {
       data.boardOrderIds.map((id) => getBoard(id))
     );
 
-    return boards;
+    onSucess(boards);
   } catch (error) {
     console.error('Error in getBoardList:', error);
-    throw error; // Hoặc xử lý lỗi theo cách bạn muốn
+    onFail(); // Hoặc xử lý lỗi theo cách bạn muốn
   }
 };
 

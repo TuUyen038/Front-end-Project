@@ -40,7 +40,7 @@ export default function AppBar() {
             </div>
           </div>
           <div className="RightSide">
-            <div className="AvatarContainer">
+            {/* <div className="AvatarContainer">
               {project.userOrderIds.map((user) => {
                 return (
                   <Avatar
@@ -51,7 +51,7 @@ export default function AppBar() {
                   ></Avatar>
                 );
               })}
-            </div>
+            </div> */}
             <div className="Icon">
               <ShareIcon sx={{ fontSize: '2.4rem' }} />
               <MoreIcon sx={{ fontSize: '2.4rem' }} />
