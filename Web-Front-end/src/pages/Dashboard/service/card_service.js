@@ -2,12 +2,14 @@ import {
   CARD_ENDPOINT,
   COLUMN_ENDPOINT,
 } from '../../../../setting/globalVariable';
+const Token = localStorage.token;
 
 export const getCardList = async (columnId) => {
   const url = COLUMN_ENDPOINT + `${columnId}`;
   const res = await fetch(url, {
     method: 'GET',
     headers: {
+      Authorization: `Bearer ${Token}`,
       'Content-Type': 'application/json',
     },
   });
@@ -26,6 +28,7 @@ export const getCard = async (cardId) => {
   const res = await fetch(url, {
     method: 'GET',
     headers: {
+      Authorization: `Bearer ${Token}`,
       'Content-Type': 'application/json',
     },
   });
@@ -46,6 +49,7 @@ export const addCard = async (payload) => {
     method: 'POST',
     body: JSON.stringify(payload),
     headers: {
+      Authorization: `Bearer ${Token}`,
       'Content-Type': 'application/json',
     },
   });
@@ -64,6 +68,7 @@ export const editCard = async (cardId, payload) => {
     method: 'PUT',
     body: JSON.stringify(payload),
     headers: {
+      Authorization: `Bearer ${Token}`,
       'Content-Type': 'application/json',
     },
   });
@@ -81,6 +86,7 @@ export const deleteCard = async (cardId) => {
   const res = await fetch(url, {
     method: 'DELETE',
     headers: {
+      Authorization: `Bearer ${Token}`,
       'Content-Type': 'application/json',
     },
   });

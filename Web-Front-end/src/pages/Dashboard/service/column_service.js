@@ -2,12 +2,14 @@ import {
   BOARD_ENDPOINT,
   COLUMN_ENDPOINT,
 } from '../../../../setting/globalVariable';
+const Token = localStorage.token;
 
 export const getColumnList = async (boardId) => {
   const url = BOARD_ENDPOINT + `${boardId}`;
   const res = await fetch(url, {
     method: 'GET',
     headers: {
+      Authorization: `Bearer ${Token}`,
       'Content-Type': 'application/json',
     },
   });
@@ -28,6 +30,7 @@ export const getColumn = async (columnId) => {
   const res = await fetch(url, {
     method: 'GET',
     headers: {
+      Authorization: `Bearer ${Token}`,
       'Content-Type': 'application/json',
     },
   });
@@ -48,6 +51,7 @@ export const addColumn = async (payload) => {
     method: 'POST',
     body: JSON.stringify(payload), /// cai nay can phai xem xet lai ne (front end chua dung chuc nang)
     headers: {
+      Authorization: `Bearer ${Token}`,
       'Content-Type': 'application/json',
     },
   });
@@ -65,6 +69,7 @@ export const deleteColumn = async (columnId) => {
   const res = await fetch(url, {
     method: 'DELETE',
     headers: {
+      Authorization: `Bearer ${Token}`,
       'Content-Type': 'application/json',
     },
   });
@@ -83,6 +88,7 @@ export const editColumn = async (columnId, payload) => {
     method: 'PUT',
     body: JSON.stringify(payload),
     headers: {
+      Authorization: `Bearer ${Token}`,
       'Content-Type': 'application/json',
     },
   });

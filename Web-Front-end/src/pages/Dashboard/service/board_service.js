@@ -2,6 +2,7 @@ import {
   BOARD_ENDPOINT,
   PROJECT_ENDPOINT,
 } from '../../../../setting/globalVariable';
+const Token = localStorage.token;
 
 export const getBoardList = async (projectId, onFail, onSucess) => {
   try {
@@ -9,7 +10,7 @@ export const getBoardList = async (projectId, onFail, onSucess) => {
     const res = await fetch(url, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${Token}`,
       },
     });
 
@@ -18,11 +19,8 @@ export const getBoardList = async (projectId, onFail, onSucess) => {
     }
 
     const data = await res.json();
-
-    if (
-      !data.boardOrderIds ||
-      !Array.isArray(data.boardOrderIds || data.boardOrderIds.length === 0)
-    ) {
+    console.log('Response data:', data);
+    if (!Array.isArray(data.boardOrderIds) || data.boardOrderIds.length === 0) {
       throw new Error('Invalid response format for board list');
     }
 
@@ -43,6 +41,7 @@ export const getBoard = async (boardId) => {
     const res = await fetch(url, {
       method: 'GET',
       headers: {
+        Authorization: `Bearer ${Token}`,
         'Content-Type': 'application/json',
       },
     });
@@ -67,6 +66,7 @@ export const addBoard = async (payload) => {
     method: 'POST',
     body: JSON.stringify(payload),
     headers: {
+      Authorization: `Bearer ${Token}`,
       'Content-Type': 'application/json',
     },
   });
@@ -85,6 +85,7 @@ export const editBoard = async (boardId, payload) => {
     method: 'PUT',
     body: JSON.stringify(payload),
     headers: {
+      Authorization: `Bearer ${Token}`,
       'Content-Type': 'application/json',
     },
   });
@@ -102,6 +103,7 @@ export const deleteBoard = async (boardId) => {
   const res = await fetch(url, {
     method: 'DELETE',
     headers: {
+      Authorization: `Bearer ${Token}`,
       'Content-Type': 'application/json',
     },
   });

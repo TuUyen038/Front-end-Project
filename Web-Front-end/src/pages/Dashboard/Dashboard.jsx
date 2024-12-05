@@ -5,33 +5,34 @@ import { useParams } from 'react-router-dom';
 import { getBoardList } from './service/board_service';
 import { getProjectBySlug } from '../../apis/project_service';
 
-//Khi khoi tao mot dashboard thi luon luon co trc 1 board
-
 export default function Dashboard() {
-  // const { project_id } = useOutletContext();
   const [boards, setBoards] = useState([]);
   const [boardId, setboardId] = useState(null);
   const { projectSlug } = useParams();
   const [project, setProject] = useState();
 
   useEffect(() => {
-    setProject(
-      getProjectBySlug(projectSlug, () => {
-        return undefined;
-      })
-    );
+    getProjectBySlug(projectSlug).then((data) => {
+      if (!data) console.log('data is undefined');
+      else setProject(data);
+      // alert(project);
+    });
   }, []);
 
   useEffect(() => {
-    getBoardList(
-      project.id,
-      () => {},
-      (boards) => {
-        console.log(boards);
-        setBoards(boards);
-      }
-    );
-  }, []);
+    console.log(project);
+    if (project)
+      getBoardList(
+        project._id,
+        () => {
+          console.log('can not get board lít');
+        },
+        (boards) => {
+          console.log(boards);
+          setBoards(boards);
+        }
+      );
+  }, [project]);
 
   const handleChange = (e) => {
     setboardId(e.target.value);

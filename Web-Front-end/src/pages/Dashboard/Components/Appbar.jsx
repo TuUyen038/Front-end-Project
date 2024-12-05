@@ -1,4 +1,4 @@
-import { Avatar } from '@mui/material';
+// import { Avatar } from '@mui/material';
 import ShareIcon from '@mui/icons-material/ShareOutlined';
 import MoreIcon from '@mui/icons-material/MoreHoriz';
 import { Link, Outlet, useParams } from 'react-router-dom';
@@ -12,11 +12,10 @@ export default function AppBar() {
   const [project, setProject] = useState();
 
   useEffect(() => {
-    setProject(
-      getProjectBySlug(projectSlug, () => {
-        return undefined;
-      })
-    );
+    getProjectBySlug(projectSlug).then((data) => {
+      if (!data) console.log('no data');
+      else setProject(data);
+    });
   }, []);
 
   if (!project) return <NotFoundPage />;
