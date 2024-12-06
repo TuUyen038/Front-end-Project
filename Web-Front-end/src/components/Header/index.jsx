@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import style from "./Header.module.css";
 import Setting from "../../pages/Setting/Setting";
 import { Button } from "@mui/material";
@@ -10,7 +11,7 @@ import {
   SessionContext,
 } from "@toolpad/core/AppProvider";
 
-const info = {
+const updatedInfo = {
   user: {
     name: localStorage.getItem("name"),
     email: localStorage.getItem("email"),
@@ -18,18 +19,30 @@ const info = {
 };
 
 function Header({ checked, onChange }) {
-  const [localStorageAuth, setLocalStorageAuth] = React.useState(info);
+  const [localStorageAuth, setLocalStorageAuth] = React.useState(updatedInfo);
+
+  React.useEffect(() => {
+    const updatedInfo = {
+      user: {
+        name: localStorage.getItem("name"),
+        email: localStorage.getItem("email"),
+      },
+    };
+    setLocalStorageAuth(updatedInfo);
+  }, []);
+
   const authentication = React.useMemo(() => {
     return {
       signIn: () => {
-        setLocalStorageAuth(info);
+        setLocalStorageAuth(updatedInfo);
       },
+
       signOut: () => {
         setLocalStorageAuth(null);
         localStorage.removeItem("token");
         localStorage.removeItem("email");
         localStorage.removeItem("name");
-        localStorage.setItem("isLoggedIn", btoa("false"));
+        localStorage.setItem("isLoggedIn", "false");
         window.location.reload(); //load lại trang
       },
     };

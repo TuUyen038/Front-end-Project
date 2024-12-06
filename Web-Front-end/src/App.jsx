@@ -73,13 +73,12 @@ function App() {
     },
   });
 
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const storedValue = localStorage.getItem("isLoggedIn");
-    return storedValue ? atob(storedValue) === "true" : false;
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("isLoggedIn") === "true"
+  );
 
   useEffect(() => {
-    localStorage.setItem("isLoggedIn", btoa(isLoggedIn ? "true" : "false"));
+    localStorage.setItem("isLoggedIn", isLoggedIn ? "true" : "false");
   }, [isLoggedIn]);
 
   return (
