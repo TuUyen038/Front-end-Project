@@ -3,11 +3,7 @@ import { useEffect, useState } from 'react';
 import Column from './Column';
 import AddIcon from '@mui/icons-material/Add';
 import PropTypes from 'prop-types';
-import {
-  addColumn,
-  deleteColumn,
-  getColumnList,
-} from '../service/column_service';
+import { getColumnList } from '../service/column_service';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function Board({ board_id }) {
@@ -25,37 +21,26 @@ export default function Board({ board_id }) {
   }, [board_id]);
 
   const AddColumn = () => {
-    addColumn({
-      title: 'NEW',
-      description: 'None',
-    }).then((data) => {
-      if (!data) {
-        console.log('can not add new column (BOARD)');
-        return;
-      }
-      setColumns(data);
-    });
-
-    console.log(columns);
+    // socket.io
   };
 
   const DeleteColumn = (id) => {
-    setColumns(deleteColumn(id));
+    // socket.io
   };
 
   return (
     <Stack direction="column" className="Board">
       <Stack direction="row" className="Main">
-        {columns.map((column) => {
+        {/* {columns.map((column) => {
           return (
             <Column
               title={column.title}
-              key={column.id}
-              column_id={column.id}
-              delete={() => DeleteColumn(column.id)}
+              key={column._id}
+              column_id={column._id}
+              delete={() => DeleteColumn(column._id)}
             ></Column>
           );
-        })}
+        })} */}
         <Button
           variant="contained"
           className="add_board"

@@ -82,7 +82,7 @@ export default function Dashboard() {
             ))}
           </Select>
         </Stack>
-        {/* <Board board_id={boardId} /> */}
+        <Board board_id={boardId} />
       </div>
       <button onClick={handleAdd}>AddBoard</button>
     </div>
