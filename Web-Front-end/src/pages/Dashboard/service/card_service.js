@@ -2,9 +2,10 @@ import {
   CARD_ENDPOINT,
   COLUMN_ENDPOINT,
 } from '../../../../setting/globalVariable';
-const Token = localStorage.token;
 
 export const getCardList = async (columnId) => {
+  const Token = localStorage.token;
+
   const url = COLUMN_ENDPOINT + `${columnId}`;
   const res = await fetch(url, {
     method: 'GET',
@@ -24,6 +25,8 @@ export const getCardList = async (columnId) => {
 };
 
 export const getCard = async (cardId) => {
+  const Token = localStorage.token;
+
   const url = CARD_ENDPOINT + `${cardId}`;
   const res = await fetch(url, {
     method: 'GET',
@@ -44,6 +47,8 @@ export const getCard = async (cardId) => {
 // nhung thao tac se can chuyen doi sang socket.io / real-time
 
 export const addCard = async (payload) => {
+  const Token = localStorage.token;
+
   const url = CARD_ENDPOINT;
   const res = await fetch(url, {
     method: 'POST',
@@ -63,6 +68,8 @@ export const addCard = async (payload) => {
 };
 
 export const editCard = async (cardId, payload) => {
+  const Token = localStorage.token;
+
   const url = CARD_ENDPOINT + `${cardId}`;
   const res = await fetch(url, {
     method: 'PUT',
@@ -82,6 +89,8 @@ export const editCard = async (cardId, payload) => {
 };
 
 export const deleteCard = async (cardId) => {
+  const Token = localStorage.token;
+
   const url = CARD_ENDPOINT + `${cardId}`;
   const res = await fetch(url, {
     method: 'DELETE',

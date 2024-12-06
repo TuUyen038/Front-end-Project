@@ -14,6 +14,10 @@ export default function Dashboard() {
   const [newBoard, setNewBoard] = useState('');
 
   useEffect(() => {
+    if (!projectSlug) {
+      console.log('slug is incorrect format');
+      return;
+    }
     getProjectBySlug(projectSlug).then((data) => {
       if (!data) console.log('data is undefined');
       else setProject(data);
@@ -32,7 +36,7 @@ export default function Dashboard() {
           console.log(boards);
           setBoards(boards);
           if (boards.length > 0 && !boardId) {
-            setBoardId(boards[0].id);
+            setBoardId(boards[0]._id);
           }
         }
       );
@@ -72,13 +76,13 @@ export default function Dashboard() {
             }}
           >
             {boards.map((board) => (
-              <MenuItem key={board._id} value={board.id}>
+              <MenuItem key={board._id} value={board._id}>
                 {board.title}
               </MenuItem>
             ))}
           </Select>
         </Stack>
-        <Board board_id={boardId} />
+        {/* <Board board_id={boardId} /> */}
       </div>
       <button onClick={handleAdd}>AddBoard</button>
     </div>

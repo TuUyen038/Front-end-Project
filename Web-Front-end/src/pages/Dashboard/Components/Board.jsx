@@ -14,16 +14,28 @@ export default function Board({ board_id }) {
   const [columns, setColumns] = useState([]);
 
   useEffect(() => {
-    setColumns(getColumnList(board_id));
-  }, []);
+    getColumnList(board_id).then((data) => {
+      if (!data) {
+        console.log('no date (Board)');
+        return;
+      }
+      setColumns(data);
+      console.log(data);
+    });
+  }, [board_id]);
 
   const AddColumn = () => {
-    setColumns(
-      addColumn({
-        id: uuidv4(),
-        title: 'NEW',
-      })
-    );
+    addColumn({
+      title: 'NEW',
+      description: 'None',
+    }).then((data) => {
+      if (!data) {
+        console.log('can not add new column (BOARD)');
+        return;
+      }
+      setColumns(data);
+    });
+
     console.log(columns);
   };
 

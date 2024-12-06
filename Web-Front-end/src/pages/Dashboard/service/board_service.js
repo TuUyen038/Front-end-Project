@@ -2,9 +2,10 @@ import {
   BOARD_ENDPOINT,
   PROJECT_ENDPOINT,
 } from '../../../../setting/globalVariable';
-const Token = localStorage.token;
 
 export const getBoardList = async (projectId, onFail, onSucess) => {
+  const Token = localStorage.token;
+
   try {
     const url = PROJECT_ENDPOINT + `${projectId}`;
     const res = await fetch(url, {
@@ -36,6 +37,8 @@ export const getBoardList = async (projectId, onFail, onSucess) => {
 };
 
 export const getBoard = async (boardId) => {
+  const Token = localStorage.token;
+
   try {
     const url = BOARD_ENDPOINT + `${boardId}`;
     const res = await fetch(url, {
@@ -61,6 +64,8 @@ export const getBoard = async (boardId) => {
 // lam them thao tac them board va xoa board nua (front-end)
 // nhung thao tac se can chuyen doi sang socket.io / real-time
 export const addBoard = async (payload) => {
+  const Token = localStorage.token;
+
   const url = BOARD_ENDPOINT;
   const res = await fetch(url, {
     method: 'POST',
@@ -80,6 +85,8 @@ export const addBoard = async (payload) => {
 };
 
 export const editBoard = async (boardId, payload) => {
+  const Token = localStorage.token;
+
   const url = BOARD_ENDPOINT + `${boardId}`;
   const res = await fetch(url, {
     method: 'PUT',
@@ -99,6 +106,8 @@ export const editBoard = async (boardId, payload) => {
 };
 
 export const deleteBoard = async (boardId) => {
+  const Token = localStorage.token;
+
   const url = BOARD_ENDPOINT + `${boardId}`;
   const res = await fetch(url, {
     method: 'DELETE',
