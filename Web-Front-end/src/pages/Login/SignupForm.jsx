@@ -45,6 +45,7 @@ function SignupForm() {
     }
 
     //ĐĂNG KÝ
+    setAlert({ severity: "info", message: "Please wait a minute!" });
     const res = await UserAPI.register(username, email, password);
     if (res.ok) {
       setAlert({
