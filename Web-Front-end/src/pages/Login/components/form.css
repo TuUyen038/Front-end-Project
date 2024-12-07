@@ -89,13 +89,13 @@
     display: flex;
     justify-content: center;
     gap: 1.4rem;
-    padding-bottom: 1.8rem;
-    padding-top: 1rem;
+    padding-bottom: 1.4rem;
+    padding-top: 0.8rem;
   }
   
 .otp-input {
     width: 4rem;
-    height: 5.4rem;
+    height: 5.6rem;
     text-align: center;
     font-size: large;
     border: 0.1rem solid gray;
