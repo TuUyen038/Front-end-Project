@@ -33,7 +33,12 @@ export default function Task({ task, index, onDelete }) {
     item: { ...task, index },
     end: (item, monitor) => {
       if (!monitor.didDrop()) {
-        console.log('Drag canceled');
+        const dropResult = monitor.getDropResult();
+        if (!dropResult) {
+          console.log(`Card ${item._id} was dropped outside`);
+          return;
+        }
+        console.log(`Card dropped into column: ${dropResult.columnId}`);
       }
     },
     collect: (monitor) => ({

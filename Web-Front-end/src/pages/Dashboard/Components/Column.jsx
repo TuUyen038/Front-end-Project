@@ -101,7 +101,7 @@ export default function Column(props) {
     const hoverClientY =
       clientOffset.y - hoverBoundingRect.top + ref.current.scrollTop;
 
-    const CARD_HEIGHT = 50; // Chiều cao của mỗi card (giả định)
+    const CARD_HEIGHT = 40.58; // Chiều cao của mỗi card (giả định)
     const hoverIndex = Math.floor(hoverClientY / CARD_HEIGHT);
 
     // Trả về vị trí hợp lệ (trong khoảng [0, cardCount])
@@ -111,31 +111,40 @@ export default function Column(props) {
   const [, drop] = useDrop(() => ({
     accept: ItemTypes.CARD,
     hover: (item, monitor) => {
+      if (!monitor.isOver) return;
       if (monitor.isOver()) {
         setHoverIndex(getHoverIndex(monitor, columnRef, tasks.length));
+        props.moveCard(item._id, item.columnId, props.column_id, hoverIndex);
       }
     },
     drop: (item, monitor) => {
-      if (!monitor.didDrop()) {
-        console.log('card dropped out of valid area');
-      } else if (
-        item.index !== hoverIndex ||
-        item.columnId !== props.column_id
-      ) {
-        props.moveCard(item._id, item.columnId, props.column_id, hoverIndex);
-        item.index = hoverIndex;
-        item.columnId = props.column_id;
+      console.log('DROPPED: ', monitor.getDropResult());
+      console.log(`Item dropped in column ${props.column_id}`);
+      if (monitor.didDrop()) {
+        console.log('Da dc xu ly o drop con');
+        return undefined;
       }
+      // props.moveCard(item._id, item.columnId, props.column_id, hoverIndex);
+      setTasks((prev) => {
+        // prev.splice(hoverIndex, 1);
+        prev.splice(hoverIndex, 0, item);
+        return [...prev];
+      });
+      return { columnId: props.column_id };
+      // else if (
+      //   item.index !== hoverIndex ||
+      //   item.columnId !== props.column_id
+      // ) {
+      //   props.moveCard(item._id, item.columnId, props.column_id, hoverIndex);
+      //   item.index = hoverIndex;
+      //   item.columnId = props.column_id;
+      // }
     },
   }));
 
   return (
     <Stack
       className="Column"
-      ref={(node) => {
-        columnRef.current = node;
-        drop(node);
-      }}
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -154,9 +163,14 @@ export default function Column(props) {
         </Stack>
         <Stack
           className="Main"
+          ref={(node) => {
+            columnRef.current = node;
+            drop(node);
+          }}
           sx={{
             height: 'auto',
             paddingTop: 2,
+            minHeight: 100,
           }}
         >
           {tasks.map((task, index) => {
