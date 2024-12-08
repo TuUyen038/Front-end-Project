@@ -1,11 +1,11 @@
-import { BACKEND_ENDPOINT } from '../../setting/globalVariable';
+import { USER_ENDPOINT } from '../../setting/globalVariable';
 
-const baseURL = BACKEND_ENDPOINT;
+const baseURL = USER_ENDPOINT;
 
 export const UserAPI = {
   login: (email, password) => {
     try {
-      const url = `${baseURL}/users/login`;
+      const url = `${baseURL}/login`;
       const body = {
         email,
         password,
@@ -25,7 +25,7 @@ export const UserAPI = {
 
   register: (name, email, password) => {
     try {
-      const url = `${baseURL}/users`;
+      const url = `${baseURL}/`;
       const body = {
         name,
         email,
@@ -46,7 +46,7 @@ export const UserAPI = {
 
   getUser: (token) => {
     try {
-      const url = `${baseURL}/users/me`;
+      const url = `${baseURL}/me`;
       const res = fetch(url, {
         method: 'GET',
         headers: {
@@ -63,7 +63,7 @@ export const UserAPI = {
 
   confirmUserEmail: (email, verificationToken) => {
     try {
-      const url = `${baseURL}/users/confirmation/${email}/${verificationToken}`
+      const url = `${baseURL}/confirmation/${email}/${verificationToken}`;
       const res = fetch(url, {
         method: 'GET',
         headers: {
@@ -78,12 +78,70 @@ export const UserAPI = {
 
   resendVerification: (email) => {
     try {
-      const url = `${baseURL}/users/resendverificationlink/${email}`
+      const url = `${baseURL}/resendverificationlink/${email}`;
       const res = fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
+      });
+      return res;
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
+
+  forgotPassword: (email) => {
+    try {
+      const url = `${baseURL}/forgotpassword`;
+      const body = {
+        email,
+      };
+      const res = fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      return res;
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
+
+  verificationOTP: (token) => {
+    try {
+      const url = `${baseURL}/verificationotp`;
+      const body = {
+        token,
+      };
+      const res = fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      return res;
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
+
+  updateNewPassword: (userId, newpassword) => {
+    try {
+      const url = `${baseURL}/newpassword`;
+      const body = {
+        userId,
+        newpassword,
+      };
+      const res = fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
       });
       return res;
     } catch (err) {

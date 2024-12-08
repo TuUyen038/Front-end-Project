@@ -1,7 +1,7 @@
 import "./App.css";
 import Header from "./components/Header";
 import Workspace from "./pages/Workspace";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Calendar from "./pages/Calendar";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AppBar from "./pages/Dashboard/Components/Appbar";
@@ -75,18 +75,13 @@ function App() {
     },
   });
 
-  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("isLoggedIn") === "true"
   );
 
   useEffect(() => {
-    if (isLoggedIn) {
-      localStorage.setItem("isLoggedIn", ("true"));
-    } else {
-      localStorage.setItem("isLoggedIn", "false");
-    }
-  }, [isLoggedIn, navigate]);
+    localStorage.setItem("isLoggedIn", isLoggedIn ? "true" : "false");
+  }, [isLoggedIn]);
 
   return (
     <>
