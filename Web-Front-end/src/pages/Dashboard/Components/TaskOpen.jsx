@@ -163,7 +163,7 @@ const TaskOpen = forwardRef(
                 {comments
                   ? comments.map((com) =>
                       com.cardId === task._id ? (
-                        <p key={com._id}>com.description</p>
+                        <p key={com._id}>{com.description}</p>
                       ) : null
                     )
                   : null}
