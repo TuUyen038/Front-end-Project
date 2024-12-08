@@ -1,4 +1,4 @@
-import { Avatar } from '@mui/material';
+// import { Avatar } from '@mui/material';
 import ShareIcon from '@mui/icons-material/ShareOutlined';
 import MoreIcon from '@mui/icons-material/MoreHoriz';
 import { Link, Outlet, useParams } from 'react-router-dom';
@@ -12,11 +12,10 @@ export default function AppBar() {
   const [project, setProject] = useState();
 
   useEffect(() => {
-    setProject(
-      getProjectBySlug(projectSlug, () => {
-        return undefined;
-      })
-    );
+    getProjectBySlug(projectSlug).then((data) => {
+      if (!data) console.log('no data');
+      else setProject(data);
+    });
   }, []);
 
   if (!project) return <NotFoundPage />;
@@ -27,7 +26,7 @@ export default function AppBar() {
           <div className="LeftSide">
             <div className="ProjectTitle">
               <Link to="" className="ProjectName">
-                <h2>{project.name}</h2>
+                <h2>{project.title}</h2>
               </Link>
             </div>
             <div className="Others">
@@ -40,7 +39,7 @@ export default function AppBar() {
             </div>
           </div>
           <div className="RightSide">
-            <div className="AvatarContainer">
+            {/* <div className="AvatarContainer">
               {project.userOrderIds.map((user) => {
                 return (
                   <Avatar
@@ -51,7 +50,7 @@ export default function AppBar() {
                   ></Avatar>
                 );
               })}
-            </div>
+            </div> */}
             <div className="Icon">
               <ShareIcon sx={{ fontSize: '2.4rem' }} />
               <MoreIcon sx={{ fontSize: '2.4rem' }} />

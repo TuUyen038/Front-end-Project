@@ -19,7 +19,7 @@ import DeletePopUp from '../../../components/DeletePopUp/DeletePopUp';
 import CloseIcon from '@mui/icons-material/Close';
 import { forwardRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { deleteCard } from '../service/card_service';
+// import { deleteCard } from '../service/card_service';
 
 const TaskOpen = forwardRef(({ task, onClose, onDelete }, ref) => {
   const [openDelete, setOpenDelete] = useState(false);
@@ -31,7 +31,7 @@ const TaskOpen = forwardRef(({ task, onClose, onDelete }, ref) => {
     setOpenDelete(false);
   };
   const saveDelete = () => {
-    deleteCard(task.id);
+    // deleteCard(task.id);
     onDelete();
     // setOpenDelete(false);
   };

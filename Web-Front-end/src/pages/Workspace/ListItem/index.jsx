@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
-import style from "./ListItem.module.css";
-import Item from "../Item";
-import { Link } from "react-router-dom";
+import style from './ListItem.module.css';
+import Item from '../Item';
+import { Link } from 'react-router-dom';
 
 const ListItem = ({ list, setLs, searchKey }) => {
   const filteredList = list.filter((item) =>

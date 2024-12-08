@@ -3,45 +3,88 @@ import { useEffect, useState } from 'react';
 import Column from './Column';
 import AddIcon from '@mui/icons-material/Add';
 import PropTypes from 'prop-types';
-import {
-  addColumn,
-  deleteColumn,
-  getColumnList,
-} from '../service/column_service';
+import { getColumnList } from '../service/column_service';
 import { v4 as uuidv4 } from 'uuid';
+import { socket } from '../../../../setting/socket';
 
 export default function Board({ board_id }) {
   const [columns, setColumns] = useState([]);
 
   useEffect(() => {
-    setColumns(getColumnList(board_id));
+    getColumnList(board_id).then((data) => {
+      if (!data) {
+        console.log('no data (Board)');
+        return;
+      }
+      setColumns(data);
+      console.log(data);
+    });
+  }, [board_id]);
+
+  const handleAddColumn = (payload) => {
+    let newColumn = { ...payload, boardId: board_id };
+    let tmpId = uuidv4();
+    let tmpColumn = { ...newColumn, _id: tmpId };
+    console.log('add a new column:' + newColumn);
+    setColumns((prev) => [...prev, tmpColumn]);
+    socket.emit('addColumn', newColumn, (response) => {
+      if (response.success) {
+        const colData = response.data;
+        setColumns((prev) =>
+          prev.map((col) => (col._id === tmpId ? colData : col))
+        );
+        console.log(columns);
+      } else {
+        console.log('Board: Fail to add column');
+      }
+    });
+  };
+  // const handleUpdateColumn = (id, payload) => {
+  //   setColumns((prev) =>
+  //     prev.map((col) => (col._id === id ? { ...col, ...payload } : col))
+  //   );
+  //   socket.emit('updateColumn', id, payload);
+  // };
+
+  const handleDeleteColumn = (id) => {
+    setColumns((prev) => prev.filter((col) => col._id !== id));
+    socket.emit('deleteColumn', id);
+  };
+
+  useEffect(() => {
+    const handleAdd = (newColumn) => {
+      setColumns((prev) => [...prev, newColumn]);
+    };
+    const handleUpdate = (id, payload) => {
+      setColumns((prev) =>
+        prev.map((col) => (col._id === id ? { ...col, ...payload } : col))
+      );
+    };
+    const handleDelete = (id) => {
+      setColumns((prev) => prev.filter((col) => col._id !== id));
+    };
+
+    socket.on('columnAdded', handleAdd);
+    socket.on('columnUpdated', handleUpdate);
+    socket.on('columnDeleted', handleDelete);
+
+    return () => {
+      socket.off('columnAdded', handleAdd);
+      socket.off('columnUpdated', handleUpdate);
+      socket.off('columnDeleted', handleDelete);
+    };
   }, []);
-
-  const AddColumn = () => {
-    setColumns(
-      addColumn({
-        id: uuidv4(), // Tạo id mới dựa trên độ dài mảng // tạm thời hoy
-        title: 'NEW',
-        tasks: [],
-      })
-    );
-    console.log(columns);
-  };
-
-  const DeleteColumn = (id) => {
-    setColumns(deleteColumn(id));
-  };
-
   return (
     <Stack direction="column" className="Board">
       <Stack direction="row" className="Main">
         {columns.map((column) => {
           return (
             <Column
-              title={column.name}
-              key={column.id}
-              column_id={column.id}
-              delete={() => DeleteColumn(column.id)}
+              title={column.title}
+              key={column._id}
+              board_id={board_id}
+              column_id={column._id}
+              delete={() => handleDeleteColumn(column._id)}
             ></Column>
           );
         })}
@@ -55,7 +98,7 @@ export default function Board({ board_id }) {
             height: '3rem',
             width: '20rem',
           }}
-          onClick={AddColumn}
+          onClick={() => handleAddColumn({ title: 'Test column' })}
         >
           New
         </Button>

@@ -1,17 +1,17 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useRef, useState } from "react";
-import { addProject } from "../services";
-import "./AddF.css";
-import Input from "@mui/material/Input";
-import { Button, TextField } from "@mui/material";
+import React, { useRef, useState } from 'react';
+import { addProject } from '../services';
+import './AddF.css';
+import Input from '@mui/material/Input';
+import { Button, TextField } from '@mui/material';
 
 export default function Add({ setLs, open, setOpen }) {
   const refInput = useRef({});
-  const [emails, setEmails] = useState([""]);
+  const [emails, setEmails] = useState(['']);
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
+    title: '',
+    description: '',
   });
 
   const handleChangeE = (e, index) => {
@@ -20,7 +20,7 @@ export default function Add({ setLs, open, setOpen }) {
     setEmails(newEmails);
   };
   const handleAddEmail = () => {
-    setEmails([...emails, ""]);
+    setEmails([...emails, '']);
     console.log(emails);
   };
 
@@ -54,7 +54,7 @@ export default function Add({ setLs, open, setOpen }) {
               name="title"
               value={formData.title}
               placeholder="Project name"
-              sx={{ marginBottom: "15px" }}
+              sx={{ marginBottom: '15px' }}
             />
           </div>
           <div className="row">
@@ -64,7 +64,7 @@ export default function Add({ setLs, open, setOpen }) {
               name="description"
               value={formData.description}
               placeholder="Description"
-              sx={{ marginBottom: "15px" }}
+              sx={{ marginBottom: '15px' }}
             />
           </div>
 
@@ -78,7 +78,7 @@ export default function Add({ setLs, open, setOpen }) {
                 name={`email-${index}`}
                 value={email}
                 placeholder="Email"
-                sx={{ marginBottom: "10px" }}
+                sx={{ marginBottom: '10px' }}
               />
             </div>
           ))}
@@ -87,9 +87,9 @@ export default function Add({ setLs, open, setOpen }) {
           </div>
           <Button
             sx={{
-              fontSize: "1.5rem",
-              marginTop: "27px",
-              marginLeft: "-1px",
+              fontSize: '1.5rem',
+              marginTop: '27px',
+              marginLeft: '-1px',
             }}
             onClick={handClickAdd}
             variant="outlined"

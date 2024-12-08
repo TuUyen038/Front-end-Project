@@ -7,63 +7,84 @@ import Task from './Task';
 import PropTypes from 'prop-types';
 import DeletePopUp from '../../../components/DeletePopUp/DeletePopUp';
 import AddNewTask from './AddNewTask';
-import { addCard, deleteCard, getCardList } from '../service/card_service';
+import { getCardList } from '../service/card_service';
 import { v4 as uuidv4 } from 'uuid';
+import { socket } from '../../../../setting/socket';
 
 export default function Column(props) {
   const [title, setTitle] = useState(props.title || 'New');
   const [tasks, setTasks] = useState([]);
-  useEffect(() => {
-    setTasks(getCardList(props.column_id));
-  }, []);
-
   const [openDeletePopUp, setOpenDeletePopUp] = useState(false);
   const [openTaskPopUp, setOpenTaskPopUp] = useState(false);
   const [tempTask, setTempTask] = useState('');
 
-  const OpenDeletePopUp = () => {
-    setOpenDeletePopUp(true);
-  };
+  useEffect(() => {
+    getCardList(props.column_id)
+      .then((data) => {
+        if (!data) console.log('COLUMN: can get card list');
+        else {
+          setTasks(data);
+        }
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  }, [props.column_id]);
 
-  const CloseDeletePopUp = () => {
-    setOpenDeletePopUp(false);
-  };
-
-  const OpenTaskPopUp = () => {
-    setOpenTaskPopUp(true);
-  };
-
-  const CloseTaskPopUp = () => {
-    setOpenTaskPopUp(false);
-  };
-
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
-  };
-
-  const handleTempTaskChange = (event) => {
-    setTempTask(event.target.value);
-  };
-
-  const AddTask = () => {
-    if (tempTask != '') {
-      setTasks(
-        addCard({
-          ...tasks,
-          id: uuidv4(),
-          title: tempTask,
-        })
+  useEffect(() => {
+    const addCard = (newCard) => {
+      setTasks((prev) => [...prev, newCard]);
+    };
+    const updateCard = (id, payload) => {
+      setTasks((prev) =>
+        prev.map((card) => (card._id === id ? { ...card, ...payload } : card))
       );
+    };
+    const deleteCard = (id) => {
+      setTasks((prev) => prev.filter((card) => card._id !== id));
+    };
 
-      setTempTask('');
-    }
+    socket.on('cardAdded', addCard);
+    socket.on('cardUpdated', updateCard);
+    socket.on('cardDeleted', deleteCard);
+
+    return () => {
+      socket.off('cardAdded', addCard);
+      socket.off('cardUpdated', updateCard);
+      socket.off('cardDeleted', deleteCard);
+    };
+  });
+
+  const handleAddCard = (payload) => {
+    let newCard = {
+      ...payload,
+      columnId: props.column_id,
+      boardId: props.board_id,
+    };
+    let tmpId = uuidv4();
+    let tmpCard = { ...newCard, _id: tmpId };
+    setTasks((prev) => [...prev, tmpCard]);
+
+    socket.emit('addCard', newCard, (response) => {
+      if (response.success) {
+        const cardData = response.data;
+        setTasks((prev) =>
+          prev.map((card) => (card._id === tmpId ? cardData : card))
+        );
+      } else {
+        console.log('COLUMN: Fail to add card, Error: ' + response.error);
+      }
+    });
+
+    setTempTask('');
+
     // else pop up sth like "make a new task unsuccess cause of null error"
     setOpenTaskPopUp(false);
   };
 
-  const DeleteTaskFromColumn = (id) => {
-    setTasks(deleteCard(id));
-    console.log(tasks);
+  const handleDeleteCard = (id) => {
+    setTasks((prev) => prev.filter((card) => card._id !== id));
+    socket.emit('deleteCard', id);
   };
 
   return (
@@ -81,7 +102,7 @@ export default function Column(props) {
         <Stack className="Title" direction="row">
           <Input
             value={title}
-            onChange={handleTitleChange}
+            onChange={(e) => setTitle(e.target.value)}
             sx={{ fontSize: '1.6rem' }}
           />
           <MoreIcon sx={{ fontSize: '2.4rem' }} />
@@ -96,10 +117,10 @@ export default function Column(props) {
           {tasks.map((task) => {
             return (
               <Task
-                key={task.id}
+                key={task._id}
                 task={task}
                 className="Task"
-                onDelete={() => DeleteTaskFromColumn(task.id)}
+                onDelete={() => handleDeleteCard(task.id)}
               ></Task>
             );
           })}
@@ -117,24 +138,24 @@ export default function Column(props) {
           marginTop: '1.5rem', // not this one
         }}
       >
-        <Button onClick={OpenTaskPopUp} title="add">
+        <Button onClick={() => setOpenTaskPopUp(true)} title="add">
           <AddIcon className="Icon" sx={{ fontSize: '2.4rem' }} />
         </Button>
 
-        <Button onClick={OpenDeletePopUp} title="delete">
+        <Button onClick={() => setOpenDeletePopUp(true)} title="delete">
           <DeleteIcon className="Icon" sx={{ fontSize: '2.4rem' }} />
         </Button>
       </Stack>
       <DeletePopUp
         open={openDeletePopUp}
-        onClose={CloseDeletePopUp}
+        onClose={() => setOpenDeletePopUp(false)}
         onDelete={props.delete}
       />
       <AddNewTask
         open={openTaskPopUp}
-        onClose={CloseTaskPopUp}
-        onSave={AddTask}
-        onChange={handleTempTaskChange}
+        onClose={() => setOpenTaskPopUp(false)}
+        onSave={() => handleAddCard({ title: tempTask })}
+        onChange={(e) => setTempTask(e.target.value)}
       />
     </Stack>
   );
@@ -143,5 +164,6 @@ export default function Column(props) {
 Column.propTypes = {
   title: PropTypes.string,
   column_id: PropTypes.string,
+  board_id: PropTypes.string,
   delete: PropTypes.func,
 };

@@ -1,18 +1,20 @@
 import { PROJECT_ENDPOINT } from '../../setting/globalVariable';
+const Token = localStorage.token;
 
-export const getProjectBySlug = async (slug, onFail) => {
-  const url = PROJECT_ENDPOINT + `${slug}`; // sua cai nay hoy ne
+export const getProjectBySlug = async (slug) => {
+  const url = PROJECT_ENDPOINT + `${slug}`;
   const res = await fetch(url, {
     method: 'GET',
     headers: {
-      'Content-Type': 'apllication/json',
+      Authorization: `Bearer ${Token}`,
     },
   });
 
   if (!res.ok) {
-    onFail();
+    alert('res not ok');
   }
 
-  const data = await res.json();
-  return data;
+  // const data = await res.json();
+  // console.log('Response data:', data);
+  return res.json();
 };
