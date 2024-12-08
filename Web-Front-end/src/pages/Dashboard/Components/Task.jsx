@@ -5,8 +5,10 @@ import Modal from '@mui/material/Modal';
 import { Avatar, AvatarGroup, Box, Stack, Typography } from '@mui/material';
 import DeadlineIcon from '@mui/icons-material/AccessAlarm';
 import DiscussIcon from '@mui/icons-material/Forum';
+import { useDrag } from 'react-dnd';
+import { ItemTypes } from '../dnd/constants';
 
-export default function Task({ task, onDelete }) {
+export default function Task({ task, index, onDelete }) {
   const [isOpened, setIsOpened] = useState(false);
   // const navigate = useNavigate();
   const OpenTask = () => {
@@ -26,12 +28,31 @@ export default function Task({ task, onDelete }) {
     // se chuyen thanh members = task.userOrderIds
   ];
 
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: ItemTypes.CARD,
+    item: { ...task, index },
+    end: (item, monitor) => {
+      if (!monitor.didDrop()) {
+        const dropResult = monitor.getDropResult();
+        if (!dropResult) {
+          console.log(`Card ${item._id} was dropped outside`);
+          //reset here
+          return;
+        }
+        console.log(`Card dropped into column: ${dropResult.columnId}`);
+      }
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
+
   // get detailed info of one card, like: title, description, deadline, member
   useEffect(() => {});
 
   return (
     <>
-      <div className="Task" draggable onClick={OpenTask}>
+      <div className="Task" draggable onClick={OpenTask} ref={drag}>
         <Stack
           sx={{
             backgroundColor: 'white',
@@ -40,6 +61,7 @@ export default function Task({ task, onDelete }) {
             borderRadius: '1rem',
             // border: '1px #2D9596 ',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            opacity: isDragging ? 0.5 : 1,
           }}
         >
           <Typography className="task-title">
@@ -116,5 +138,6 @@ export default function Task({ task, onDelete }) {
 
 Task.propTypes = {
   task: PropTypes.object,
+  index: PropTypes.number,
   onDelete: PropTypes.func,
 };

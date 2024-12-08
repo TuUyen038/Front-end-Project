@@ -51,6 +51,33 @@ export default function Board({ board_id }) {
     socket.emit('deleteColumn', id);
   };
 
+  const moveCard = (
+    cardId,
+    source_column_id,
+    target_column_id,
+    target_index
+  ) => {
+    setColumns((prev) => {
+      let sourceCol = prev.find((col) => col._id === source_column_id);
+      let targetCol = prev.find((col) => col._id === target_column_id);
+      if (sourceCol === targetCol) {
+        sourceCol.cardOrderIds.splice(target_index, 1);
+        sourceCol.cardOrderIds.splice(target_index, 0, cardId);
+        // socket.emit('updateColumn', sourceCol._id, sourceCol);
+      } else {
+        //loai bo card khoi tap nguon
+        sourceCol.cardOrderIds = sourceCol.cardOrderIds.filter(
+          (i) => i !== cardId
+        );
+        // socket.emit('updateColumn', sourceCol._id, sourceCol);
+        // them vo tap dich
+        targetCol.cardOrderIds.splice(target_index, 0, cardId);
+        // socket.emit('updateColumn', targetCol._id, targetCol);
+      }
+      return [...prev];
+    });
+  };
+
   useEffect(() => {
     const handleAdd = (newColumn) => {
       setColumns((prev) => [...prev, newColumn]);
@@ -85,6 +112,7 @@ export default function Board({ board_id }) {
               board_id={board_id}
               column_id={column._id}
               delete={() => handleDeleteColumn(column._id)}
+              moveCard={moveCard}
             ></Column>
           );
         })}
