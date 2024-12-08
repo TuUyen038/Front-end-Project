@@ -33,3 +33,20 @@
     padding-left: 0 !important;
     padding-right: 0px !important;
   }
+  .calendar {
+    display: flex;
+    font-size: 4rem!important;
+  }
+  .calendar-content {
+    background: rgb(243, 239, 239);
+    width: 70%;
+    height: 100vh;
+  }
+  .css-cyfsxc-MuiPickersCalendarHeader-labelContainer {
+    font-size: 2rem!important;
+  }
+  calender-main-content {
+    margin-left: 30px;
+    margin-top: 30px;
+    background: red;
+  }

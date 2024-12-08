@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./UpdateF.css";
-import { updateProject } from "../services";
+import { AddFriend, updateProject } from "../services";
 import Input from "@mui/material/Input";
 import { Button } from "@mui/material";
 
@@ -8,6 +8,17 @@ import { Button } from "@mui/material";
 export default function Update({ setLs, item }) {
   const [formData, setFormData] = useState({ ...item });
   const [showForm, setShowForm] = useState(false);
+  const [emails, setEmails] = useState([]);
+
+  const handleChangeE = (e, index) => {
+    const newEmails = [...emails];
+    newEmails[index] = e.target.value;
+    setEmails(newEmails);
+  };
+  const handleAddE = () => {
+    setEmails([...emails, ""]);
+  };
+
   const handleOpen = (e) => {
     e.preventDefault();
     setShowForm(true);
@@ -23,10 +34,17 @@ export default function Update({ setLs, item }) {
   const handleSubmitUpdate = (e) => {
     e.preventDefault();
     handleUpdate(formData);
+    setEmails([]);
     setShowForm(false);
   };
   const handleUpdate = async () => {
     const updatedProject = await updateProject(formData);
+    await Promise.all(
+      emails.map((email) => {
+        AddFriend(formData._id, email);
+      })
+    );
+
     setLs((prevProjects) =>
       prevProjects.map((p) =>
         p._id === updatedProject._id ? updatedProject : p
@@ -49,6 +67,7 @@ export default function Update({ setLs, item }) {
       >
         Change
       </Button>
+
       {showForm && (
         <div className="form">
           <div
@@ -78,6 +97,27 @@ export default function Update({ setLs, item }) {
                   type="text"
                   name="description"
                 />
+              </div>
+              <p className="addFriend">Invite your friends (via Email): </p>
+              <div className="ListEmail">
+                {emails.map((email, index) => (
+                  <div className="rowOfEmail" key={index}>
+                    <Input
+                      className="input"
+                      onChange={(e) => handleChangeE(e, index)}
+                      type="text"
+                      name={`email-${index}`}
+                      value={email}
+                      placeholder="Email"
+                      sx={{ marginBottom: "10px" }}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="row">
+                <button className="BAdd" onClick={handleAddE}>
+                  +
+                </button>
               </div>
               <Button
                 sx={{

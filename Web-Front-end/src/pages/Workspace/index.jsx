@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import ListItem from "./ListItem";
 import style from "./Workspace.module.css";
 import ListDeadline from "./ListDeadline";
@@ -11,11 +12,13 @@ import { useState, useEffect } from "react";
 import Add from "./AddFunc";
 import Search from "./SearchF";
 import Badge from "@mui/material/Badge";
+import { ToastContainer, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 // eslint-disable-next-line react/prop-types
 
-function Workspace() {
+function Workspace({ dl, setDl }) {
   const [ls, setLs] = useState([]);
-  const [dl, setDl] = useState([]);
   const [open, setOpen] = useState(false);
   const [keySearch, setKeySearch] = useState("");
   useEffect(() => {
@@ -48,6 +51,19 @@ function Workspace() {
 
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       {open && <Add setLs={setLs} open={open} setOpen={setOpen} />}
       <div className={style.Container}>
         <div className={style.Workspaces}>

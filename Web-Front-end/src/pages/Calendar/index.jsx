@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useRef, useTransition } from "react";
+import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import Badge from "@mui/material/Badge";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -10,31 +10,8 @@ import { DayCalendarSkeleton } from "@mui/x-date-pickers/DayCalendarSkeleton";
 import { red } from "@mui/material/colors";
 import "./Calendar.css";
 import { getDeadline, getListDeadline } from "../Workspace/services";
-
-function getRandomNumber(min, max) {
-  return Math.round(Math.random() * (max - min) + min);
-}
-
-function fakeFetch(date, { signal }) {
-  return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      const daysInMonth = date.daysInMonth();
-      const daysToHighlight = [1, 2, 3].map(() =>
-        getRandomNumber(1, daysInMonth)
-      );
-
-      resolve({ daysToHighlight });
-    }, 500);
-
-    signal.onabort = () => {
-      clearTimeout(timeout);
-      reject(new DOMException("aborted", "AbortError"));
-    };
-  });
-}
-let currentDate = new Date();
-const initialValue = dayjs(currentDate);
-
+import ListDeadline from "../Workspace/ListDeadline"
+const initialValue = dayjs();
 function ServerDay(props) {
   const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
@@ -77,10 +54,25 @@ function ServerDay(props) {
 }
 
 export default function Calendar() {
-  const requestAbortController = useRef(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [highlightedDays, setHighlightedDays] = useState([1, 2, 15]);
-  const [time, setTime] = useState("");
+  const [selectedDate, setSelectedDate] = useState(initialValue);
+  const [highlightedDays, setHighlightedDays] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(dayjs().month()); // Tháng hiện tại
+  const [selectedYear, setSelectedYear] = useState(dayjs().year()); // Năm hiện tại
+  const [dl, setDl] = useState([])
+  const handleMonthChange = (newDate) => {
+    setSelectedMonth(newDate.month()); // Lấy tháng mới
+    setSelectedYear(newDate.year()); // Lấy năm mới
+  };
+  const handleDateChange = (newDate) => {
+    setSelectedDate(newDate); // Cập nhật ngày được chọn
+
+    // Kiểm tra deadline của ngày được chọn
+    const formattedDate = newDate.format("YYYY-MM-DD");
+    const deadline = dl.find((d) => d.date === formattedDate);
+    return (
+<ListDeadline/>
+    )
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -88,73 +80,56 @@ export default function Calendar() {
         const deadlines = await Promise.all(
           deadlineIds.map((id) => getDeadline(id))
         );
-        setDl(deadlines);
-        setTime(deadlines.getDate());
+        setDl(deadlines)
+        const highlighted = deadlines
+        .filter((item) => {
+          
+          const dl = dayjs(item.deadline);
+          return (
+            dl.year() === selectedYear &&
+            dl.month() === selectedMonth
+          );
+        })
+        .map((item) => 
+          dayjs(item.deadline).date()
+        )
+        setHighlightedDays(highlighted);
       } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu deadline in calendar: ", error);
+        console.error("Lỗi khi lấy dữ liệu deadline: ", error);
       }
     };
     fetchData();
-  }, []);
-
-  const fetchHighlightedDays = (date) => {
-    const controller = new AbortController();
-    fakeFetch(date, {
-      signal: controller.signal,
-    })
-      .then(({ daysToHighlight }) => {
-        setHighlightedDays(daysToHighlight);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        // Bỏ qua lỗi nếu là lỗi do `controller.abort`
-        if (error.name !== "AbortError") {
-          throw error;
-        }
-      });
-
-    requestAbortController.current = controller;
-  };
-
-  useEffect(() => {
-    fetchHighlightedDays(initialValue);
-    // Hủy yêu cầu khi component unmount
-    return () => requestAbortController.current?.abort();
-  }, []);
-
-  // {  const handleMonthChange = (date) => {
-  //     if (requestAbortController.current) {
-  //       // Hủy bỏ yêu cầu không cần thiết nếu người dùng chuyển tháng nhanh chóng
-  //       requestAbortController.current.abort();
-  //     }
-
-  //     setIsLoading(true);
-  //     setHighlightedDays([]);
-  //     fetchHighlightedDays(date);
-  //   };}
+  }, [selectedMonth]);
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs} className="calendar">
-      <DateCalendar
-        defaultValue={initialValue}
-        loading={isLoading}
-        //onMonthChange={handleMonthChange}
-        renderLoading={() => <DayCalendarSkeleton />}
-        slots={{
-          day: ServerDay,
-        }}
-        slotProps={{
-          day: {
-            highlightedDays,
-          },
-        }}
-        sx={{
-          fontSize: "1.2rem",
-          width: "300px",
-          height: "700px",
-          maxWidth: "100%",
-        }}
-      />
-    </LocalizationProvider>
+    <div className="calendar">
+      <LocalizationProvider dateAdapter={AdapterDayjs} className="calendar">
+        <DateCalendar
+          value={selectedDate}
+          onChange={handleDateChange} 
+          onMonthChange={handleMonthChange}
+          renderLoading={() => <DayCalendarSkeleton />}
+          slots={{
+            day: ServerDay,
+          }}
+          slotProps={{
+            day: {
+              highlightedDays,
+            },
+          }}
+          sx={{
+            fontSize: "1.2rem",
+            width: "300px",
+            height: "700px",
+            maxWidth: "100%",
+          }}
+        />
+      </LocalizationProvider>
+      <div className="calendar-content">
+        <div className="calender-main-content">
+          <h3></h3>
+        </div>
+      </div>
+    </div>
   );
 }

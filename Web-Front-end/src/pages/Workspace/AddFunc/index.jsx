@@ -1,28 +1,17 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useRef, useState } from 'react';
-import { addProject } from '../services';
-import './AddF.css';
-import Input from '@mui/material/Input';
-import { Button, TextField } from '@mui/material';
+import React, { useRef, useState } from "react";
+import { addProject } from "../services";
+import "./AddF.css";
+import Input from "@mui/material/Input";
+import { Button } from "@mui/material";
 
 export default function Add({ setLs, open, setOpen }) {
   const refInput = useRef({});
-  const [emails, setEmails] = useState(['']);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
+    title: "",
+    description: "",
   });
-
-  const handleChangeE = (e, index) => {
-    const newEmails = [...emails];
-    newEmails[index] = e.target.value;
-    setEmails(newEmails);
-  };
-  const handleAddEmail = () => {
-    setEmails([...emails, '']);
-    console.log(emails);
-  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -31,15 +20,18 @@ export default function Add({ setLs, open, setOpen }) {
       [name]: value,
     });
   };
-  const handleAdd = () => {
-    addProject(formData).then((data) => {
-      if (data) {
-        setLs((prevProjects) => [...prevProjects, formData]);
-      }
-    });
+  const handleAdd = async () => {
+    const newProject = await addProject(formData);
+    if (newProject) {
+      setLs((prevProjects) => [...prevProjects, newProject]);
+    }
   };
   const handClickAdd = () => {
     handleAdd();
+    setFormData({
+      title: "",
+      description: "",
+    });
     setOpen(false);
   };
   return (
@@ -54,7 +46,7 @@ export default function Add({ setLs, open, setOpen }) {
               name="title"
               value={formData.title}
               placeholder="Project name"
-              sx={{ marginBottom: '15px' }}
+              sx={{ marginBottom: "15px" }}
             />
           </div>
           <div className="row">
@@ -64,32 +56,15 @@ export default function Add({ setLs, open, setOpen }) {
               name="description"
               value={formData.description}
               placeholder="Description"
-              sx={{ marginBottom: '15px' }}
+              sx={{ marginBottom: "15px" }}
             />
           </div>
 
-          <p>Add your friend (by Email): </p>
-          {emails.map((email, index) => (
-            <div className="rowOfEmail" key={index}>
-              <Input
-                className="input"
-                onChange={(e) => handleChangeE(e, index)}
-                type="text"
-                name={`email-${index}`}
-                value={email}
-                placeholder="Email"
-                sx={{ marginBottom: '10px' }}
-              />
-            </div>
-          ))}
-          <div className="row">
-            <button onClick={handleAddEmail}>+</button>
-          </div>
           <Button
             sx={{
-              fontSize: '1.5rem',
-              marginTop: '27px',
-              marginLeft: '-1px',
+              fontSize: "1.5rem",
+              marginTop: "27px",
+              marginLeft: "-1px",
             }}
             onClick={handClickAdd}
             variant="outlined"
