@@ -6,3 +6,4 @@ export const COLUMN_ENDPOINT = BACKEND_ENDPOINT + '/columns/';
 export const CARD_ENDPOINT = BACKEND_ENDPOINT + '/cards/';
 export const COMMENT_ENDPOINT = BACKEND_ENDPOINT + '/comments/';
 
+export const USER_ENDPOINT = BACKEND_ENDPOINT + '/users';
