@@ -23,7 +23,6 @@ const ListItem = ({ list }) => {
           }
           return null;
         })}
-        {console.log(count)}
       </ul>
     </div>
   );

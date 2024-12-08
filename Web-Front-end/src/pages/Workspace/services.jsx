@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { getApiProject, getApiDeadline } from "./config";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 export const getListProject = async () => {
   const Token = localStorage.token;
@@ -12,9 +12,8 @@ export const getListProject = async () => {
   });
 
   if (!res.ok) {
-    const e = await res.json();
-    console.error("loi la: ", e);
-    toast.error("Please refresh the page as the fetch process in geListProject was interrupted!")
+    const catchError = await res.json();
+    console.error(catchError.errors);
   }
   const data = await res.json();
   return data.projectOrderIds;
@@ -29,7 +28,9 @@ export const getListDeadline = async () => {
   });
 
   if (!res.ok) {
-    toast.error("Please refresh the page as the fetch process in geListDeadline was interrupted!")
+    const catchError = await res.json();
+    console.error(catchError.errors);
+    return;
   }
   const data = await res.json();
   return await data.involvedCardOrderIds;
@@ -43,7 +44,8 @@ export const getProject = async (id) => {
     },
   });
   if (!res.ok) {
-    toast.error("Can not get project!")
+    toast.error("Can not get project!");
+    return;
   }
   return res.json();
 };
@@ -56,9 +58,9 @@ export const getDeadline = async (id) => {
     },
   });
   if (!res.ok) {
-   // alert("Can not get deadline");
     const resp = await res.json();
-    console.error("loi la:", resp);
+    console.error("getDl:", resp);
+    return;
   }
   return await res.json();
 };
@@ -81,7 +83,6 @@ export const addDefaultBoard = async (id) => {
   });
   if (!res.ok) {
     const errorData = await res.json();
-   toast.error("can not create default board");
     console.error("Error response:", errorData);
   }
 };
@@ -112,6 +113,27 @@ export const addProject = async (payload) => {
   return await getProject(newProject._id);
 };
 
+export const AddFriend = async (id, email) => {
+  const Token = localStorage.token;
+  const url = getApiProject(id) + (email ? `/${email}` : "");
+  console.log(url);
+  const body = email ? JSON.stringify({ email }) : undefined;
+  const res = await fetch(url, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${Token}`,
+      "Content-Type": "application/json",
+    },
+    body,
+  });
+  if (!res.ok) {
+    const errorData = await res.json();
+    toast.error(errorData.errors);
+    return;
+  }
+  return await getProject(id);
+};
+
 export const updateProject = async (payload) => {
   const Token = localStorage.token;
   const url = getApiProject(payload._id);
@@ -135,9 +157,9 @@ export const updateProject = async (payload) => {
     body: JSON.stringify(updateData),
   });
   if (!res.ok) {
-    toast.error("Can not update data.");
     const errorData = await res.json();
-    console.error("Error response:", errorData);
+    toast.error(errorData.errors);
+    return;
   }
   toast.success("Update project successfully! 😉");
   return await getProject(payload._id);
@@ -153,12 +175,11 @@ export const deleteProject = async (id) => {
     },
   });
   if (!res.ok) {
-    toast.error("Can not delete project");
     const errorData = await res.json();
-    console.error("Error response:", errorData);
+    toast.error(errorData.errors);
+    return;
   }
   toast.success("Delete project successfully! 😉");
   const arr = await getListProject();
   const newProject = await getProject(arr[arr.length - 1]);
-  return await getProject(newProject._id);
 };

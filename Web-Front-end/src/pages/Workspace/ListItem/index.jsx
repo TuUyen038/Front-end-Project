@@ -4,10 +4,9 @@ import Item from '../Item';
 import { Link } from 'react-router-dom';
 
 const ListItem = ({ list, setLs, searchKey }) => {
-  const filteredList = list.filter((item) =>
-    item.title.toLowerCase().includes(searchKey.toLowerCase())
+  const filteredList = list.filter(
+    (item) => item.title?.toLowerCase().includes(searchKey?.toLowerCase() || "")
   );
-
   return (
     <div>
       <ul className={style.Listitem}>

@@ -17,7 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 // eslint-disable-next-line react/prop-types
 
-function Workspace({dl, setDl}) {
+function Workspace({ dl, setDl }) {
   const [ls, setLs] = useState([]);
   const [open, setOpen] = useState(false);
   const [keySearch, setKeySearch] = useState("");
@@ -51,7 +51,6 @@ function Workspace({dl, setDl}) {
 
   return (
     <>
-    
       <ToastContainer
         position="top-right"
         autoClose={2000}
