@@ -16,7 +16,7 @@ export const getCardList = async (columnId) => {
   });
 
   if (!res.ok) {
-    alert('can not get card list');
+    console.log('can not get card list');
   }
 
   const data = await res.json();
@@ -42,68 +42,4 @@ export const getCard = async (cardId) => {
 
   const data = await res.json();
   return data;
-};
-
-// nhung thao tac se can chuyen doi sang socket.io / real-time
-
-export const addCard = async (payload) => {
-  const Token = localStorage.token;
-
-  const url = CARD_ENDPOINT;
-  const res = await fetch(url, {
-    method: 'POST',
-    body: JSON.stringify(payload),
-    headers: {
-      Authorization: `Bearer ${Token}`,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  if (!res.ok) {
-    alert('can not add new card');
-  }
-
-  const data = await res.json();
-  return getCardList(data.columnId);
-};
-
-export const editCard = async (cardId, payload) => {
-  const Token = localStorage.token;
-
-  const url = CARD_ENDPOINT + `${cardId}`;
-  const res = await fetch(url, {
-    method: 'PUT',
-    body: JSON.stringify(payload),
-    headers: {
-      Authorization: `Bearer ${Token}`,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  if (!res.ok) {
-    alert('can not edit this card');
-  }
-
-  const data = await res.json();
-  return getCardList(data.columnId);
-};
-
-export const deleteCard = async (cardId) => {
-  const Token = localStorage.token;
-
-  const url = CARD_ENDPOINT + `${cardId}`;
-  const res = await fetch(url, {
-    method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${Token}`,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  if (!res.ok) {
-    alert('can not delete this card');
-  }
-
-  const data = await res.json();
-  return getCardList(data.columnId);
 };

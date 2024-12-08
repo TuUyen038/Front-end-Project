@@ -6,11 +6,7 @@ import { Avatar, AvatarGroup, Box, Stack, Typography } from '@mui/material';
 import DeadlineIcon from '@mui/icons-material/AccessAlarm';
 import DiscussIcon from '@mui/icons-material/Forum';
 
-// THIS ONE IS TEMP FOR TEST, NOT CALL API
 export default function Task({ task, onDelete }) {
-  // const { taskId } = useParams();
-  // using taskId to get Info of one task
-
   const [isOpened, setIsOpened] = useState(false);
   // const navigate = useNavigate();
   const OpenTask = () => {
@@ -30,6 +26,7 @@ export default function Task({ task, onDelete }) {
     // se chuyen thanh members = task.userOrderIds
   ];
 
+  // get detailed info of one card, like: title, description, deadline, member
   useEffect(() => {});
 
   return (
