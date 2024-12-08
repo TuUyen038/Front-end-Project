@@ -1,5 +1,5 @@
 import { Button, Input, Stack } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreIcon from '@mui/icons-material/MoreHoriz';
@@ -10,6 +10,8 @@ import AddNewTask from './AddNewTask';
 import { getCardList } from '../service/card_service';
 import { v4 as uuidv4 } from 'uuid';
 import { socket } from '../../../../setting/socket';
+import { useDrop } from 'react-dnd';
+import { ItemTypes } from '../dnd/constants';
 
 export default function Column(props) {
   const [title, setTitle] = useState(props.title || 'New');
@@ -87,10 +89,53 @@ export default function Column(props) {
     socket.emit('deleteCard', id);
   };
 
+  const columnRef = useRef(null);
+  const [hoverIndex, setHoverIndex] = useState();
+  const getHoverIndex = (monitor, ref, cardCount) => {
+    if (!ref.current) return cardCount;
+
+    const hoverBoundingRect = ref.current.getBoundingClientRect(); // Lấy kích thước của container
+    const clientOffset = monitor.getClientOffset(); // Lấy tọa độ của con trỏ chuột
+
+    // Tính toán vị trí Y tương đối so với container
+    const hoverClientY =
+      clientOffset.y - hoverBoundingRect.top + ref.current.scrollTop;
+
+    const CARD_HEIGHT = 50; // Chiều cao của mỗi card (giả định)
+    const hoverIndex = Math.floor(hoverClientY / CARD_HEIGHT);
+
+    // Trả về vị trí hợp lệ (trong khoảng [0, cardCount])
+    return Math.max(0, Math.min(cardCount, hoverIndex));
+  };
+
+  const [, drop] = useDrop(() => ({
+    accept: ItemTypes.CARD,
+    hover: (item, monitor) => {
+      if (monitor.isOver()) {
+        setHoverIndex(getHoverIndex(monitor, columnRef, tasks.length));
+      }
+    },
+    drop: (item, monitor) => {
+      if (!monitor.didDrop()) {
+        console.log('card dropped out of valid area');
+      } else if (
+        item.index !== hoverIndex ||
+        item.columnId !== props.column_id
+      ) {
+        props.moveCard(item._id, item.columnId, props.column_id, hoverIndex);
+        item.index = hoverIndex;
+        item.columnId = props.column_id;
+      }
+    },
+  }));
+
   return (
     <Stack
       className="Column"
-      draggable
+      ref={(node) => {
+        columnRef.current = node;
+        drop(node);
+      }}
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -114,11 +159,12 @@ export default function Column(props) {
             paddingTop: 2,
           }}
         >
-          {tasks.map((task) => {
+          {tasks.map((task, index) => {
             return (
               <Task
                 key={task._id}
                 task={task}
+                index={index}
                 className="Task"
                 onDelete={() => handleDeleteCard(task.id)}
               ></Task>
@@ -166,4 +212,5 @@ Column.propTypes = {
   column_id: PropTypes.string,
   board_id: PropTypes.string,
   delete: PropTypes.func,
+  moveCard: PropTypes.func,
 };
