@@ -2,21 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import "./components/form.css";
+import { UserAPI } from "../../apis";
 
 function VerifyAccount() {
   const navigate = useNavigate();
-  const [otpInput, setOtpInput] = useState(["", "", "", ""]);
-  const [timerCount, setTimerCount] = useState(60);
-  const [disableResend, setDisableResend] = useState(true);
-  const [otp, setOtp] = useState(0);
+  const [otpInput, setOtpInput] = useState(["", "", "", "", "", ""]);
+  const [timerCount, setTimerCount] = useState(0);
+  const [disableResend, setDisableResend] = useState(false);
   const [alert, setAlert] = useState({ severity: "", message: "" });
-
-  //Tạo hàm random otp để chạy thử code
-  useEffect(() => {
-    const generatedOtp = Math.floor(1000 + Math.random() * 9000);
-    setOtp(generatedOtp);
-    console.log(generatedOtp);
-  }, []);
 
   //Tự động gọi để chuyển đến input kế tiếp
   const handleChange = (index, e) => {
@@ -33,34 +26,53 @@ function VerifyAccount() {
     }
   };
 
-  const handleVerify = (e) => {
+  const handleVerify = async (e) => {
     e.preventDefault();
-    const enteredOtp = parseInt(otpInput.join(""));
+    const otp = otpInput.join("");
 
-    if (enteredOtp === otp) {
-      setAlert({ severity: "success", message: "OTP verified successfully!" });
-      setTimeout(() => navigate("/reset_password"), 2000); //chuyển đến trang reset_password trong 2 giây
+    const res = await UserAPI.verificationOTP(otp);
+    if (res.ok) {
+      const data = await res.json();
+      localStorage.setItem("userId", data.userId);
+      setAlert({
+        severity: "success",
+        message:
+          data.message ||
+          "OTP verified successfully! Please change your password!",
+      });
+      setTimeout(() => navigate("/reset_password"), 2500);
     } else {
+      const err = res.json();
       setAlert({
         severity: "error",
-        message: "The OTP entered is incorrect. Please try again!",
+        message:
+          err.message || "The OTP entered is incorrect. Please try again!",
       });
-      setOtpInput(["", "", "", ""]);
+      setOtpInput(["", "", "", "", "", ""]);
     }
   };
 
   // Gửi lại OTP và làm rỗng input, chỉnh thời gian,...
-  const handleResendOtp = () => {
-    const generatedOtp = Math.floor(1000 + Math.random() * 9000); // Tạo OTP mới khi gửi lại
-    setOtp(generatedOtp);
-    setOtpInput(["", "", "", ""]);
-    console.log(generatedOtp);
+  const handleResendOtp = async () => {
+    setOtpInput(["", "", "", "", "", ""]);
     setTimerCount(60);
     setDisableResend(true);
-    setAlert({
-      severity: "info",
-      message: "A new OTP has been sent to your email!",
-    });
+
+    const res = await UserAPI.forgotPassword(localStorage.getItem("userEmail"));
+    if (res.ok) {
+      const responce = await res.text();
+      setAlert({
+        severity: "info",
+        message: responce || "Please check your email!",
+      });
+      setTimeout(() => navigate("/verify_account"), 5000);
+    } else {
+      const err = await res.json();
+      setAlert({
+        severity: "error",
+        message: err.message || "Please try again!",
+      });
+    }
   };
 
   useEffect(() => {

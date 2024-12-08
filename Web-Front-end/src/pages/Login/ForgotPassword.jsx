@@ -2,18 +2,21 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./components/form.css";
 import EmailInput from "./components/EmailInput";
+import { UserAPI } from "../../apis";
+import { Alert } from "@mui/material";
 
 function ForgotPassword() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
+  const [alert, setAlert] = useState({ severity: "", message: "" });
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const handleContinue = (e) => {
+  const handleContinue = async (e) => {
     e.preventDefault();
 
     const isEmailValid = validateEmail(email);
@@ -22,12 +25,34 @@ function ForgotPassword() {
       return;
     }
 
-    navigate("/verify_account");
+    setAlert({ severity: "info", message: "Please wait a minute!" });
+    localStorage.setItem("userEmail", email);
+
+    const res = await UserAPI.forgotPassword(email);
+    if (res.ok) {
+      const responce = await res.text();
+      setAlert({
+        severity: "info",
+        message: responce || "Please check your email!",
+      });
+      setTimeout(() => navigate("/verify_account"), 5000);
+    } else {
+      const err = await res.json();
+      setAlert({
+        severity: "error",
+        message: err.message || "Please try again!",
+      });
+    }
   };
 
   return (
     <div className="login-signup-container">
       <div className="login-signup-form">
+        {alert.message && (
+          <Alert severity={alert.severity} style={{ fontSize: "1.4rem" }}>
+            {alert.message}
+          </Alert>
+        )}
         <h2 className="login-signup-title">Forgot Password</h2>
         <p className="label-of-form">Please enter your email!</p>
         <form onSubmit={handleContinue} noValidate>
