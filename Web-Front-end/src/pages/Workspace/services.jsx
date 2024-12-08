@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { getApiProject, getApiDeadline } from "./config";
+import { ToastContainer, toast } from 'react-toastify';
 
 export const getListProject = async () => {
   const Token = localStorage.token;
@@ -13,7 +14,7 @@ export const getListProject = async () => {
   if (!res.ok) {
     const e = await res.json();
     console.error("loi la: ", e);
-    alert("Can not get list ID of project");
+    toast.error("Please refresh the page as the fetch process in geListProject was interrupted!")
   }
   const data = await res.json();
   return data.projectOrderIds;
@@ -28,7 +29,7 @@ export const getListDeadline = async () => {
   });
 
   if (!res.ok) {
-    alert("Can not get list ID of deadline");
+    toast.error("Please refresh the page as the fetch process in geListDeadline was interrupted!")
   }
   const data = await res.json();
   return await data.involvedCardOrderIds;
@@ -42,7 +43,7 @@ export const getProject = async (id) => {
     },
   });
   if (!res.ok) {
-    alert("Can not get project");
+    toast.error("Can not get project!")
   }
   return res.json();
 };
@@ -55,7 +56,7 @@ export const getDeadline = async (id) => {
     },
   });
   if (!res.ok) {
-    alert("Can not get deadline");
+   // alert("Can not get deadline");
     const resp = await res.json();
     console.error("loi la:", resp);
   }
@@ -80,7 +81,7 @@ export const addDefaultBoard = async (id) => {
   });
   if (!res.ok) {
     const errorData = await res.json();
-    alert("can not create default board");
+   toast.error("can not create default board");
     console.error("Error response:", errorData);
   }
 };
@@ -98,12 +99,13 @@ export const addProject = async (payload) => {
   });
   if (!res.ok) {
     if (res.status === 422 || res.status === 500) {
-      alert("Data is not correct");
+      toast.error("Data is not correct!");
     } else {
-      alert("Other error occurred: " + res.status);
+      toast.error("Other error occurred: " + res.status);
     }
     return null;
   }
+  toast.success("Add project successfully! 😉");
   const arr = await getListProject();
   const newProject = await getProject(arr[arr.length - 1]);
   addDefaultBoard(newProject._id);
@@ -133,10 +135,11 @@ export const updateProject = async (payload) => {
     body: JSON.stringify(updateData),
   });
   if (!res.ok) {
-    alert("Can not update data.");
+    toast.error("Can not update data.");
     const errorData = await res.json();
     console.error("Error response:", errorData);
   }
+  toast.success("Update project successfully! 😉");
   return await getProject(payload._id);
 };
 
@@ -150,10 +153,11 @@ export const deleteProject = async (id) => {
     },
   });
   if (!res.ok) {
-    alert("Can not delete project");
+    toast.error("Can not delete project");
     const errorData = await res.json();
     console.error("Error response:", errorData);
   }
+  toast.success("Delete project successfully! 😉");
   const arr = await getListProject();
   const newProject = await getProject(arr[arr.length - 1]);
   return await getProject(newProject._id);
