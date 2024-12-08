@@ -111,34 +111,44 @@ export default function Column(props) {
   const [, drop] = useDrop(() => ({
     accept: ItemTypes.CARD,
     hover: (item, monitor) => {
+      console.log('Hovering card:', item);
+      console.log('Current hover index:', hoverIndex);
+      console.log('Tasks before update:', tasks);
       if (!monitor.isOver) return;
+      if (item.index === hoverIndex && item.columnId === props.column_id)
+        return;
       if (monitor.isOver()) {
         setHoverIndex(getHoverIndex(monitor, columnRef, tasks.length));
         props.moveCard(item._id, item.columnId, props.column_id, hoverIndex);
+        setTasks((prev) => {
+          if (props.column_id === item.columnId) prev.splice(item.index, 1);
+          // prev.splice(hoverIndex, 0, item);
+          item.index = hoverIndex;
+          // item.columnId = props.column_id;
+          return [...prev];
+        });
       }
     },
     drop: (item, monitor) => {
-      console.log('DROPPED: ', monitor.getDropResult());
-      console.log(`Item dropped in column ${props.column_id}`);
+      console.log('Dropped card:', item);
+      console.log(
+        'Tasks after drop of column:' + props.column_id + 'is: ',
+        tasks
+      );
       if (monitor.didDrop()) {
         console.log('Da dc xu ly o drop con');
         return undefined;
       }
       // props.moveCard(item._id, item.columnId, props.column_id, hoverIndex);
       setTasks((prev) => {
-        // prev.splice(hoverIndex, 1);
-        prev.splice(hoverIndex, 0, item);
+        // if (props.column_id === item.columnId) prev.splice(hoverIndex, 1);
+        let tmpTask = { ...item, columnId: props.column_id };
+        prev.splice(hoverIndex, 0, tmpTask);
+        item.index = hoverIndex;
+        item.columnId = props.column_id;
         return [...prev];
       });
       return { columnId: props.column_id };
-      // else if (
-      //   item.index !== hoverIndex ||
-      //   item.columnId !== props.column_id
-      // ) {
-      //   props.moveCard(item._id, item.columnId, props.column_id, hoverIndex);
-      //   item.index = hoverIndex;
-      //   item.columnId = props.column_id;
-      // }
     },
   }));
 

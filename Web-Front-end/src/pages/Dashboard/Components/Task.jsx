@@ -36,6 +36,7 @@ export default function Task({ task, index, onDelete }) {
         const dropResult = monitor.getDropResult();
         if (!dropResult) {
           console.log(`Card ${item._id} was dropped outside`);
+          //reset here
           return;
         }
         console.log(`Card dropped into column: ${dropResult.columnId}`);
