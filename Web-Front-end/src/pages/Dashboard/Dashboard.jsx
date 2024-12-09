@@ -8,6 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { socket } from '../../../setting/socket';
 import AddBoard from './Components/AddBoard';
 import EditBoard from './Components/EditBoard';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export default function Dashboard() {
   const [boards, setBoards] = useState([]);
@@ -177,8 +179,9 @@ export default function Dashboard() {
             boards[boards.findIndex((board) => board._id === boardId)].title
           }
         />
-
-        <Board key={boardId} board_id={boardId} />
+        <DndProvider backend={HTML5Backend}>
+          <Board key={boardId} board_id={boardId} />
+        </DndProvider>
       </div>
     </div>
   );
