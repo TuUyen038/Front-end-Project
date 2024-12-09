@@ -3,7 +3,7 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
     background: hsla(163, 36%, 71%, 0.288);
-    height: 299px;
+    height: 325px;
     padding-bottom: 7px;
     overflow-x: auto;
     border-radius: 3px;

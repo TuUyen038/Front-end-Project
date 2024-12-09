@@ -19,8 +19,14 @@ const Item = ({ setLs, item }) => {
           alt={name}
         />
       </div>
-      <div className={style.GroupName}>
-        <p>{item.title}</p>
+      
+        <div className={style.GroupName}>
+          <div className={style.name}>
+            <p>{item.title}</p>
+          </div>
+          <div className={style.detail}>
+            <p>{item.description}</p>
+          </div>
       </div>
       <div className={style.tools}>
         <button
