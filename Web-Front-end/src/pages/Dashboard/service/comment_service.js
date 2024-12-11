@@ -20,7 +20,7 @@ export const getCommentList = async (cardId) => {
 
   const data = await res.json();
   if (data.commentOrderIds.length === 0) {
-    return undefined;
+    return [];
   }
   const comments = await Promise.all(
     data.commentOrderIds.map((id) => getComment(id))
@@ -40,7 +40,7 @@ export const getComment = async (commentId) => {
   });
 
   if (!res.ok) {
-    alert('can not get this column data');
+    alert('can not get this comment data', commentId);
   }
 
   const data = await res.json();

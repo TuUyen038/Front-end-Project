@@ -8,6 +8,7 @@ import DiscussIcon from '@mui/icons-material/Forum';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../dnd/constants';
 import { socket } from '../../../../setting/socket';
+import { getCard } from '../service/card_service';
 
 export default function Task({ task, index, onDelete }) {
   const [Task, setTask] = useState(task);
@@ -49,7 +50,11 @@ export default function Task({ task, index, onDelete }) {
   }));
 
   // get detailed info of one card, like: title, description, deadline, member
-  useEffect(() => {});
+  useEffect(() => {
+    getCard(task._id)
+      .then((data) => setTask(data))
+      .catch((error) => console.log(error.message));
+  }, [isOpened]);
 
   return (
     <>

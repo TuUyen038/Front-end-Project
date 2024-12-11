@@ -37,18 +37,11 @@ const TaskOpen = forwardRef(
       getCommentList(task._id).then((data) => setComments(data));
       UserAPI.getUser(localStorage.token)
         .then((res) => res.json())
-        .then((data) => setUser(data))
+        .then((data) => {
+          setUser({ ...data, _id: data.id });
+          console.log('get user successfully', data);
+        })
         .catch((error) => console.log(error));
-    });
-
-    useEffect(() => {
-      const handleAdd = (newComment) => {
-        setComments((prev) => [...prev, newComment]);
-      };
-      socket.on('commentAdded', handleAdd);
-      return () => {
-        socket.off('commentAdded', handleAdd);
-      };
     }, []);
 
     const [openDelete, setOpenDelete] = useState(false);
@@ -64,22 +57,23 @@ const TaskOpen = forwardRef(
     };
 
     const handleSendMess = (payload) => {
-      let tmpId = uuidv4();
-      let newCom = { ...payload, cardId: task._id };
-      let tmpCom = { ...newCom, _id: tmpId };
-
-      setComments((prev) => [...prev, tmpCom]);
-      socket.emit('addComment', newCom, user, (res) => {
-        if (res.success) {
-          let comData = res.data;
-          setComments((prev) =>
-            prev.map((com) => (com._id === tmpId ? comData : com))
-          );
-        } else {
-          console.log('TASKOPEN: Error when add comment');
-        }
-      });
+      socket.emit('addComment', payload, user);
+      console.log('comment has been sent');
+      setMess('');
     };
+
+    useEffect(() => {
+      const handleAdd = (newComment) => {
+        console.log('You got comment from the socket');
+        if (!Array.isArray(comments)) {
+          console.error('State is not an array:', comments);
+        } else setComments((prev) => [...prev, newComment]);
+      };
+      socket.on('commentAdded', handleAdd);
+      return () => {
+        socket.off('commentAdded', handleAdd);
+      };
+    }, []);
 
     const [openJoinIn, setOpenJoinIn] = useState(false);
 
@@ -156,17 +150,23 @@ const TaskOpen = forwardRef(
                     }}
                   />
                   <SendIcon
-                    onClick={() => handleSendMess({ description: mess })}
+                    onClick={() =>
+                      handleSendMess({ description: mess, cardId: task._id })
+                    }
                   />
                 </Stack>
                 {/* <label>Discuss</label> */}
-                {comments
-                  ? comments.map((com) =>
-                      com.cardId === task._id ? (
-                        <p key={com._id}>{com.description}</p>
-                      ) : null
-                    )
-                  : null}
+                <Stack>
+                  {comments
+                    ? comments.map((com) =>
+                        com.cardId === task._id ? (
+                          <p key={com._id}>
+                            {com.userId} : {com.description}
+                          </p>
+                        ) : null
+                      )
+                    : null}
+                </Stack>
               </Stack>
               <Stack
                 className="task-method"

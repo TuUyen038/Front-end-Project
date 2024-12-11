@@ -20,6 +20,9 @@ export const getCardList = async (columnId) => {
   }
 
   const data = await res.json();
+  if (data.cardOrderIds === 0) {
+    return [];
+  }
   const cards = await Promise.all(data.cardOrderIds.map((id) => getCard(id)));
   return cards;
 };

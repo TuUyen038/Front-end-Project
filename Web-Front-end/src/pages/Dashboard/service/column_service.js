@@ -20,7 +20,7 @@ export const getColumnList = async (boardId) => {
 
   const data = await res.json();
   if (data.columnOrderIds.length === 0) {
-    return undefined;
+    return [];
   }
   const columns = await Promise.all(
     data.columnOrderIds.map((id) => getColumn(id))
