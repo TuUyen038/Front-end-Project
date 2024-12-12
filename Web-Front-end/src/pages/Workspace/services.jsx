@@ -116,7 +116,6 @@ export const addProject = async (payload) => {
 export const AddFriend = async (id, email) => {
   const Token = localStorage.token;
   const url = getApiProject(id) + (email ? `/${email}` : "");
-  console.log(url);
   const body = email ? JSON.stringify({ email }) : undefined;
   const res = await fetch(url, {
     method: "PUT",
@@ -146,6 +145,8 @@ export const updateProject = async (payload) => {
     createdAt,
     updatedAt,
     updateAt,
+    adminOrderIds,
+    boardOrderIds,
     ...updateData
   } = payload;
   const res = await fetch(url, {
@@ -156,11 +157,13 @@ export const updateProject = async (payload) => {
     },
     body: JSON.stringify(updateData),
   });
+
   if (!res.ok) {
     const errorData = await res.json();
     toast.error(errorData.errors);
     return;
   }
+
   toast.success("Update project successfully! 😉");
   return await getProject(payload._id);
 };

@@ -1,0 +1,27 @@
+
+.item {
+    display: flex;
+margin-bottom: 20px;
+}
+.mainD {
+    line-height: 2;
+    letter-spacing: 0.5px;
+    font-size: 1.5rem;
+    margin: 0 20px;
+    padding: 5px 25px;
+    border-radius: 30px;
+    background: #fff;
+
+}
+
+.name {
+    font-weight: 500;
+    color: #2D9596;
+}
+.time {
+    font-size: 1.3rem;
+    color: #817c7c;
+}
+.item .css-1umw9bq-MuiSvgIcon-root {
+    font-size: 2.4rem;
+}

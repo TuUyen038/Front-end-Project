@@ -5,7 +5,7 @@ import Input from "@mui/material/Input";
 import { Button } from "@mui/material";
 
 // eslint-disable-next-line react/prop-types
-export default function Update({ setLs, item }) {
+export default function Update({ setLs, item, setShow }) {
   const [formData, setFormData] = useState({ ...item });
   const [showForm, setShowForm] = useState(false);
   const [emails, setEmails] = useState([]);
@@ -36,6 +36,7 @@ export default function Update({ setLs, item }) {
     handleUpdate(formData);
     setEmails([]);
     setShowForm(false);
+    setShow(false);
   };
   const handleUpdate = async () => {
     const updatedProject = await updateProject(formData);

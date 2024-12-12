@@ -17,10 +17,12 @@ import "react-toastify/dist/ReactToastify.css";
 
 // eslint-disable-next-line react/prop-types
 
-function Workspace({ dl, setDl }) {
+function Workspace() {
   const [ls, setLs] = useState([]);
   const [open, setOpen] = useState(false);
   const [keySearch, setKeySearch] = useState("");
+  const currentDay = new Date();
+  const [dl, setDl] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,7 +39,10 @@ function Workspace({ dl, setDl }) {
         const deadlines = await Promise.all(
           deadlineIds.map((id) => getDeadline(id))
         );
-        setDl(deadlines);
+        const listDl = deadlines.filter(
+          (item) => new Date(item.deadline) >= currentDay
+        );
+        setDl(listDl);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu deadline: ", error);
       }
