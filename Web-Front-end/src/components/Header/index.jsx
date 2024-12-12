@@ -42,6 +42,7 @@ function Header({ checked, onChange }) {
         localStorage.removeItem("token");
         localStorage.removeItem("email");
         localStorage.removeItem("name");
+        localStorage.removeItem("id");
         localStorage.setItem("isLoggedIn", "false");
         window.location.reload(); //load lại trang
       },

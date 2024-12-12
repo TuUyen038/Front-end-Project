@@ -40,6 +40,7 @@ function ResetPassword() {
           message: responce || "Success! Please log in!",
         });
         localStorage.removeItem("userId");
+        localStorage.removeItem("userEmail");
         setTimeout(() => navigate("/login"), 2000);
       } else {
         const err = await res.text();
