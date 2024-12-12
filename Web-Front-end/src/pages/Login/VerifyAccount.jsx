@@ -103,12 +103,14 @@ function VerifyAccount() {
           <div className="otp-input-container">
             {otpInput.map((value, index) => (
               <input
+                className="otp-input"
                 key={index}
                 id={`otp-input-${index}`}
+                name={`otp-${index}`} // Tránh các tên phổ biến
                 maxLength="1"
                 value={value}
                 onChange={(e) => handleChange(index, e)}
-                className="otp-input"
+                autoComplete="one-time-code"
               />
             ))}
           </div>

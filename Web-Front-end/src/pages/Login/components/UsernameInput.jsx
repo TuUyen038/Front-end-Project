@@ -14,11 +14,12 @@ function UsernameInput({ value, onChange }) {
             fontFamily: "Roboto Flex",
             fontSize: "1.8rem",
           }}
-          type="username"
+          type="text"
           id="username"
           label="username"
           value={value}
           onChange={onChange}
+          autoComplete="off"
           required
         />
       </FormControl>

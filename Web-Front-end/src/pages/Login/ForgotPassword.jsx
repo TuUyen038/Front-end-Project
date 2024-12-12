@@ -26,10 +26,10 @@ function ForgotPassword() {
     }
 
     setAlert({ severity: "info", message: "Please wait a minute!" });
-    localStorage.setItem("userEmail", email);
 
     const res = await UserAPI.forgotPassword(email);
     if (res.ok) {
+      localStorage.setItem("userEmail", email);
       const responce = await res.text();
       setAlert({
         severity: "info",
