@@ -15,7 +15,7 @@ function EmailInput({ value, onChange, error }) {
             fontFamily: "Roboto Flex",
             fontSize: "1.8rem",
           }}
-          type="email"
+          type="text"
           id="email"
           label="email"
           value={value}
