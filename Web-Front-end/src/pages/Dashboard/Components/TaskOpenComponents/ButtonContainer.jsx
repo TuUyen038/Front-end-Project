@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import AddPersonIcon from '@mui/icons-material/PersonAddAlt';
 import DeadlineIcon from '@mui/icons-material/AccessAlarm';
 import AttachIcon from '@mui/icons-material/Attachment';
@@ -7,10 +7,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import FollowIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import DeletePopUp from '../../../components/DeletePopUp/DeletePopUp';
 // import JoinIn from './JoinIn';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import DeletePopUp from '../../../../components/DeletePopUp/DeletePopUp';
 
 export default function ButtonContainer({ onDelete, onClose, setEditing }) {
   const [openDelete, setOpenDelete] = useState(false);
@@ -27,9 +27,9 @@ export default function ButtonContainer({ onDelete, onClose, setEditing }) {
   };
 
   return (
-    <div
+    <Stack
       className="task-method"
-      style={{
+      sx={{
         gap: '1.5rem',
       }}
     >
@@ -140,7 +140,7 @@ export default function ButtonContainer({ onDelete, onClose, setEditing }) {
         onClose={() => setOpenDelete(false)}
         onDelete={saveDelete}
       />
-    </div>
+    </Stack>
   );
 }
 
