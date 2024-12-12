@@ -1,22 +1,22 @@
 /* eslint-disable react/prop-types */
-import Deadline from "../Deadline";
+import FullDeadline from "../FullDeadline";
 
-const ListItem = ({ list }) => {
+export const FilteredList = ({ list }) => {
   if (list.length === 0) {
     return <p>No deadlines available.</p>;
   }
-  let count = 0;
+  const currentDay = new Date();
   return (
     <div>
       <ul>
         {list.map((item) => {
-          count++;
+          
           const deadline = item.deadline ? new Date(item.deadline) : null;
-          if (count <= 3) {
+          if (deadline && deadline >= currentDay) {
             const formattedDeadline = deadline.toLocaleString();
             return (
               <li key={item.id}>
-                <Deadline title={item.title} time={formattedDeadline} />
+                <FullDeadline title={item.title} time={formattedDeadline} />
               </li>
             );
           }
@@ -27,4 +27,3 @@ const ListItem = ({ list }) => {
   );
 };
 
-export default ListItem;

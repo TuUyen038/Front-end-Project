@@ -10,8 +10,10 @@ import { DayCalendarSkeleton } from "@mui/x-date-pickers/DayCalendarSkeleton";
 import { red } from "@mui/material/colors";
 import "./Calendar.css";
 import { getDeadline, getListDeadline } from "../Workspace/services";
-import ListDeadline from "../Workspace/ListDeadline"
+import { FilteredList } from "./FilteredList";
 const initialValue = dayjs();
+
+
 function ServerDay(props) {
   const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
@@ -54,25 +56,16 @@ function ServerDay(props) {
 }
 
 export default function Calendar() {
-  const [selectedDate, setSelectedDate] = useState(initialValue);
+  const selectedDate = initialValue;
   const [highlightedDays, setHighlightedDays] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState(dayjs().month()); // Tháng hiện tại
-  const [selectedYear, setSelectedYear] = useState(dayjs().year()); // Năm hiện tại
-  const [dl, setDl] = useState([])
+  const [selectedMonth, setSelectedMonth] = useState(dayjs().month());
+  const [selectedYear, setSelectedYear] = useState(dayjs().year());
+  const [filteredLs, setFilteredLs] = useState([])
   const handleMonthChange = (newDate) => {
-    setSelectedMonth(newDate.month()); // Lấy tháng mới
-    setSelectedYear(newDate.year()); // Lấy năm mới
+    setSelectedMonth(newDate.month());
+    setSelectedYear(newDate.year());
   };
-  const handleDateChange = (newDate) => {
-    setSelectedDate(newDate); // Cập nhật ngày được chọn
 
-    // Kiểm tra deadline của ngày được chọn
-    const formattedDate = newDate.format("YYYY-MM-DD");
-    const deadline = dl.find((d) => d.date === formattedDate);
-    return (
-<ListDeadline/>
-    )
-  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -80,19 +73,14 @@ export default function Calendar() {
         const deadlines = await Promise.all(
           deadlineIds.map((id) => getDeadline(id))
         );
-        setDl(deadlines)
+        
+        setFilteredLs(deadlines.sort((a,b) => new Date(a.deadline)-new Date(b.deadline)))
         const highlighted = deadlines
-        .filter((item) => {
-          
-          const dl = dayjs(item.deadline);
-          return (
-            dl.year() === selectedYear &&
-            dl.month() === selectedMonth
-          );
-        })
-        .map((item) => 
-          dayjs(item.deadline).date()
-        )
+          .filter((item) => {
+            const dl = dayjs(item.deadline);
+            return dl.year() === selectedYear && dl.month() === selectedMonth && initialValue <= dl;
+          })
+          .map((item) => dayjs(item.deadline).date());
         setHighlightedDays(highlighted);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu deadline: ", error);
@@ -106,7 +94,6 @@ export default function Calendar() {
       <LocalizationProvider dateAdapter={AdapterDayjs} className="calendar">
         <DateCalendar
           value={selectedDate}
-          onChange={handleDateChange} 
           onMonthChange={handleMonthChange}
           renderLoading={() => <DayCalendarSkeleton />}
           slots={{
@@ -127,7 +114,9 @@ export default function Calendar() {
       </LocalizationProvider>
       <div className="calendar-content">
         <div className="calender-main-content">
-          <h3></h3>
+          <p className="titleC"> List Deadline</p>
+          {(filteredLs.length !== 0) ? <FilteredList  list={filteredLs}/>
+          : <p>No deadline</p>}
         </div>
       </div>
     </div>

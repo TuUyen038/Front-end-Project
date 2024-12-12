@@ -45,7 +45,6 @@ function App() {
       color: "",
     },
   ];
-  const [dl, setDl] = useState([]);
 
 
   const [toggleDarkMode, setToggleDarkMode] = useState(false);
@@ -104,8 +103,8 @@ function App() {
 
           <Routes>
             <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Workspace dl={dl} setDl={setDl}/>} />
-              <Route path="/calendar" element={<Calendar dl={dl} setDl={setDl} />} />
+              <Route path="/" element={<Workspace/>} />
+              <Route path="/calendar" element={<Calendar />} />
               <Route path="/:projectSlug/*" element={<AppBar users={users} />}>
                 <Route index element={<Dashboard />} />
                 <Route path="meeting" element={<Meeting />}></Route>
