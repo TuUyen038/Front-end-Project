@@ -65,7 +65,8 @@ function VerifyAccount() {
         severity: "info",
         message: responce || "Please check your email!",
       });
-      setTimeout(() => navigate("/verify_account"), 5000);
+      localStorage.removeItem("userEmail");
+      setTimeout(() => navigate("/verify_account"), 2000);
     } else {
       const err = await res.json();
       setAlert({

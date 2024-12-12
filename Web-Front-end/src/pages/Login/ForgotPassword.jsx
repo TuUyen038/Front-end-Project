@@ -35,7 +35,7 @@ function ForgotPassword() {
         severity: "info",
         message: responce || "Please check your email!",
       });
-      setTimeout(() => navigate("/verify_account"), 5000);
+      setTimeout(() => navigate("/verify_account"), 2000);
     } else {
       const err = await res.json();
       setAlert({
