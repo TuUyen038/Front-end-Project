@@ -1,12 +1,12 @@
 import {
-  BOARD_ENDPOINT,
-  COLUMN_ENDPOINT,
+  CARD_ENDPOINT,
+  COMMENT_ENDPOINT,
 } from '../../../../setting/globalVariable';
 
-export const getColumnList = async (boardId) => {
+export const getCommentList = async (cardId) => {
   const Token = localStorage.token;
 
-  const url = BOARD_ENDPOINT + `${boardId}`;
+  const url = CARD_ENDPOINT + `${cardId}`;
   const res = await fetch(url, {
     method: 'GET',
     headers: {
@@ -15,23 +15,23 @@ export const getColumnList = async (boardId) => {
   });
 
   if (!res.ok) {
-    alert('can not get board list');
+    alert('can not get comment list');
   }
 
   const data = await res.json();
-  if (data.columnOrderIds.length === 0) {
+  if (data.commentOrderIds.length === 0) {
     return [];
   }
-  const columns = await Promise.all(
-    data.columnOrderIds.map((id) => getColumn(id))
+  const comments = await Promise.all(
+    data.commentOrderIds.map((id) => getComment(id))
   );
-  return columns;
+  return comments;
 };
 
-export const getColumn = async (columnId) => {
+export const getComment = async (commentId) => {
   const Token = localStorage.token;
 
-  const url = COLUMN_ENDPOINT + `${columnId}`;
+  const url = COMMENT_ENDPOINT + `${commentId}`;
   const res = await fetch(url, {
     method: 'GET',
     headers: {
@@ -40,7 +40,7 @@ export const getColumn = async (columnId) => {
   });
 
   if (!res.ok) {
-    alert('can not get this column data');
+    alert('can not get this comment data', commentId);
   }
 
   const data = await res.json();

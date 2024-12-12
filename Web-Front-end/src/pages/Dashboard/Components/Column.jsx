@@ -190,7 +190,7 @@ export default function Column(props) {
                 task={task}
                 index={index}
                 className="Task"
-                onDelete={() => handleDeleteCard(task.id)}
+                onDelete={() => handleDeleteCard(task._id)}
               ></Task>
             );
           })}

@@ -25,11 +25,13 @@ export default function Dashboard() {
       console.log('slug is incorrect format');
       return;
     }
-    getProjectBySlug(projectSlug).then((data) => {
-      if (!data) console.log('data is undefined');
-      else setProject(data);
-      socket.emit('joinRoom', data._id);
-    });
+    getProjectBySlug(projectSlug)
+      .then((data) => {
+        if (!data) console.log('data is undefined');
+        else setProject(data);
+        socket.emit('joinRoom', data._id);
+      })
+      .then(() => {});
   }, [projectSlug]);
 
   useEffect(() => {
@@ -180,7 +182,11 @@ export default function Dashboard() {
           }
         />
         <DndProvider backend={HTML5Backend}>
-          <Board key={boardId} board_id={boardId} />
+          <Board
+            key={boardId}
+            board_id={boardId}
+            // members={project.userOrderIds}
+          />
         </DndProvider>
       </div>
     </div>

@@ -7,10 +7,12 @@ import DeadlineIcon from '@mui/icons-material/AccessAlarm';
 import DiscussIcon from '@mui/icons-material/Forum';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../dnd/constants';
+import { socket } from '../../../../setting/socket';
+import { getCard } from '../service/card_service';
 
 export default function Task({ task, index, onDelete }) {
+  const [Task, setTask] = useState(task);
   const [isOpened, setIsOpened] = useState(false);
-  // const navigate = useNavigate();
   const OpenTask = () => {
     setIsOpened(true);
     console.log('open pop up');
@@ -20,13 +22,13 @@ export default function Task({ task, index, onDelete }) {
     setIsOpened(false);
   };
 
-  const members = [
-    { name: 'A', color: 'green' },
-    { name: 'B', color: 'blue' },
-    { name: 'C', color: 'orange' },
-
-    // se chuyen thanh members = task.userOrderIds
-  ];
+  const handleAddUserToCard = (users) => {
+    setTask((prev) => ({
+      ...prev,
+      userOrderIds: [...prev.userOrderIds, users],
+    }));
+    socket.emit('addUsersCard', Task._id, users);
+  };
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.CARD,
@@ -48,7 +50,11 @@ export default function Task({ task, index, onDelete }) {
   }));
 
   // get detailed info of one card, like: title, description, deadline, member
-  useEffect(() => {});
+  useEffect(() => {
+    getCard(task._id)
+      .then((data) => setTask(data))
+      .catch((error) => console.log(error.message));
+  }, [isOpened]);
 
   return (
     <>
@@ -65,7 +71,7 @@ export default function Task({ task, index, onDelete }) {
           }}
         >
           <Typography className="task-title">
-            {task.title ? task.title : 'Say Hello World'}
+            {Task.title ? Task.title : 'Say Hello World'}
           </Typography>
           <Stack
             className="other-info"
@@ -73,30 +79,33 @@ export default function Task({ task, index, onDelete }) {
             sx={{ display: 'flex', justifyContent: 'space-between' }}
           >
             <Box className="deadline-discuss" sx={{ display: 'flex', gap: 1 }}>
-              <Box
-                backgroundColor="#2D9596"
-                borderRadius={0.3}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 0.4,
-                  margin: 0.4,
-                  padding: 0.2,
-                }}
-              >
-                <DeadlineIcon sx={{ color: 'white', fontSize: '10px' }} />
-                <Typography color="white" fontSize={8}>
-                  3 Mar
-                </Typography>
-              </Box>
+              {Task.dealine ? (
+                <Box
+                  backgroundColor="#2D9596"
+                  borderRadius={0.3}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 0.4,
+                    margin: 0.4,
+                    padding: 0.2,
+                  }}
+                >
+                  <DeadlineIcon sx={{ color: 'white', fontSize: '10px' }} />
+                  <Typography color="white" fontSize={8}>
+                    {Task.deadline}
+                  </Typography>
+                </Box>
+              ) : null}
+
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.2 }}>
                 <DiscussIcon fontSize="small" />
-                <>3</>
+                <>{Task.commentOrderIds.length}</>
               </Box>
             </Box>
 
             <AvatarGroup className="menbers" max={3} spacing={5}>
-              {members.map((member, index) => (
+              {Task.userOrderIds.map((member, index) => (
                 <Avatar
                   key={index}
                   sx={{
@@ -125,11 +134,12 @@ export default function Task({ task, index, onDelete }) {
         }}
       >
         <TaskOpen
-          // delete={task.delete}
+          delete={task.delete}
           onClose={Close}
-          task={task}
+          task={Task}
           onDelete={onDelete}
           sx={{ position: 'relative' }}
+          handleAddUserToCard={handleAddUserToCard}
         />
       </Modal>
     </>
