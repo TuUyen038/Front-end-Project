@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./UpdateF.css";
-import { AddFriend, updateProject } from "../services";
+import { AddFriend, updateProject } from "../../services";
 import Input from "@mui/material/Input";
 import { Button } from "@mui/material";
 
@@ -62,7 +62,7 @@ export default function Update({ setLs, item, setShow }) {
           borderBottom: "1px solid currentColor",
           borderRadius: "0px",
         }}
-        className="btnn change"
+        className="btnn "
         onClick={handleOpen}
         variant="outlined"
       >

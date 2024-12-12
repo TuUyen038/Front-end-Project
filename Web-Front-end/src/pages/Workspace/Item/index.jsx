@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-import Delete from "../DeleF";
-import Update from "../UpdateF";
+import Delete from "./DeleF";
+import Update from "./UpdateF";
 import style from "./Item.module.css";
 import MoreHorizTwoToneIcon from "@mui/icons-material/MoreHorizTwoTone";
-
+import Admin from "./Admin"
+import Exit from "./Exit";
 const Item = ({ setLs, item }) => {
   const [show, setShow] = useState(false);
   const handleShow = (e) => {
@@ -40,6 +41,8 @@ const Item = ({ setLs, item }) => {
           <div className={style.form}>
             <Update setLs={setLs} item={item} setShow={setShow} />
             <Delete setLs={setLs} item={item} />
+            <Admin item={item} />
+            <Exit setLs={setLs} item={item} />
           </div>
         )}
       </div>

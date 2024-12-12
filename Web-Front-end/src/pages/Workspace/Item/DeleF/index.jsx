@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Button } from "@mui/material";
-import { deleteProject, getListProject, getProject } from "../services";
+import { deleteProject, getListProject, getProject } from "../../services";
 
 export default function Delete({ setLs, item }) {
   const handleDelete = (id) => async (ev) => {
@@ -18,11 +18,12 @@ export default function Delete({ setLs, item }) {
     <div>
       <div>
         <Button
-          sx={{ border: "none", fontSize: "1.3rem" }}
-          className="btnn"
+          sx={{ border: "none", fontSize: "1.3rem",borderRadius: "0px", borderBottom: "1px solid currentColor", }}
+          className="btnn change"
           onClick={(ev) => handleDelete(item._id)(ev)}
           variant="outlined"
         >
+          
           Delete
         </Button>
       </div>
