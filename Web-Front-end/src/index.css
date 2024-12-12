@@ -177,3 +177,39 @@ body {
 .main .filemanager {
   background-color: transparent;
 }
+
+/* -----------------JOIN IN ------------------ */
+.task-join-in {
+  z-index: 1;
+  position: absolute;
+  left: -6rem;
+  top: 3.2rem;
+  background-color: white;
+  border: 0.2px solid black;
+  border-radius: 1rem;
+}
+
+.task-join-in input {
+  border: 0.2px solid black;
+  border-radius: 0.4rem;
+  margin: 1rem;
+  font-size: 1.6rem;
+  padding-left: 1rem;
+}
+
+.task-join-in button {
+  margin-bottom: 1rem;
+}
+
+.cus-btn {
+  background-color: #2d9596;
+  border: 0.2px solid black;
+  border-radius: 0.2rem;
+  color: white;
+  padding: 0.2rem 0.5rem 0.3rem 0.5rem;
+  text-align: center;
+}
+
+.task-join-in .member-list {
+  height: 10rem;
+}

@@ -191,6 +191,7 @@ export default function Column(props) {
                 index={index}
                 className="Task"
                 onDelete={() => handleDeleteCard(task._id)}
+                member={props.member}
               ></Task>
             );
           })}
@@ -237,4 +238,5 @@ Column.propTypes = {
   board_id: PropTypes.string,
   delete: PropTypes.func,
   moveCard: PropTypes.func,
+  member: PropTypes.array,
 };

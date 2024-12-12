@@ -7,12 +7,19 @@ import EditIcon from '@mui/icons-material/Edit';
 import FollowIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-// import JoinIn from './JoinIn';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import DeletePopUp from '../../../../components/DeletePopUp/DeletePopUp';
+import JoinIn from '../JoinIn';
 
-export default function ButtonContainer({ onDelete, onClose, setEditing }) {
+export default function ButtonContainer({
+  onDelete,
+  onClose,
+  setEditing,
+  member,
+  onAddMemLs,
+}) {
+  console.log('BUTTON', member);
   const [openDelete, setOpenDelete] = useState(false);
   const [openJoinIn, setOpenJoinIn] = useState(false);
 
@@ -43,15 +50,17 @@ export default function ButtonContainer({ onDelete, onClose, setEditing }) {
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'flex-start',
+          position: 'relative',
         }}
       >
         Join in
-        {/* {openJoinIn ? (
-                    <JoinIn
-                      onClose={() => setOpenJoinIn(false)}
-                      onAddMemLs={handleAddUserToCard}
-                    />
-                  ) : null} */}
+        {openJoinIn ? (
+          <JoinIn
+            member={member}
+            onClose={() => setOpenJoinIn(false)}
+            onAddMemLs={onAddMemLs}
+          />
+        ) : null}
       </Button>
       <Button
         className="task-button"
@@ -148,4 +157,6 @@ ButtonContainer.propTypes = {
   onDelete: PropTypes.func,
   onClose: PropTypes.func,
   setEditing: PropTypes.func,
+  onAddMemLs: PropTypes.func,
+  member: PropTypes.array,
 };
