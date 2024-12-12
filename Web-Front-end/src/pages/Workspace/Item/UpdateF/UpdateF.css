@@ -81,10 +81,6 @@
     width: 100px;
 }
 
-.change {
-    border-bottom: 1px solid #2D9596;
-}
-
 .row>p {
     color: #2D9596;
     margin-top: 15px;
@@ -112,4 +108,24 @@
 .ListEmail {
     max-height: 200px;
     overflow: auto;
+}
+
+.row {
+    font-size: 1.5rem;
+    font-weight: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+    border-bottom: 1px solid transparent;
+    margin-top: 5px;
+}
+.admin .row .name {
+    margin: 0;
+    color: black;
+    font-weight: 100;
+}
+.admin .row:hover {
+    border-bottom: 1px solid #2D9596;
+
 }

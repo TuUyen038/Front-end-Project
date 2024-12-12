@@ -1,7 +1,82 @@
 /* eslint-disable no-unused-vars */
 import { getApiProject, getApiDeadline } from "./config";
 import { toast } from "react-toastify";
+export const exitProject = async (id) => {
+  const Token = localStorage.token;
+  const url = "http://localhost:8017/v1/projects/exitproject/" + id;
+  const res = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${Token}`,
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok) {
+    const errorData = await res.json();
+    toast.error(errorData.errors);
+    return false;
+  }
+  const updatedProject = await res.json();
+  toast.success(updateProject.resultMessage)
+    return updatedProject;
+}
+export const DeleteAdmin = async (idPrj, idAd) => {
+  const Token = localStorage.token;
+  const url = "http://localhost:8017/v1/projects/admin/" + idPrj + "/" + idAd;
+  const res = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${Token}`,
+      "Content-Type": "application/json",
+    },
 
+  });
+  if (!res.ok) {
+    const errorData = await res.json();
+    console.error("loi: ", errorData.errors)
+    toast.error(errorData.errors);
+    return false;
+  }const updatedProject = await res.json();
+  toast.success(updateProject.resultMessage)
+  
+    return updatedProject;
+
+}
+
+export const addAdmin = async (idPrj, idAd) => {
+  const Token = localStorage.token;
+  const url = "http://localhost:8017/v1/projects/admin/" + idPrj + "/" + idAd;
+  const res = await fetch(url, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${Token}`,
+      "Content-Type": "application/json",
+    },
+
+  });
+  if (!res.ok) {
+    const errorData = await res.json();
+    console.error("loi: ", errorData.errors)
+    toast.error(errorData.errors);
+    return false;
+  }
+  const updatedProject = await res.json();
+    return updatedProject;
+}
+export const getDetailUser = async (id) => {
+  const Token = localStorage.token
+  const url = "http://localhost:8017/v1/users/" + id;
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${Token}`,
+    },
+  });
+  if (!res.ok) {
+    toast.error("Can not get admin!");
+    return;
+  }
+  return await res.json();
+}
 export const getListProject = async () => {
   const Token = localStorage.token;
   const url = "http://localhost:8017/v1/users/me";
