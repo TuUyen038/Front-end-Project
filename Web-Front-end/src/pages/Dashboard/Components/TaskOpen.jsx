@@ -9,11 +9,14 @@ import Comment from './TaskOpenComponents/Comment';
 import ButtonContainer from './TaskOpenComponents/ButtonContainer';
 import CloseX from '../../../components/SmallCom/CloseX';
 import Save from '../../../components/SmallCom/Save';
+import { getMemberOfCard } from '../service/user_service';
 
 const TaskOpen = forwardRef(
   ({ task, onClose, onDelete, member, onAddMemLs }, ref) => {
     const [comments, setComments] = useState([]);
     const [user, setUser] = useState({});
+    const [cardMem, setCardMem] = useState([]);
+    const [checked, setChecked] = useState(task.deadlinestatus === 'on_time');
     const [mess, setMess] = useState('');
     const [editing, setEditing] = useState(false);
     const [editPayload, setEditPayload] = useState({
@@ -29,6 +32,8 @@ const TaskOpen = forwardRef(
     };
 
     const handleSave = () => {
+      console.log(task.deadlinestatus);
+      console.log(checked);
       if (
         task.title !== editPayload.title ||
         task.description !== editPayload.description ||
@@ -49,6 +54,10 @@ const TaskOpen = forwardRef(
           console.log('get user successfully', data);
         })
         .catch((error) => console.log(error));
+    }, []);
+
+    useEffect(() => {
+      getMemberOfCard(task).then((data) => setCardMem(data));
     }, []);
 
     useEffect(() => {
@@ -82,7 +91,7 @@ const TaskOpen = forwardRef(
               padding: '1rem 4rem 0 4rem',
             }}
           >
-            <Stack className="props-header" direction="row">
+            <Stack className="props-header">
               {!editing ? (
                 <h1>{task.title}</h1>
               ) : (
@@ -93,6 +102,39 @@ const TaskOpen = forwardRef(
                   }
                 />
               )}
+              <div className="member-deadline-info">
+                {task.userOrderIds && (
+                  <div>
+                    Member:
+                    <div>
+                      {cardMem.map((mem, index) => (
+                        <p key={index}>{mem.name}</p>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {task.deadline && (
+                  <div>
+                    Deadline: {task.deadline}, Done:
+                    {task.deadlinestatus !== 'late' && (
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        value={checked}
+                        onChange={(e) => {
+                          setChecked(!checked);
+                          setEditPayload((prev) => ({
+                            ...prev,
+                            deadlinestatus: e.target.checked
+                              ? 'on_time'
+                              : 'not_done',
+                          }));
+                        }}
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
             </Stack>
             <Stack
               className="task-body"

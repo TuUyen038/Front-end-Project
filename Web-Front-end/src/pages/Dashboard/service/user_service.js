@@ -28,3 +28,11 @@ export const getUsersOfProject = async (project) => {
   );
   return users;
 };
+
+export const getMemberOfCard = async (card) => {
+  if (card.userOrderIds.length === 0) {
+    return;
+  }
+  const users = await Promise.all(card.userOrderIds.map((id) => getUser(id)));
+  return users;
+};
