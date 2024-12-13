@@ -88,7 +88,10 @@ export default function ButtonContainer({
             onChange={(newDate) => {
               setSelectedDate(newDate);
               console.log('new date: ', newDate);
-              onSetPayLoad({ deadline: newDate.format('YYYY-MM-DD') });
+              onSetPayLoad({
+                deadline: newDate.format('YYYY-MM-DD'),
+                deadlinestatus: 'not_done',
+              });
               setOpenDatePicker(false);
             }}
           />
