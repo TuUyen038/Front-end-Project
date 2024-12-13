@@ -59,23 +59,53 @@ export default function Board({ board_id, member }) {
     target_index
   ) => {
     setColumns((prev) => {
-      let sourceCol = prev.find((col) => col._id === source_column_id);
-      let targetCol = prev.find((col) => col._id === target_column_id);
-      if (sourceCol === targetCol) {
-        sourceCol.cardOrderIds.splice(target_index, 1);
-        sourceCol.cardOrderIds.splice(target_index, 0, cardId);
-        // socket.emit('updateColumn', sourceCol._id, sourceCol);
-      } else {
-        //loai bo card khoi tap nguon
-        sourceCol.cardOrderIds = sourceCol.cardOrderIds.filter(
-          (i) => i !== cardId
-        );
-        // socket.emit('updateColumn', sourceCol._id, sourceCol);
-        // them vo tap dich
-        targetCol.cardOrderIds.splice(target_index, 0, cardId);
-        // socket.emit('updateColumn', targetCol._id, targetCol);
+      const sourceCol = prev.find((col) => col._id === source_column_id);
+      const targetCol = prev.find((col) => col._id === target_column_id);
+
+      if (!sourceCol || !targetCol) {
+        console.error('Source or target column not found');
+        return prev;
       }
-      return [...prev];
+
+      // Xử lý khi di chuyển trong cùng một cột
+      if (sourceCol === targetCol) {
+        const draggedCard = sourceCol.cardOrderIds.splice(
+          sourceCol.cardOrderIds.indexOf(cardId),
+          1
+        )[0];
+        sourceCol.cardOrderIds.splice(target_index, 0, draggedCard);
+
+        // Gửi socket
+        socket.emit('updateColumn', sourceCol._id, sourceCol);
+
+        return prev.map((col) =>
+          col._id === source_column_id ? { ...sourceCol } : col
+        );
+      }
+
+      // Xử lý khi di chuyển giữa các cột
+      const updatedSourceCol = {
+        ...sourceCol,
+        cardOrderIds: sourceCol.cardOrderIds.filter((i) => i !== cardId),
+      };
+      const updatedTargetCol = {
+        ...targetCol,
+        cardOrderIds: [
+          ...targetCol.cardOrderIds.slice(0, target_index),
+          cardId,
+          ...targetCol.cardOrderIds.slice(target_index),
+        ],
+      };
+
+      // Gửi socket
+      socket.emit('updateColumn', sourceCol._id, updatedSourceCol);
+      socket.emit('updateColumn', targetCol._id, updatedTargetCol);
+
+      return prev.map((col) => {
+        if (col._id === source_column_id) return updatedSourceCol;
+        if (col._id === target_column_id) return updatedTargetCol;
+        return col;
+      });
     });
   };
 

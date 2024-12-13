@@ -64,22 +64,16 @@ export default function Column(props) {
     const addCard = (newCard) => {
       setTasks((prev) => [...prev, newCard]);
     };
-    const updateCard = (id, payload) => {
-      setTasks((prev) =>
-        prev.map((card) => (card._id === id ? { ...card, ...payload } : card))
-      );
-    };
+
     const deleteCard = (id) => {
       setTasks((prev) => prev.filter((card) => card._id !== id));
     };
 
     socket.on('cardAdded', addCard);
-    socket.on('cardUpdated', updateCard);
     socket.on('cardDeleted', deleteCard);
 
     return () => {
       socket.off('cardAdded', addCard);
-      socket.off('cardUpdated', updateCard);
       socket.off('cardDeleted', deleteCard);
     };
   });
@@ -145,14 +139,29 @@ export default function Column(props) {
       if (item.index === hoverIndex && item.columnId === props.column_id)
         return;
       if (monitor.isOver()) {
-        setHoverIndex(getHoverIndex(monitor, columnRef, tasks.length));
-        props.moveCard(item._id, item.columnId, props.column_id, hoverIndex);
+        const calculatedHoverIndex = getHoverIndex(
+          monitor,
+          columnRef,
+          tasks.length
+        );
+
+        setHoverIndex(calculatedHoverIndex);
+
+        // Cập nhật dữ liệu cha qua moveCard
+        props.moveCard(
+          item._id,
+          item.columnId,
+          props.column_id,
+          calculatedHoverIndex
+        );
+
+        // Cập nhật tasks cục bộ
         setTasks((prev) => {
-          if (props.column_id === item.columnId) prev.splice(item.index, 1);
-          // prev.splice(hoverIndex, 0, item);
-          item.index = hoverIndex;
-          // item.columnId = props.column_id;
-          return [...prev];
+          const updatedTasks = [...prev];
+
+          updatedTasks.splice(item.index, 1);
+
+          return updatedTasks;
         });
       }
     },
@@ -166,9 +175,7 @@ export default function Column(props) {
         console.log('Da dc xu ly o drop con');
         return undefined;
       }
-      // props.moveCard(item._id, item.columnId, props.column_id, hoverIndex);
       setTasks((prev) => {
-        // if (props.column_id === item.columnId) prev.splice(hoverIndex, 1);
         let tmpTask = { ...item, columnId: props.column_id };
         prev.splice(hoverIndex, 0, tmpTask);
         item.index = hoverIndex;
@@ -219,6 +226,7 @@ export default function Column(props) {
                 className="Task"
                 onDelete={() => handleDeleteCard(task._id)}
                 member={props.member}
+                // onSetTasks={setTasks}
               ></Task>
             );
           })}
