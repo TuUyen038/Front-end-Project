@@ -7,7 +7,8 @@ export default function Exit({ setLs, item }) {
     ev.preventDefault();
     const e = window.confirm("Do you want to exit this project?");
     if (e === false) return;
-    await exitProject(id);
+    const kq = await exitProject(id);
+    if(!kq) return;
     const projectIds = await getListProject();
     const updatedProjects = await Promise.all(
       projectIds.map((projectId) => getProject(projectId))

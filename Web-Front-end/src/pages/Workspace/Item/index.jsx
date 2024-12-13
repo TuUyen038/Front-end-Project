@@ -6,7 +6,10 @@ import style from "./Item.module.css";
 import MoreHorizTwoToneIcon from "@mui/icons-material/MoreHorizTwoTone";
 import Admin from "./Admin"
 import Exit from "./Exit";
+
 const Item = ({ setLs, item }) => {
+  const [idUsers, setIdUsers] = useState(item.userOrderIds);
+  const [idAdmins, setIdAdmins] = useState(item.adminOrderIds);
   const [show, setShow] = useState(false);
   const handleShow = (e) => {
     e.preventDefault();
@@ -38,10 +41,10 @@ const Item = ({ setLs, item }) => {
           <MoreHorizTwoToneIcon sx={{ fontSize: "2rem" }} />
         </button>
         {show && (
-          <div className={style.form}>
-            <Update setLs={setLs} item={item} setShow={setShow} />
-            <Delete setLs={setLs} item={item} />
-            <Admin item={item} />
+          <div className={style.formTool}>
+            <Update setLs={setLs} item={item} setShow={setShow} idAdmins={idAdmins} setIdUsers={setIdUsers}/>
+            <Delete setLs={setLs} item={item} idAdmins={idAdmins} setShow={setShow} />
+            <Admin item={item} idAdmins={idAdmins} setIdAdmins={setIdAdmins} setShow={setShow} idUsers={idUsers} setIdUsers={setIdUsers} />
             <Exit setLs={setLs} item={item} />
           </div>
         )}

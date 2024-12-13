@@ -1,6 +1,30 @@
 /* eslint-disable no-unused-vars */
 import { getApiProject, getApiDeadline } from "./config";
 import { toast } from "react-toastify";
+
+export const updateDeadline = async (id, payload) => {
+  const Token = localStorage.token;
+  const url = "http://localhost:8017/v1/cards/" + id;
+  console.log(url)
+  const body = JSON.stringify({ deadlinestatus: payload });
+  console.log(body)
+  const res = await fetch(url, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${Token}`,
+      "Content-Type": "application/json",
+    },
+    body,
+  });
+  if (!res.ok) {
+    const errorData = await res.json();
+    return;
+  }
+  const kq = await res.json()
+  console.log(kq)
+  return kq;
+};
+
 export const exitProject = async (id) => {
   const Token = localStorage.token;
   const url = "http://localhost:8017/v1/projects/exitproject/" + id;
@@ -18,7 +42,7 @@ export const exitProject = async (id) => {
   }
   const updatedProject = await res.json();
   toast.success(updateProject.resultMessage)
-    return updatedProject;
+  return updatedProject;
 }
 export const DeleteAdmin = async (idPrj, idAd) => {
   const Token = localStorage.token;
@@ -33,7 +57,6 @@ export const DeleteAdmin = async (idPrj, idAd) => {
   });
   if (!res.ok) {
     const errorData = await res.json();
-    console.error("loi: ", errorData.errors)
     toast.error(errorData.errors);
     return false;
   }const updatedProject = await res.json();
@@ -56,7 +79,6 @@ export const addAdmin = async (idPrj, idAd) => {
   });
   if (!res.ok) {
     const errorData = await res.json();
-    console.error("loi: ", errorData.errors)
     toast.error(errorData.errors);
     return false;
   }

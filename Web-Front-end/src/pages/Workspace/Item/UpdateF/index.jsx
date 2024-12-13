@@ -1,14 +1,17 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import "./UpdateF.css";
-import { AddFriend, updateProject } from "../../services";
+import { AddFriend, getProject, updateProject } from "../../services";
 import Input from "@mui/material/Input";
 import { Button } from "@mui/material";
 
 // eslint-disable-next-line react/prop-types
-export default function Update({ setLs, item, setShow }) {
+export default function Update({ setLs, item, setShow, idAdmins, setIdUsers}) {
   const [formData, setFormData] = useState({ ...item });
   const [showForm, setShowForm] = useState(false);
   const [emails, setEmails] = useState([]);
+  const currentUser = localStorage.getItem("id");
+  const isAdmin = idAdmins.filter((id) => id === currentUser).length;
 
   const handleChangeE = (e, index) => {
     const newEmails = [...emails];
@@ -40,12 +43,14 @@ export default function Update({ setLs, item, setShow }) {
   };
   const handleUpdate = async () => {
     const updatedProject = await updateProject(formData);
-    await Promise.all(
+    const kq = await Promise.all(
       emails.map((email) => {
         AddFriend(formData._id, email);
       })
     );
-
+    if(!kq) return
+    await getProject(item._id)
+    setIdUsers(item.userOrderIds)
     setLs((prevProjects) =>
       prevProjects.map((p) =>
         p._id === updatedProject._id ? updatedProject : p
@@ -55,19 +60,21 @@ export default function Update({ setLs, item, setShow }) {
 
   return (
     <>
-      <Button
-        sx={{
-          border: "none",
-          fontSize: "1.3rem",
-          borderBottom: "1px solid currentColor",
-          borderRadius: "0px",
-        }}
-        className="btnn "
-        onClick={handleOpen}
-        variant="outlined"
-      >
-        Change
-      </Button>
+      {isAdmin ? (
+        <Button
+          sx={{
+            border: "none",
+            fontSize: "1.3rem",
+            borderBottom: "1px solid currentColor",
+            borderRadius: "0px",
+          }}
+          className="btnn "
+          onClick={handleOpen}
+          variant="outlined"
+        >
+          Change
+        </Button>
+      ) : null}
 
       {showForm && (
         <div className="form">

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
   addAdmin,
   DeleteAdmin,
@@ -7,12 +8,12 @@ import {
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 
-export default function Admin({ item }) {
-  const [idUsers, setIdUsers] = useState(item.userOrderIds);
-  const [idAdmins, setIdAdmins] = useState(item.adminOrderIds);
-  const [detailAd, setDetailAd] = useState([]);
+export default function Admin({ item, idAdmins, setIdAdmins,idUsers, setIdUsers  }) {
+  const [detailAdmin, setDetailAdmin] = useState([]);
   const [detailUser, setDetailUser] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const currentUser = localStorage.getItem("id");
+  const isAdmin = idAdmins.filter((id) => id === currentUser).length;
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -25,7 +26,7 @@ export default function Admin({ item }) {
           idAdmins.map((id) => getDetailUser(id))
         );
         setDetailUser(userDetails);
-        setDetailAd(adDetails);
+        setDetailAdmin(adDetails);
       } catch (error) {
         console.error("Error fetching user details:", error);
       }
@@ -73,7 +74,7 @@ export default function Admin({ item }) {
         onClick={handleOpen}
         variant="outlined"
       >
-        Admin
+        users
       </Button>
 
       {showForm && (
@@ -86,23 +87,30 @@ export default function Admin({ item }) {
             }}
           ></div>
           <div className="add">
-            <div className="main-content" onClick={(e) => e.preventDefault()}>
+            <div className="main-content users" onClick={(e) => e.preventDefault()}>
+              <h3>ALL USERS</h3>
               <p style={{ color: "#2D9596", marginTop: "10px" }}>Admin:</p>
-              {detailAd.map((dt, index) => (
+              {detailAdmin.map((dt, index) => (
                 <div className="row" key={index}>
-                  <p className="name">{dt.name}</p>
-                  <Button onClick={() => handleDeleteAdmin(dt.id)}>
+                  <div className="group-name">
+                    <p className="name">{dt.name}</p>
+                    {(currentUser === dt.id) ? (<p style={{marginTop: "0px", color: "#999", fontSize: '1.3rem'}}>(You)</p>) : null}
+                  </div>
+                  {(isAdmin && (idAdmins.length !== 1)) ? (<Button onClick={() => handleDeleteAdmin(dt.id)}>
                     Delete Admin
-                  </Button>
+                  </Button>) : null}
                 </div>
               ))}
-              <p style={{ color: "#2D9596", marginTop: "10px" }}>User:</p>
+              <p style={{ color: "#2D9596", marginTop: "15px" }}>User:</p>
               {detailUser.map((dt, index) => (
                 <div className="row" key={index}>
-                  <p className="name">{dt.name}</p>
-                  <Button onClick={() => handleAddAdmin(dt.id)}>
+                  <div className="group-name">
+                    <p className="name">{dt.name}</p>
+                    {(currentUser === dt.id) ? (<p style={{marginTop: "0px", color: "#999", fontSize: '1.3rem'}}>(You)</p>) : null}
+                  </div>
+                  {isAdmin ? (<Button onClick={() => handleAddAdmin(dt.id)}>
                     Add Admin
-                  </Button>
+                  </Button>) : null}
                 </div>
               ))}
             </div>

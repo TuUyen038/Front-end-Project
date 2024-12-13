@@ -100,5 +100,12 @@
     position: absolute !important;
     left: 100px !important;
 }
-
-.Workspaces .css-1bfmfmm-MuiBadge-badge {}
+.groupDl {
+    display: flex;
+    gap: 30px;
+    align-items:flex-start
+}
+.grp:hover, .grp>p:hover {
+    color: black!important;
+    font-size: 1.4rem;
+}

@@ -10,13 +10,12 @@ export const FilteredList = ({ list }) => {
     <div>
       <ul>
         {list.map((item) => {
-          
           const deadline = item.deadline ? new Date(item.deadline) : null;
           if (deadline && deadline >= currentDay) {
-            const formattedDeadline = deadline.toLocaleString();
+            const formattedDeadline = deadline.toLocaleDateString("vi-VN");
             return (
-              <li key={item.id}>
-                <FullDeadline title={item.title} time={formattedDeadline} />
+              <li key={item._id}>
+                <FullDeadline title={item.title} time={formattedDeadline} initialStatus={item.deadlinestatus} id={item._id} />
               </li>
             );
           }
