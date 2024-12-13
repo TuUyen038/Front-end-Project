@@ -27,6 +27,28 @@ export default function Task({ task, index, onDelete, member }) {
     console.log('emit add user id to card');
   };
 
+  const deadlineBGColor = () => {
+    switch (Task.deadlinestatus) {
+      case 'not_done':
+        return 'rgba(236, 244, 214, 1)';
+      case 'late':
+        return 'red';
+      case 'on_time':
+        return '#2D9596';
+      default:
+        return 'blue';
+    }
+  };
+
+  const deadlineTextColor = () => {
+    switch (Task.deadlinestatus) {
+      case 'not_done':
+        return '#2D9596';
+      default:
+        return 'white';
+    }
+  };
+
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.CARD,
     item: { ...task, index },
@@ -110,7 +132,7 @@ export default function Task({ task, index, onDelete, member }) {
             <Box className="deadline-discuss" sx={{ display: 'flex', gap: 1 }}>
               {Task.deadline ? (
                 <Box
-                  backgroundColor="#2D9596"
+                  backgroundColor={deadlineBGColor}
                   borderRadius={0.3}
                   sx={{
                     display: 'flex',
@@ -120,8 +142,10 @@ export default function Task({ task, index, onDelete, member }) {
                     padding: 0.2,
                   }}
                 >
-                  <DeadlineIcon sx={{ color: 'white', fontSize: '10px' }} />
-                  <Typography color="white" fontSize={8}>
+                  <DeadlineIcon
+                    sx={{ color: { deadlineTextColor }, fontSize: '10px' }}
+                  />
+                  <Typography color={deadlineTextColor} fontSize={8}>
                     {Task.deadline.slice(0, 10)}
                   </Typography>
                 </Box>
