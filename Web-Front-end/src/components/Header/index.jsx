@@ -49,6 +49,7 @@ function Header({ checked, onChange }) {
   const [localStorageAuth, setLocalStorageAuth] = React.useState(updatedInfo);
 
   const avatar = getAvatar(localStorage.getItem("name"));
+  localStorage.setItem("avatar", avatar);
 
   React.useEffect(() => {
     const updatedInfo = {
@@ -73,6 +74,7 @@ function Header({ checked, onChange }) {
         localStorage.removeItem("email");
         localStorage.removeItem("name");
         localStorage.removeItem("id");
+        localStorage.removeItem("avatar");
         localStorage.removeItem("userEmail");
         localStorage.setItem("isLoggedIn", "false");
         window.location.reload(); //load lại trang
@@ -126,7 +128,7 @@ function Header({ checked, onChange }) {
                     popoverContent: {
                       sx: {
                         "& .MuiTypography-root": {
-                          fontSize: "1rem",
+                          fontSize: "1.1rem",
                         },
                       },
                     },
