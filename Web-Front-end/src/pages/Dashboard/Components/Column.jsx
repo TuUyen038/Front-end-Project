@@ -62,7 +62,9 @@ export default function Column(props) {
 
   useEffect(() => {
     const addCard = (newCard) => {
-      setTasks((prev) => [...prev, newCard]);
+      console.log('BE emit lai');
+      if (newCard.columnId === props.column_id)
+        setTasks((prev) => [...prev, newCard]);
     };
 
     const deleteCard = (id) => {
@@ -84,16 +86,11 @@ export default function Column(props) {
       columnId: props.column_id,
       boardId: props.board_id,
     };
-    let tmpId = uuidv4();
-    let tmpCard = { ...newCard, _id: tmpId };
-    setTasks((prev) => [...prev, tmpCard]);
-
     socket.emit('addCard', newCard, (response) => {
       if (response.success) {
-        const cardData = response.data;
-        setTasks((prev) =>
-          prev.map((card) => (card._id === tmpId ? cardData : card))
-        );
+        console.log('da emit add card thanh cong');
+        // const cardData = response.data;
+        // setTasks(cardData);
       } else {
         console.log('COLUMN: Fail to add card, Error: ' + response.error);
       }

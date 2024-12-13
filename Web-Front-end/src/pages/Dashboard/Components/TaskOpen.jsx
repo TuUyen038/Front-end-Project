@@ -53,7 +53,7 @@ const TaskOpen = forwardRef(
 
     useEffect(() => {
       const handleAdd = (newComment) => {
-        console.log('You got comment from the socket');
+        console.log('You got comment from the socket ', newComment);
         if (!Array.isArray(comments)) {
           console.error('State is not an array:', comments);
         } else setComments((prev) => [...prev, newComment]);
