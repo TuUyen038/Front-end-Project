@@ -275,7 +275,9 @@ export default function Column(props) {
             description: tempTask.description,
           })
         }
-        onChange={setTempTask}
+        setTempTask={(payload) =>
+          setTempTask((pre) => ({ ...pre, ...payload }))
+        }
       />
     </Stack>
   );

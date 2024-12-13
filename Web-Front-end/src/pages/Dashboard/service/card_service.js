@@ -40,7 +40,7 @@ export const getCard = async (cardId) => {
   });
 
   if (!res.ok) {
-    alert('can not get this card data');
+    console.log('can not get this card data');
   }
 
   const data = await res.json();
