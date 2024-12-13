@@ -19,7 +19,10 @@ export default function Comment({ comment }) {
   return (
     <div className="comment">
       <Avatar>{username}</Avatar>
-      <span>{comment.description}</span>
+      <span>
+        <p className="cmt-username">{username}</p>
+        <p>{comment.description}</p>
+      </span>
     </div>
   );
 }

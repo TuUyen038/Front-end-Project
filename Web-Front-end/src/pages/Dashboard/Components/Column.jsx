@@ -30,26 +30,6 @@ export default function Column(props) {
   };
 
   useEffect(() => {
-    const handleCardMoved = (oldCol, newCol) => {
-      console.log('oldCol: ', oldCol);
-      console.log('newCol: ', newCol);
-      if (props.column_id === oldCol._id) {
-        getCardList(oldCol._id).then((data) => {
-          setTasks(data);
-        });
-      } else if (props.column_id === newCol) {
-        getCardList(newCol._id).then((data) => {
-          setTasks(data);
-        });
-      }
-    };
-    socket.on('cardMoved', handleCardMoved);
-    return () => {
-      socket.off('cardMoved', handleCardMoved);
-    };
-  }, []);
-
-  useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick);
 
     return () => {
@@ -152,48 +132,63 @@ export default function Column(props) {
   const [, drop] = useDrop(() => ({
     accept: ItemTypes.CARD,
     hover: (item, monitor) => {
-      console.log('Hovering card:', item);
-      console.log('Current hover index:', hoverIndex);
-      console.log('Tasks before update:', tasks);
-      if (!monitor.isOver) return;
+      if (!monitor.isOver()) return;
       if (item.index === hoverIndex && item.columnId === props.column_id)
         return;
-      if (monitor.isOver()) {
-        const calculatedHoverIndex = getHoverIndex(
-          monitor,
-          columnRef,
-          tasks.length
-        );
 
+      const calculatedHoverIndex = getHoverIndex(
+        monitor,
+        columnRef,
+        tasks.length
+      );
+      if (calculatedHoverIndex >= 0 && calculatedHoverIndex !== hoverIndex) {
         setHoverIndex(calculatedHoverIndex);
       }
     },
     drop: (item, monitor) => {
-      console.log('Dropped card:', item);
-      console.log(
-        'Tasks after drop of column:' + props.column_id + 'is: ',
-        tasks
-      );
-      if (monitor.didDrop()) {
-        console.log('Da dc xu ly o drop con');
-        return undefined;
-      }
+      if (!item || monitor.didDrop() || !monitor.isOver()) return undefined;
+
       if (props.column_id === item.columnId) {
         setTasks((pre) => {
-          const updateTasks = pre.splice(item.index, 1);
-          return updateTasks;
+          const updatedTasks = [...pre];
+          updatedTasks.splice(item.index, 1);
+          return updatedTasks;
         });
       }
+
+      setTasks((pre) => {
+        const updatedTasks = [...pre];
+        updatedTasks.splice(hoverIndex, 0, item);
+        item.index = hoverIndex;
+        return updatedTasks;
+      });
+
       socket.emit(
         'moveCard',
         item._id,
         props.column_id.toString(),
         parseInt(hoverIndex)
       );
-      console.log('emit move card done');
+
       return { columnId: props.column_id };
     },
   }));
+
+  useEffect(() => {
+    const handleCardMoved = (oldCol, newCol) => {
+      if (props.column_id === oldCol._id) {
+        getCardList(oldCol._id).then(setTasks);
+      }
+      if (props.column_id === newCol._id) {
+        getCardList(newCol._id).then(setTasks);
+      }
+    };
+
+    socket.on('cardMoved', handleCardMoved);
+    return () => {
+      socket.off('cardMoved', handleCardMoved);
+    };
+  }, [props.column_id]);
 
   return (
     <Stack

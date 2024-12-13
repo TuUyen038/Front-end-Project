@@ -147,15 +147,19 @@ const TaskOpen = forwardRef(
                   />
                 </Stack>
                 {/* <label>Discuss</label> */}
-                <div>
+                <br /> <br />
+                <Stack className="discuss-area">
                   {comments
-                    ? comments.map((com) =>
-                        com.cardId === task._id ? (
-                          <Comment key={com._id} comment={com} />
-                        ) : null
-                      )
+                    ? comments
+                        .slice()
+                        .reverse()
+                        .map((com) =>
+                          com.cardId === task._id ? (
+                            <Comment key={com._id} comment={com} />
+                          ) : null
+                        )
                     : null}
-                </div>
+                </Stack>
               </Stack>
               <Stack>
                 <ButtonContainer
