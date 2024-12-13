@@ -31,9 +31,11 @@ const TaskOpen = forwardRef(
     const handleSave = () => {
       if (
         task.title !== editPayload.title ||
-        task.description !== editPayload.description
+        task.description !== editPayload.description ||
+        task.deadline !== editPayload.deadline
       )
-        socket.emit('updateCard', task._id, editPayload);
+        console.log('edit pay load : ', editPayload);
+      socket.emit('updateCard', task._id, editPayload);
       onClose();
     };
 
