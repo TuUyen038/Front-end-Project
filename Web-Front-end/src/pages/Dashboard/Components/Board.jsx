@@ -52,62 +52,62 @@ export default function Board({ board_id, member }) {
     socket.emit('deleteColumn', id);
   };
 
-  const moveCard = (
-    cardId,
-    source_column_id,
-    target_column_id,
-    target_index
-  ) => {
-    setColumns((prev) => {
-      const sourceCol = prev.find((col) => col._id === source_column_id);
-      const targetCol = prev.find((col) => col._id === target_column_id);
+  // const moveCard = (
+  //   cardId,
+  //   source_column_id,
+  //   target_column_id,
+  //   target_index
+  // ) => {
+  //   setColumns((prev) => {
+  //     const sourceCol = prev.find((col) => col._id === source_column_id);
+  //     const targetCol = prev.find((col) => col._id === target_column_id);
 
-      if (!sourceCol || !targetCol) {
-        console.error('Source or target column not found');
-        return prev;
-      }
+  //     if (!sourceCol || !targetCol) {
+  //       console.error('Source or target column not found');
+  //       return prev;
+  //     }
 
-      // Xử lý khi di chuyển trong cùng một cột
-      if (sourceCol === targetCol) {
-        const draggedCard = sourceCol.cardOrderIds.splice(
-          sourceCol.cardOrderIds.indexOf(cardId),
-          1
-        )[0];
-        sourceCol.cardOrderIds.splice(target_index, 0, draggedCard);
+  //     // Xử lý khi di chuyển trong cùng một cột
+  //     if (sourceCol === targetCol) {
+  //       const draggedCard = sourceCol.cardOrderIds.splice(
+  //         sourceCol.cardOrderIds.indexOf(cardId),
+  //         1
+  //       )[0];
+  //       sourceCol.cardOrderIds.splice(target_index, 0, draggedCard);
 
-        // Gửi socket
-        socket.emit('updateColumn', sourceCol._id, sourceCol);
+  //       // Gửi socket
+  //       socket.emit('updateColumn', sourceCol._id, sourceCol);
 
-        return prev.map((col) =>
-          col._id === source_column_id ? { ...sourceCol } : col
-        );
-      }
+  //       return prev.map((col) =>
+  //         col._id === source_column_id ? { ...sourceCol } : col
+  //       );
+  //     }
 
-      // Xử lý khi di chuyển giữa các cột
-      const updatedSourceCol = {
-        ...sourceCol,
-        cardOrderIds: sourceCol.cardOrderIds.filter((i) => i !== cardId),
-      };
-      const updatedTargetCol = {
-        ...targetCol,
-        cardOrderIds: [
-          ...targetCol.cardOrderIds.slice(0, target_index),
-          cardId,
-          ...targetCol.cardOrderIds.slice(target_index),
-        ],
-      };
+  //     // Xử lý khi di chuyển giữa các cột
+  //     const updatedSourceCol = {
+  //       ...sourceCol,
+  //       cardOrderIds: sourceCol.cardOrderIds.filter((i) => i !== cardId),
+  //     };
+  //     const updatedTargetCol = {
+  //       ...targetCol,
+  //       cardOrderIds: [
+  //         ...targetCol.cardOrderIds.slice(0, target_index),
+  //         cardId,
+  //         ...targetCol.cardOrderIds.slice(target_index),
+  //       ],
+  //     };
 
-      // Gửi socket
-      socket.emit('updateColumn', sourceCol._id, updatedSourceCol);
-      socket.emit('updateColumn', targetCol._id, updatedTargetCol);
+  //     // Gửi socket
+  //     socket.emit('updateColumn', sourceCol._id, updatedSourceCol);
+  //     socket.emit('updateColumn', targetCol._id, updatedTargetCol);
 
-      return prev.map((col) => {
-        if (col._id === source_column_id) return updatedSourceCol;
-        if (col._id === target_column_id) return updatedTargetCol;
-        return col;
-      });
-    });
-  };
+  //     return prev.map((col) => {
+  //       if (col._id === source_column_id) return updatedSourceCol;
+  //       if (col._id === target_column_id) return updatedTargetCol;
+  //       return col;
+  //     });
+  //   });
+  // };
 
   useEffect(() => {
     const handleAdd = (newColumn) => {
@@ -137,7 +137,7 @@ export default function Board({ board_id, member }) {
               board_id={board_id}
               column_id={column._id}
               delete={() => handleDeleteColumn(column._id)}
-              moveCard={moveCard}
+              // moveCard={moveCard}
               member={member}
               onUpdate={handleUpdateColumn}
             ></Column>

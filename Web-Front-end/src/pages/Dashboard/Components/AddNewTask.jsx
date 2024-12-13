@@ -1,7 +1,7 @@
 import { Button, Modal, Stack } from '@mui/material';
 import PropTypes from 'prop-types';
 
-export default function AddNewTask({ open, onClose, onSave, onChange }) {
+export default function AddNewTask({ open, onClose, onSave, setTempTask }) {
   return (
     <div>
       <Modal
@@ -28,12 +28,21 @@ export default function AddNewTask({ open, onClose, onSave, onChange }) {
         >
           <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>Add new task</p>
           <Stack direction="row">
-            <input onChange={onChange} placeholder="Task name ..." />
-            <button>add</button>
+            <input
+              onChange={(e) =>
+                setTempTask((pre) => ({ ...pre, title: e.target.value }))
+              }
+              placeholder="Task name ..."
+            />
+            {/* <button>add</button> */}
           </Stack>
           <Stack direction="row">
             <p>Add desciption: </p>
-            <input />
+            <input
+              onChange={(e) =>
+                setTempTask((pre) => ({ ...pre, description: e.target.value }))
+              }
+            />
           </Stack>
           <Stack
             direction="row"
@@ -63,5 +72,5 @@ AddNewTask.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   onSave: PropTypes.func,
-  onChange: PropTypes.func,
+  setTempTask: PropTypes.func,
 };

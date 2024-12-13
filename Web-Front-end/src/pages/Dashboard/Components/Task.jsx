@@ -49,7 +49,10 @@ export default function Task({ task, index, onDelete, member }) {
   // get detailed info of one card, like: title, description, deadline, member
   useEffect(() => {
     getCard(task._id)
-      .then((data) => setTask(data))
+      .then((data) => {
+        setTask(data);
+        console.log(data);
+      })
       .catch((error) => console.log(error.message));
   }, [isOpened]);
 
@@ -106,7 +109,7 @@ export default function Task({ task, index, onDelete, member }) {
             sx={{ display: 'flex', justifyContent: 'space-between' }}
           >
             <Box className="deadline-discuss" sx={{ display: 'flex', gap: 1 }}>
-              {Task.dealine ? (
+              {Task.deadline ? (
                 <Box
                   backgroundColor="#2D9596"
                   borderRadius={0.3}
@@ -120,7 +123,7 @@ export default function Task({ task, index, onDelete, member }) {
                 >
                   <DeadlineIcon sx={{ color: 'white', fontSize: '10px' }} />
                   <Typography color="white" fontSize={8}>
-                    {Task.deadline}
+                    {Task.deadline.slice(0, 10)}
                   </Typography>
                 </Box>
               ) : null}

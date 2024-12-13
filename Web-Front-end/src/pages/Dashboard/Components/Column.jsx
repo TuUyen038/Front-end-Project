@@ -18,7 +18,7 @@ export default function Column(props) {
   const [tasks, setTasks] = useState([]);
   const [openDeletePopUp, setOpenDeletePopUp] = useState(false);
   const [openTaskPopUp, setOpenTaskPopUp] = useState(false);
-  const [tempTask, setTempTask] = useState('');
+  const [tempTask, setTempTask] = useState({});
   const ref = useRef();
 
   const handleOutsideClick = (event) => {
@@ -28,6 +28,26 @@ export default function Column(props) {
       setTempTask('');
     }
   };
+
+  useEffect(() => {
+    const handleCardMoved = (oldCol, newCol) => {
+      console.log('oldCol: ', oldCol);
+      console.log('newCol: ', newCol);
+      if (props.column_id === oldCol._id) {
+        getCardList(oldCol._id).then((data) => {
+          setTasks(data);
+        });
+      } else if (props.column_id === newCol) {
+        getCardList(newCol._id).then((data) => {
+          setTasks(data);
+        });
+      }
+    };
+    socket.on('cardMoved', handleCardMoved);
+    return () => {
+      socket.off('cardMoved', handleCardMoved);
+    };
+  }, []);
 
   useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick);
@@ -99,7 +119,7 @@ export default function Column(props) {
       }
     });
 
-    setTempTask('');
+    setTempTask({});
 
     // else pop up sth like "make a new task unsuccess cause of null error"
     setOpenTaskPopUp(false);
@@ -146,23 +166,6 @@ export default function Column(props) {
         );
 
         setHoverIndex(calculatedHoverIndex);
-
-        // Cập nhật dữ liệu cha qua moveCard
-        props.moveCard(
-          item._id,
-          item.columnId,
-          props.column_id,
-          calculatedHoverIndex
-        );
-
-        // Cập nhật tasks cục bộ
-        setTasks((prev) => {
-          const updatedTasks = [...prev];
-
-          updatedTasks.splice(item.index, 1);
-
-          return updatedTasks;
-        });
       }
     },
     drop: (item, monitor) => {
@@ -175,13 +178,19 @@ export default function Column(props) {
         console.log('Da dc xu ly o drop con');
         return undefined;
       }
-      setTasks((prev) => {
-        let tmpTask = { ...item, columnId: props.column_id };
-        prev.splice(hoverIndex, 0, tmpTask);
-        item.index = hoverIndex;
-        item.columnId = props.column_id;
-        return [...prev];
-      });
+      if (props.column_id === item.columnId) {
+        setTasks((pre) => {
+          const updateTasks = pre.splice(item.index, 1);
+          return updateTasks;
+        });
+      }
+      socket.emit(
+        'moveCard',
+        item._id,
+        props.column_id.toString(),
+        parseInt(hoverIndex)
+      );
+      console.log('emit move card done');
       return { columnId: props.column_id };
     },
   }));
@@ -260,8 +269,13 @@ export default function Column(props) {
       <AddNewTask
         open={openTaskPopUp}
         onClose={() => setOpenTaskPopUp(false)}
-        onSave={() => handleAddCard({ title: tempTask })}
-        onChange={(e) => setTempTask(e.target.value)}
+        onSave={() =>
+          handleAddCard({
+            title: tempTask.title,
+            description: tempTask.description,
+          })
+        }
+        onChange={setTempTask}
       />
     </Stack>
   );
