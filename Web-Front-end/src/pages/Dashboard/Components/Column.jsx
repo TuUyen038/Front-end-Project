@@ -18,7 +18,54 @@ export default function Column(props) {
   const [tasks, setTasks] = useState([]);
   const [openDeletePopUp, setOpenDeletePopUp] = useState(false);
   const [openTaskPopUp, setOpenTaskPopUp] = useState(false);
-  const [tempTask, setTempTask] = useState('');
+  const [tempTask, setTempTask] = useState({});
+  const ref = useRef();
+
+  const handleOutsideClick = (event) => {
+    if (ref.current && !ref.current.contains(event.target)) {
+      props.onUpdate(props.column_id, { title: tempTask });
+      socket.emit('updateColumn', props.column_id, { title: tempTask });
+      setTempTask('');
+    }
+  };
+
+  useEffect(() => {
+    const handleCardMoved = (oldCol, newCol) => {
+      console.log('oldCol: ', oldCol);
+      console.log('newCol: ', newCol);
+      if (props.column_id === oldCol._id) {
+        getCardList(oldCol._id).then((data) => {
+          setTasks(data);
+        });
+      } else if (props.column_id === newCol) {
+        getCardList(newCol._id).then((data) => {
+          setTasks(data);
+        });
+      }
+    };
+    socket.on('cardMoved', handleCardMoved);
+    return () => {
+      socket.off('cardMoved', handleCardMoved);
+    };
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleUpdate = (id, payload) => {
+      if (props.column_id === id) props.onUpdate(id, payload);
+    };
+    socket.on('columnUpdated', handleUpdate);
+    return () => {
+      socket.off('columnUpdated', handleUpdate);
+    };
+  }, []);
 
   useEffect(() => {
     getCardList(props.column_id)
@@ -37,22 +84,16 @@ export default function Column(props) {
     const addCard = (newCard) => {
       setTasks((prev) => [...prev, newCard]);
     };
-    const updateCard = (id, payload) => {
-      setTasks((prev) =>
-        prev.map((card) => (card._id === id ? { ...card, ...payload } : card))
-      );
-    };
+
     const deleteCard = (id) => {
       setTasks((prev) => prev.filter((card) => card._id !== id));
     };
 
     socket.on('cardAdded', addCard);
-    socket.on('cardUpdated', updateCard);
     socket.on('cardDeleted', deleteCard);
 
     return () => {
       socket.off('cardAdded', addCard);
-      socket.off('cardUpdated', updateCard);
       socket.off('cardDeleted', deleteCard);
     };
   });
@@ -78,7 +119,7 @@ export default function Column(props) {
       }
     });
 
-    setTempTask('');
+    setTempTask({});
 
     // else pop up sth like "make a new task unsuccess cause of null error"
     setOpenTaskPopUp(false);
@@ -101,7 +142,7 @@ export default function Column(props) {
     const hoverClientY =
       clientOffset.y - hoverBoundingRect.top + ref.current.scrollTop;
 
-    const CARD_HEIGHT = 40.58; // Chiều cao của mỗi card (giả định)
+    const CARD_HEIGHT = 34; // Chiều cao của mỗi card (giả định)
     const hoverIndex = Math.floor(hoverClientY / CARD_HEIGHT);
 
     // Trả về vị trí hợp lệ (trong khoảng [0, cardCount])
@@ -118,15 +159,13 @@ export default function Column(props) {
       if (item.index === hoverIndex && item.columnId === props.column_id)
         return;
       if (monitor.isOver()) {
-        setHoverIndex(getHoverIndex(monitor, columnRef, tasks.length));
-        props.moveCard(item._id, item.columnId, props.column_id, hoverIndex);
-        setTasks((prev) => {
-          if (props.column_id === item.columnId) prev.splice(item.index, 1);
-          // prev.splice(hoverIndex, 0, item);
-          item.index = hoverIndex;
-          // item.columnId = props.column_id;
-          return [...prev];
-        });
+        const calculatedHoverIndex = getHoverIndex(
+          monitor,
+          columnRef,
+          tasks.length
+        );
+
+        setHoverIndex(calculatedHoverIndex);
       }
     },
     drop: (item, monitor) => {
@@ -139,15 +178,19 @@ export default function Column(props) {
         console.log('Da dc xu ly o drop con');
         return undefined;
       }
-      // props.moveCard(item._id, item.columnId, props.column_id, hoverIndex);
-      setTasks((prev) => {
-        // if (props.column_id === item.columnId) prev.splice(hoverIndex, 1);
-        let tmpTask = { ...item, columnId: props.column_id };
-        prev.splice(hoverIndex, 0, tmpTask);
-        item.index = hoverIndex;
-        item.columnId = props.column_id;
-        return [...prev];
-      });
+      if (props.column_id === item.columnId) {
+        setTasks((pre) => {
+          const updateTasks = pre.splice(item.index, 1);
+          return updateTasks;
+        });
+      }
+      socket.emit(
+        'moveCard',
+        item._id,
+        props.column_id.toString(),
+        parseInt(hoverIndex)
+      );
+      console.log('emit move card done');
       return { columnId: props.column_id };
     },
   }));
@@ -190,7 +233,9 @@ export default function Column(props) {
                 task={task}
                 index={index}
                 className="Task"
-                onDelete={() => handleDeleteCard(task.id)}
+                onDelete={() => handleDeleteCard(task._id)}
+                member={props.member}
+                // onSetTasks={setTasks}
               ></Task>
             );
           })}
@@ -224,8 +269,13 @@ export default function Column(props) {
       <AddNewTask
         open={openTaskPopUp}
         onClose={() => setOpenTaskPopUp(false)}
-        onSave={() => handleAddCard({ title: tempTask })}
-        onChange={(e) => setTempTask(e.target.value)}
+        onSave={() =>
+          handleAddCard({
+            title: tempTask.title,
+            description: tempTask.description,
+          })
+        }
+        onChange={setTempTask}
       />
     </Stack>
   );
@@ -237,4 +287,6 @@ Column.propTypes = {
   board_id: PropTypes.string,
   delete: PropTypes.func,
   moveCard: PropTypes.func,
+  member: PropTypes.array,
+  onUpdate: PropTypes.func,
 };

@@ -7,10 +7,12 @@ import DeadlineIcon from '@mui/icons-material/AccessAlarm';
 import DiscussIcon from '@mui/icons-material/Forum';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../dnd/constants';
+import { socket } from '../../../../setting/socket';
+import { getCard } from '../service/card_service';
 
-export default function Task({ task, index, onDelete }) {
+export default function Task({ task, index, onDelete, member }) {
+  const [Task, setTask] = useState(task);
   const [isOpened, setIsOpened] = useState(false);
-  // const navigate = useNavigate();
   const OpenTask = () => {
     setIsOpened(true);
     console.log('open pop up');
@@ -20,13 +22,10 @@ export default function Task({ task, index, onDelete }) {
     setIsOpened(false);
   };
 
-  const members = [
-    { name: 'A', color: 'green' },
-    { name: 'B', color: 'blue' },
-    { name: 'C', color: 'orange' },
-
-    // se chuyen thanh members = task.userOrderIds
-  ];
+  const handleAddUserToCard = (users) => {
+    users.forEach((user) => socket.emit('addUserCard', Task._id, user.id));
+    console.log('emit add user id to card');
+  };
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.CARD,
@@ -48,7 +47,44 @@ export default function Task({ task, index, onDelete }) {
   }));
 
   // get detailed info of one card, like: title, description, deadline, member
-  useEffect(() => {});
+  useEffect(() => {
+    getCard(task._id)
+      .then((data) => {
+        setTask(data);
+        console.log(data);
+      })
+      .catch((error) => console.log(error.message));
+  }, [isOpened]);
+
+  useEffect(() => {
+    const handleAdd = (userId) => {
+      console.log('get update from socket');
+      setTask((prev) => ({
+        ...prev,
+        userOrderIds: [...prev.userOrderIds, userId],
+      }));
+    };
+    socket.on('userCardAdded', (cardId, userId) => {
+      if (cardId === task._id) handleAdd(userId);
+    });
+    return () => {
+      socket.off('userCardAdded', (cardId, userId) => {
+        if (cardId === task._id) handleAdd(userId);
+      });
+    };
+  }, []);
+
+  useEffect(() => {
+    const updateCard = (cardId, data) => {
+      if (cardId === Task._id) {
+        setTask(data);
+      }
+    };
+    socket.on('cardUpdated', updateCard);
+    return () => {
+      socket.off('cardUpdated', updateCard);
+    };
+  }, []);
 
   return (
     <>
@@ -65,7 +101,7 @@ export default function Task({ task, index, onDelete }) {
           }}
         >
           <Typography className="task-title">
-            {task.title ? task.title : 'Say Hello World'}
+            {Task.title ? Task.title : 'Say Hello World'}
           </Typography>
           <Stack
             className="other-info"
@@ -73,30 +109,33 @@ export default function Task({ task, index, onDelete }) {
             sx={{ display: 'flex', justifyContent: 'space-between' }}
           >
             <Box className="deadline-discuss" sx={{ display: 'flex', gap: 1 }}>
-              <Box
-                backgroundColor="#2D9596"
-                borderRadius={0.3}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 0.4,
-                  margin: 0.4,
-                  padding: 0.2,
-                }}
-              >
-                <DeadlineIcon sx={{ color: 'white', fontSize: '10px' }} />
-                <Typography color="white" fontSize={8}>
-                  3 Mar
-                </Typography>
-              </Box>
+              {Task.deadline ? (
+                <Box
+                  backgroundColor="#2D9596"
+                  borderRadius={0.3}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 0.4,
+                    margin: 0.4,
+                    padding: 0.2,
+                  }}
+                >
+                  <DeadlineIcon sx={{ color: 'white', fontSize: '10px' }} />
+                  <Typography color="white" fontSize={8}>
+                    {Task.deadline.slice(0, 10)}
+                  </Typography>
+                </Box>
+              ) : null}
+
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.2 }}>
                 <DiscussIcon fontSize="small" />
-                <>3</>
+                <>{Task.commentOrderIds.length}</>
               </Box>
             </Box>
 
             <AvatarGroup className="menbers" max={3} spacing={5}>
-              {members.map((member, index) => (
+              {Task.userOrderIds.map((member, index) => (
                 <Avatar
                   key={index}
                   sx={{
@@ -125,11 +164,14 @@ export default function Task({ task, index, onDelete }) {
         }}
       >
         <TaskOpen
-          // delete={task.delete}
+          delete={task.delete}
           onClose={Close}
-          task={task}
+          task={Task}
           onDelete={onDelete}
           sx={{ position: 'relative' }}
+          handleAddUserToCard={handleAddUserToCard}
+          member={member}
+          onAddMemLs={handleAddUserToCard}
         />
       </Modal>
     </>
@@ -140,4 +182,5 @@ Task.propTypes = {
   task: PropTypes.object,
   index: PropTypes.number,
   onDelete: PropTypes.func,
+  member: PropTypes.array,
 };

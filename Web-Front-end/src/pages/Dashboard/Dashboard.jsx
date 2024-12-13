@@ -10,6 +10,7 @@ import AddBoard from './Components/AddBoard';
 import EditBoard from './Components/EditBoard';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { getUsersOfProject } from './service/user_service';
 
 export default function Dashboard() {
   const [boards, setBoards] = useState([]);
@@ -19,17 +20,35 @@ export default function Dashboard() {
   const [openAddBoardPopUp, setOpenAddBoardPopUp] = useState(false);
   const [openEditBoardPopUp, setOpenEditBoardPopUp] = useState(false);
   const [newBoard, setNewBoard] = useState('');
+  const [userLs, setUserLs] = useState([]);
 
   useEffect(() => {
-    if (!projectSlug) {
-      console.log('slug is incorrect format');
-      return;
-    }
-    getProjectBySlug(projectSlug).then((data) => {
-      if (!data) console.log('data is undefined');
-      else setProject(data);
-      socket.emit('joinRoom', data._id);
-    });
+    const fetchData = () => {
+      if (!projectSlug) {
+        console.log('slug is incorrect format');
+        return;
+      }
+
+      getProjectBySlug(projectSlug)
+        .then((data) => {
+          if (!data) {
+            console.log('data is undefined');
+            return;
+          }
+
+          setProject(data);
+          socket.emit('joinRoom', data._id);
+
+          return getUsersOfProject(data);
+        })
+        .then((resData) => {
+          console.log('get users: ', resData);
+          setUserLs(resData);
+        })
+        .catch((error) => console.log(error.message));
+    };
+
+    fetchData();
   }, [projectSlug]);
 
   useEffect(() => {
@@ -131,7 +150,7 @@ export default function Dashboard() {
     return (
       <>
         {/* <input onChange={handleBoardNameChange} /> */}
-        <button>AddBoard</button>
+        <button className="cus-btn">AddBoard</button>
       </>
     );
   }
@@ -159,8 +178,18 @@ export default function Dashboard() {
             ))}
           </Select>
           <div className="board-icon-container">
-            <button onClick={() => setOpenAddBoardPopUp(true)}>New</button>
-            <button onClick={() => setOpenEditBoardPopUp(true)}>Edit</button>
+            <button
+              className="cus-btn"
+              onClick={() => setOpenAddBoardPopUp(true)}
+            >
+              New
+            </button>
+            <button
+              className="cus-btn"
+              onClick={() => setOpenEditBoardPopUp(true)}
+            >
+              Edit
+            </button>
           </div>
         </Stack>
         <AddBoard
@@ -180,7 +209,7 @@ export default function Dashboard() {
           }
         />
         <DndProvider backend={HTML5Backend}>
-          <Board key={boardId} board_id={boardId} />
+          <Board key={boardId} board_id={boardId} member={userLs} />
         </DndProvider>
       </div>
     </div>

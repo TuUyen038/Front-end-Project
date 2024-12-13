@@ -31,10 +31,6 @@ export default function AddBoard({ open, onClose, onSave, onChange }) {
             <input onChange={onChange} placeholder="Board name ..." />
             <button>Add</button>
           </Stack>
-          {/* <Stack direction="row">
-            <p>Add desciption: </p>
-            <input />
-          </Stack> */}
           <Stack
             direction="row"
             sx={{

@@ -7,7 +7,7 @@ import { getColumnList } from '../service/column_service';
 import { v4 as uuidv4 } from 'uuid';
 import { socket } from '../../../../setting/socket';
 
-export default function Board({ board_id }) {
+export default function Board({ board_id, member }) {
   const [columns, setColumns] = useState([]);
 
   useEffect(() => {
@@ -39,65 +39,90 @@ export default function Board({ board_id }) {
       }
     });
   };
-  // const handleUpdateColumn = (id, payload) => {
-  //   setColumns((prev) =>
-  //     prev.map((col) => (col._id === id ? { ...col, ...payload } : col))
-  //   );
-  //   socket.emit('updateColumn', id, payload);
-  // };
+  const handleUpdateColumn = (id, payload) => {
+    setColumns((prev) =>
+      prev.map((col) => (col._id === id ? { ...col, ...payload } : col))
+    );
+  };
 
   const handleDeleteColumn = (id) => {
+    console.log('BOARD : ', member);
+
     setColumns((prev) => prev.filter((col) => col._id !== id));
     socket.emit('deleteColumn', id);
   };
 
-  const moveCard = (
-    cardId,
-    source_column_id,
-    target_column_id,
-    target_index
-  ) => {
-    setColumns((prev) => {
-      let sourceCol = prev.find((col) => col._id === source_column_id);
-      let targetCol = prev.find((col) => col._id === target_column_id);
-      if (sourceCol === targetCol) {
-        sourceCol.cardOrderIds.splice(target_index, 1);
-        sourceCol.cardOrderIds.splice(target_index, 0, cardId);
-        // socket.emit('updateColumn', sourceCol._id, sourceCol);
-      } else {
-        //loai bo card khoi tap nguon
-        sourceCol.cardOrderIds = sourceCol.cardOrderIds.filter(
-          (i) => i !== cardId
-        );
-        // socket.emit('updateColumn', sourceCol._id, sourceCol);
-        // them vo tap dich
-        targetCol.cardOrderIds.splice(target_index, 0, cardId);
-        // socket.emit('updateColumn', targetCol._id, targetCol);
-      }
-      return [...prev];
-    });
-  };
+  // const moveCard = (
+  //   cardId,
+  //   source_column_id,
+  //   target_column_id,
+  //   target_index
+  // ) => {
+  //   setColumns((prev) => {
+  //     const sourceCol = prev.find((col) => col._id === source_column_id);
+  //     const targetCol = prev.find((col) => col._id === target_column_id);
+
+  //     if (!sourceCol || !targetCol) {
+  //       console.error('Source or target column not found');
+  //       return prev;
+  //     }
+
+  //     // Xử lý khi di chuyển trong cùng một cột
+  //     if (sourceCol === targetCol) {
+  //       const draggedCard = sourceCol.cardOrderIds.splice(
+  //         sourceCol.cardOrderIds.indexOf(cardId),
+  //         1
+  //       )[0];
+  //       sourceCol.cardOrderIds.splice(target_index, 0, draggedCard);
+
+  //       // Gửi socket
+  //       socket.emit('updateColumn', sourceCol._id, sourceCol);
+
+  //       return prev.map((col) =>
+  //         col._id === source_column_id ? { ...sourceCol } : col
+  //       );
+  //     }
+
+  //     // Xử lý khi di chuyển giữa các cột
+  //     const updatedSourceCol = {
+  //       ...sourceCol,
+  //       cardOrderIds: sourceCol.cardOrderIds.filter((i) => i !== cardId),
+  //     };
+  //     const updatedTargetCol = {
+  //       ...targetCol,
+  //       cardOrderIds: [
+  //         ...targetCol.cardOrderIds.slice(0, target_index),
+  //         cardId,
+  //         ...targetCol.cardOrderIds.slice(target_index),
+  //       ],
+  //     };
+
+  //     // Gửi socket
+  //     socket.emit('updateColumn', sourceCol._id, updatedSourceCol);
+  //     socket.emit('updateColumn', targetCol._id, updatedTargetCol);
+
+  //     return prev.map((col) => {
+  //       if (col._id === source_column_id) return updatedSourceCol;
+  //       if (col._id === target_column_id) return updatedTargetCol;
+  //       return col;
+  //     });
+  //   });
+  // };
 
   useEffect(() => {
     const handleAdd = (newColumn) => {
       setColumns((prev) => [...prev, newColumn]);
     };
-    const handleUpdate = (id, payload) => {
-      setColumns((prev) =>
-        prev.map((col) => (col._id === id ? { ...col, ...payload } : col))
-      );
-    };
+
     const handleDelete = (id) => {
       setColumns((prev) => prev.filter((col) => col._id !== id));
     };
 
     socket.on('columnAdded', handleAdd);
-    socket.on('columnUpdated', handleUpdate);
     socket.on('columnDeleted', handleDelete);
 
     return () => {
       socket.off('columnAdded', handleAdd);
-      socket.off('columnUpdated', handleUpdate);
       socket.off('columnDeleted', handleDelete);
     };
   }, []);
@@ -112,7 +137,9 @@ export default function Board({ board_id }) {
               board_id={board_id}
               column_id={column._id}
               delete={() => handleDeleteColumn(column._id)}
-              moveCard={moveCard}
+              // moveCard={moveCard}
+              member={member}
+              onUpdate={handleUpdateColumn}
             ></Column>
           );
         })}
@@ -137,4 +164,5 @@ export default function Board({ board_id }) {
 
 Board.propTypes = {
   board_id: PropTypes.string,
+  member: PropTypes.array,
 };
