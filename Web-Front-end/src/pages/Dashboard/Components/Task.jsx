@@ -10,7 +10,7 @@ import { ItemTypes } from '../dnd/constants';
 import { socket } from '../../../../setting/socket';
 import { getCard } from '../service/card_service';
 
-export default function Task({ task, index, onDelete }) {
+export default function Task({ task, index, onDelete, member }) {
   const [Task, setTask] = useState(task);
   const [isOpened, setIsOpened] = useState(false);
   const OpenTask = () => {
@@ -23,11 +23,8 @@ export default function Task({ task, index, onDelete }) {
   };
 
   const handleAddUserToCard = (users) => {
-    setTask((prev) => ({
-      ...prev,
-      userOrderIds: [...prev.userOrderIds, users],
-    }));
-    socket.emit('addUsersCard', Task._id, users);
+    users.forEach((user) => socket.emit('addUserCard', Task._id, user.id));
+    console.log('emit add user id to card');
   };
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -55,6 +52,36 @@ export default function Task({ task, index, onDelete }) {
       .then((data) => setTask(data))
       .catch((error) => console.log(error.message));
   }, [isOpened]);
+
+  useEffect(() => {
+    const handleAdd = (userId) => {
+      console.log('get update from socket');
+      setTask((prev) => ({
+        ...prev,
+        userOrderIds: [...prev.userOrderIds, userId],
+      }));
+    };
+    socket.on('userCardAdded', (cardId, userId) => {
+      if (cardId === task._id) handleAdd(userId);
+    });
+    return () => {
+      socket.off('userCardAdded', (cardId, userId) => {
+        if (cardId === task._id) handleAdd(userId);
+      });
+    };
+  }, []);
+
+  useEffect(() => {
+    const updateCard = (cardId, data) => {
+      if (cardId === Task._id) {
+        setTask(data);
+      }
+    };
+    socket.on('cardUpdated', updateCard);
+    return () => {
+      socket.off('cardUpdated', updateCard);
+    };
+  }, []);
 
   return (
     <>
@@ -140,6 +167,8 @@ export default function Task({ task, index, onDelete }) {
           onDelete={onDelete}
           sx={{ position: 'relative' }}
           handleAddUserToCard={handleAddUserToCard}
+          member={member}
+          onAddMemLs={handleAddUserToCard}
         />
       </Modal>
     </>
@@ -150,4 +179,5 @@ Task.propTypes = {
   task: PropTypes.object,
   index: PropTypes.number,
   onDelete: PropTypes.func,
+  member: PropTypes.array,
 };

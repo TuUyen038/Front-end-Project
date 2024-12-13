@@ -7,7 +7,7 @@ import { getColumnList } from '../service/column_service';
 import { v4 as uuidv4 } from 'uuid';
 import { socket } from '../../../../setting/socket';
 
-export default function Board({ board_id }) {
+export default function Board({ board_id, member }) {
   const [columns, setColumns] = useState([]);
 
   useEffect(() => {
@@ -39,14 +39,15 @@ export default function Board({ board_id }) {
       }
     });
   };
-  // const handleUpdateColumn = (id, payload) => {
-  //   setColumns((prev) =>
-  //     prev.map((col) => (col._id === id ? { ...col, ...payload } : col))
-  //   );
-  //   socket.emit('updateColumn', id, payload);
-  // };
+  const handleUpdateColumn = (id, payload) => {
+    setColumns((prev) =>
+      prev.map((col) => (col._id === id ? { ...col, ...payload } : col))
+    );
+  };
 
   const handleDeleteColumn = (id) => {
+    console.log('BOARD : ', member);
+
     setColumns((prev) => prev.filter((col) => col._id !== id));
     socket.emit('deleteColumn', id);
   };
@@ -82,22 +83,16 @@ export default function Board({ board_id }) {
     const handleAdd = (newColumn) => {
       setColumns((prev) => [...prev, newColumn]);
     };
-    const handleUpdate = (id, payload) => {
-      setColumns((prev) =>
-        prev.map((col) => (col._id === id ? { ...col, ...payload } : col))
-      );
-    };
+
     const handleDelete = (id) => {
       setColumns((prev) => prev.filter((col) => col._id !== id));
     };
 
     socket.on('columnAdded', handleAdd);
-    socket.on('columnUpdated', handleUpdate);
     socket.on('columnDeleted', handleDelete);
 
     return () => {
       socket.off('columnAdded', handleAdd);
-      socket.off('columnUpdated', handleUpdate);
       socket.off('columnDeleted', handleDelete);
     };
   }, []);
@@ -113,6 +108,8 @@ export default function Board({ board_id }) {
               column_id={column._id}
               delete={() => handleDeleteColumn(column._id)}
               moveCard={moveCard}
+              member={member}
+              onUpdate={handleUpdateColumn}
             ></Column>
           );
         })}
@@ -137,4 +134,5 @@ export default function Board({ board_id }) {
 
 Board.propTypes = {
   board_id: PropTypes.string,
+  member: PropTypes.array,
 };

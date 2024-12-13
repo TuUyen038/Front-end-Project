@@ -19,6 +19,33 @@ export default function Column(props) {
   const [openDeletePopUp, setOpenDeletePopUp] = useState(false);
   const [openTaskPopUp, setOpenTaskPopUp] = useState(false);
   const [tempTask, setTempTask] = useState('');
+  const ref = useRef();
+
+  const handleOutsideClick = (event) => {
+    if (ref.current && !ref.current.contains(event.target)) {
+      props.onUpdate(props.column_id, { title: tempTask });
+      socket.emit('updateColumn', props.column_id, { title: tempTask });
+      setTempTask('');
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleUpdate = (id, payload) => {
+      if (props.column_id === id) props.onUpdate(id, payload);
+    };
+    socket.on('columnUpdated', handleUpdate);
+    return () => {
+      socket.off('columnUpdated', handleUpdate);
+    };
+  }, []);
 
   useEffect(() => {
     getCardList(props.column_id)
@@ -101,7 +128,7 @@ export default function Column(props) {
     const hoverClientY =
       clientOffset.y - hoverBoundingRect.top + ref.current.scrollTop;
 
-    const CARD_HEIGHT = 40.58; // Chiều cao của mỗi card (giả định)
+    const CARD_HEIGHT = 34; // Chiều cao của mỗi card (giả định)
     const hoverIndex = Math.floor(hoverClientY / CARD_HEIGHT);
 
     // Trả về vị trí hợp lệ (trong khoảng [0, cardCount])
@@ -191,6 +218,7 @@ export default function Column(props) {
                 index={index}
                 className="Task"
                 onDelete={() => handleDeleteCard(task._id)}
+                member={props.member}
               ></Task>
             );
           })}
@@ -237,4 +265,6 @@ Column.propTypes = {
   board_id: PropTypes.string,
   delete: PropTypes.func,
   moveCard: PropTypes.func,
+  member: PropTypes.array,
+  onUpdate: PropTypes.func,
 };
