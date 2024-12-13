@@ -16,12 +16,25 @@ const TaskOpen = forwardRef(
     const [user, setUser] = useState({});
     const [mess, setMess] = useState('');
     const [editing, setEditing] = useState(false);
+    const [editPayload, setEditPayload] = useState({
+      title: task.title,
+      description: task.description,
+    });
 
     //handler
     const handleSendMess = (payload) => {
       socket.emit('addComment', payload, user);
       console.log('comment has been sent');
       setMess('');
+    };
+
+    const handleSave = () => {
+      if (
+        task.title !== editPayload.title ||
+        task.description !== editPayload.description
+      )
+        socket.emit('updateCard', task._id, editPayload);
+      onClose();
     };
 
     //useEffect
@@ -68,7 +81,16 @@ const TaskOpen = forwardRef(
             }}
           >
             <Stack className="props-header" direction="row">
-              <h1>{task.title}</h1>
+              {!editing ? (
+                <h1>{task.title}</h1>
+              ) : (
+                <input
+                  value={editPayload.title}
+                  onChange={(e) =>
+                    setEditPayload((pre) => ({ ...pre, title: e.target.value }))
+                  }
+                />
+              )}
             </Stack>
             <Stack
               className="task-body"
@@ -88,7 +110,13 @@ const TaskOpen = forwardRef(
                 ) : (
                   <TextField
                     variant="outlined"
-                    value={task.description}
+                    value={editPayload.description}
+                    onChange={(e) =>
+                      setEditPayload((pre) => ({
+                        ...pre,
+                        description: e.target.value,
+                      }))
+                    }
                     sx={{
                       height: '2rem',
                       width: '40rem',
@@ -134,11 +162,14 @@ const TaskOpen = forwardRef(
                   setEditing={setEditing}
                   member={member}
                   onAddMemLs={onAddMemLs}
+                  onSetPayLoad={(payload) =>
+                    setEditPayload((pre) => ({ ...pre, ...payload }))
+                  }
                 />
               </Stack>
             </Stack>
           </Stack>
-          <Save />
+          <Save onSave={handleSave} />
         </Box>
       </div>
     );

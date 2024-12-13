@@ -71,6 +71,18 @@ export default function Task({ task, index, onDelete, member }) {
     };
   }, []);
 
+  useEffect(() => {
+    const updateCard = (cardId, data) => {
+      if (cardId === Task._id) {
+        setTask(data);
+      }
+    };
+    socket.on('cardUpdated', updateCard);
+    return () => {
+      socket.off('cardUpdated', updateCard);
+    };
+  }, []);
+
   return (
     <>
       <div className="Task" draggable onClick={OpenTask} ref={drag}>

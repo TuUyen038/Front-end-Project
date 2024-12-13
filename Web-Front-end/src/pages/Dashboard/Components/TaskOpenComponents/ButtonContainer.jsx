@@ -12,21 +12,32 @@ import PropTypes from 'prop-types';
 import DeletePopUp from '../../../../components/DeletePopUp/DeletePopUp';
 import JoinIn from '../JoinIn';
 
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 export default function ButtonContainer({
   onDelete,
   onClose,
   setEditing,
   member,
   onAddMemLs,
+  onSetPayLoad,
 }) {
-  console.log('BUTTON', member);
   const [openDelete, setOpenDelete] = useState(false);
   const [openJoinIn, setOpenJoinIn] = useState(false);
+  const [openDatePicker, setOpenDatePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDelete = () => {
     //   console.log(task);
     setOpenDelete(true);
   };
+  const handleDeadline = () => {
+    onSetPayLoad({ deadline: selectedDate });
+    setOpenDatePicker(false);
+  };
+
   const saveDelete = () => {
     onDelete();
     setOpenDelete(false);
@@ -62,19 +73,38 @@ export default function ButtonContainer({
           />
         ) : null}
       </Button>
-      <Button
-        className="task-button"
-        variant="contained"
-        startIcon={<DeadlineIcon />}
-        color="rgba(217, 217, 217, 217, 0.7)"
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-        }}
-      >
-        Deadline
-      </Button>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Button
+          className="task-button"
+          onClick={() => setOpenDatePicker(!openDatePicker)}
+          variant="contained"
+          startIcon={<DeadlineIcon />}
+          color="rgba(217, 217, 217, 217, 0.7)"
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+          }}
+        >
+          Deadline
+        </Button>
+        {openDatePicker && (
+          <>
+            <DatePicker
+              label="Pick Up Deadline"
+              value={selectedDate}
+              onChange={(newDate) => setSelectedDate(newDate)}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                },
+              }}
+            />
+            <button onClick={handleDeadline}>OK</button>
+          </>
+        )}
+      </LocalizationProvider>
+
       <Button
         className="task-button"
         variant="contained"
@@ -159,4 +189,5 @@ ButtonContainer.propTypes = {
   setEditing: PropTypes.func,
   onAddMemLs: PropTypes.func,
   member: PropTypes.array,
+  onSetPayLoad: PropTypes.func,
 };
