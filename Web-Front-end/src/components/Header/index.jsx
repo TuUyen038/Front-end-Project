@@ -43,6 +43,7 @@ function Header({ checked, onChange }) {
         localStorage.removeItem("email");
         localStorage.removeItem("name");
         localStorage.removeItem("id");
+        localStorage.removeItem("userEmail");
         localStorage.setItem("isLoggedIn", "false");
         window.location.reload(); //load lại trang
       },

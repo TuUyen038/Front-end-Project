@@ -61,7 +61,7 @@ function LoginForm({ onLoginSuccess }) {
       const err = await res.json();
       setAlert({
         severity: "error",
-        message: err.message || "Failed to login!",
+        message: err.msg || "Failed to login!",
       });
     }
   };
