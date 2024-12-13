@@ -89,7 +89,7 @@ function LoginForm({ onLoginSuccess }) {
       const err = await res.json();
       setAlert({
         severity: "error",
-        message: err.message || "Failed send to your email!",
+        message: err.msg || "Failed send to your email!",
       });
       setTimerCount(60);
       setDisableResend(true);
