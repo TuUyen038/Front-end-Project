@@ -8,7 +8,7 @@
     top: 0;
     display: flex;
     font-size: 1.4rem;
-    z-index: 2;
+    z-index: 5;
 }
 
 .blur {
@@ -43,27 +43,9 @@
 }
 
 .main-content:first-child {
-    padding-top: 70px;
+    padding-top: 50px;
 }
 
-.close {
-    position: absolute;
-    left: 0;
-    top: 0;
-    border: none;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 7px;
-    border-radius: 2px;
-    padding-bottom: 5px;
-}
-
-.close:hover {
-    background: red;
-    color: white;
-}
 
 .btn {
     background: #fff;
@@ -127,5 +109,19 @@
 }
 .admin .row:hover {
     border-bottom: 1px solid #2D9596;
-
+}
+.users {
+    min-width: 500px;
+    padding-bottom: 50px;
+    max-height: 600px;
+    min-height: 350px;
+}
+.users h3 {
+    font-size: 2.3rem;
+    color: #2D9596;
+}
+.group-name {
+    display: flex;
+    gap: 5px;
+    align-items: last baseline;
 }

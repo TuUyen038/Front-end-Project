@@ -13,7 +13,7 @@ const ListItem = ({ list }) => {
           count++;
           const deadline = item.deadline ? new Date(item.deadline) : null;
           if (count <= 3) {
-            const formattedDeadline = deadline.toLocaleString();
+            const formattedDeadline = deadline.toLocaleDateString("vi-VN");
             return (
               <li key={item.id}>
                 <Deadline title={item.title} time={formattedDeadline} />

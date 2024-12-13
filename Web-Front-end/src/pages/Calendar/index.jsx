@@ -116,7 +116,7 @@ export default function Calendar() {
         <div className="calender-main-content">
           <p className="titleC"> List Deadline</p>
           {(filteredLs.length !== 0) ? <FilteredList  list={filteredLs}/>
-          : <p>No deadline</p>}
+          : <p style={{fontSize: "1.5rem"}}>No deadline</p>}
         </div>
       </div>
     </div>

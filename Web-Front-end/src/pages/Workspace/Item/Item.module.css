@@ -3,6 +3,7 @@
 }
 
 .Item {
+    position: relative;
     width: 230px;
     height: 300px;
     background: white;
@@ -57,7 +58,6 @@
 
 .tools {
     margin-left: 10px;
-    position: relative;
 }
 
 .tools .btnn {
@@ -77,26 +77,32 @@
     margin-left: -2px;
     padding: 0 10px;
     padding-top: 3px;
+    position: relative;
 }
-
+.more:hover {
+    background: red;
+}
+.more:hover .formTool {
+    display: block;
+}
 .tools button:hover {
     background: #d5edf3;
 }
 
-.form {
+.formTool {
     position: absolute;
     margin-top: 2px;
     width: 102px;
     border: 1px solid #2D9596;
     border-radius: 2px;
     background: #fff;
-    top: 22px;
-    left: 9px;
 }
-.detail{
+
+.detail {
     padding-bottom: 13px;
 }
-.detail > p {
+
+.detail>p {
     font-size: 1.1rem;
     font-weight: 100;
     color: #333;
