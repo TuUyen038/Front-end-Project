@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import PropTypes from 'prop-types';
 
-export default function Save({ onSave, onSetPayLoad }) {
+export default function Save({ onSave }) {
   return (
     <div>
       <Button
@@ -22,5 +22,4 @@ export default function Save({ onSave, onSetPayLoad }) {
 
 Save.propTypes = {
   onSave: PropTypes.func,
-  onSetPayLoad: PropTypes.func,
 };

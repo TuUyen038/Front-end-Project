@@ -94,11 +94,6 @@ export default function ButtonContainer({
               label="Pick Up Deadline"
               value={selectedDate}
               onChange={(newDate) => setSelectedDate(newDate)}
-              slotProps={{
-                textField: {
-                  fullWidth: true,
-                },
-              }}
             />
             <button onClick={handleDeadline}>OK</button>
           </>
