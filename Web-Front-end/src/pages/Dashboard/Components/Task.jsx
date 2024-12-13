@@ -51,10 +51,9 @@ export default function Task({ task, index, onDelete, member }) {
     getCard(task._id)
       .then((data) => {
         setTask(data);
-        console.log(data);
       })
       .catch((error) => console.log(error.message));
-  }, [isOpened]);
+  }, [isOpened, task._id]);
 
   useEffect(() => {
     const handleAdd = (userId) => {
@@ -128,27 +127,31 @@ export default function Task({ task, index, onDelete, member }) {
                 </Box>
               ) : null}
 
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.2 }}>
-                <DiscussIcon fontSize="small" />
-                <>{Task.commentOrderIds.length}</>
-              </Box>
+              {Task.commentOrderIds ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.2 }}>
+                  <DiscussIcon fontSize="small" />
+                  <>{Task.commentOrderIds.length}</>
+                </Box>
+              ) : null}
             </Box>
 
-            <AvatarGroup className="menbers" max={3} spacing={5}>
-              {Task.userOrderIds.map((member, index) => (
-                <Avatar
-                  key={index}
-                  sx={{
-                    backgroundColor: member.color,
-                    width: 12,
-                    height: 12,
-                    fontSize: 8,
-                  }}
-                >
-                  {member.name}
-                </Avatar>
-              ))}
-            </AvatarGroup>
+            {Task.userOrderIds ? (
+              <AvatarGroup className="menbers" max={3} spacing={5}>
+                {Task.userOrderIds.map((member, index) => (
+                  <Avatar
+                    key={index}
+                    sx={{
+                      backgroundColor: member.color,
+                      width: 12,
+                      height: 12,
+                      fontSize: 8,
+                    }}
+                  >
+                    {member.name}
+                  </Avatar>
+                ))}
+              </AvatarGroup>
+            ) : null}
           </Stack>
         </Stack>
       </div>
