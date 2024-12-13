@@ -40,7 +40,7 @@ function ForgotPassword() {
       const err = await res.json();
       setAlert({
         severity: "error",
-        message: err.message || "Please try again!",
+        message: err.msg || "Please try again!",
       });
     }
   };

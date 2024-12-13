@@ -58,7 +58,7 @@ function SignupForm() {
       const err = await res.json();
       setAlert({
         severity: "error",
-        message: err.message || "Failed to register!",
+        message: err.msg || "Failed to register!",
       });
     }
   };
