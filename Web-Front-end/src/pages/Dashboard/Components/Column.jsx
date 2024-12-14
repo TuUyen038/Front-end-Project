@@ -116,29 +116,67 @@ export default function Column(props) {
   };
 
   const columnRef = useRef(null);
-  const [hoverIndex, setHoverIndex] = useState();
+  const [hoverIndex, setHoverIndex] = useState(0);
+  const hoverIndexRef = useRef(hoverIndex);
+
+  useEffect(() => {
+    hoverIndexRef.current = hoverIndex; // Cập nhật ref khi hoverIndex thay đổi
+  }, [hoverIndex]);
+
   const getHoverIndex = (monitor, ref, cardCount) => {
     if (!ref.current) return cardCount;
 
-    const hoverBoundingRect = ref.current.getBoundingClientRect(); // Lấy kích thước của container
-    const clientOffset = monitor.getClientOffset(); // Lấy tọa độ của con trỏ chuột
+    const hoverBoundingRect = ref.current.getBoundingClientRect(); // Kích thước container
+    const clientOffset = monitor.getClientOffset(); // Tọa độ con trỏ chuột
 
-    // Tính toán vị trí Y tương đối so với container
+    if (!clientOffset) return cardCount;
+
     const hoverClientY =
       clientOffset.y - hoverBoundingRect.top + ref.current.scrollTop;
 
-    const CARD_HEIGHT = 34; // Chiều cao của mỗi card (giả định)
-    const hoverIndex = Math.floor(hoverClientY / CARD_HEIGHT);
+    const childNodes = ref.current.children;
 
-    // Trả về vị trí hợp lệ (trong khoảng [0, cardCount])
-    return Math.max(0, Math.min(cardCount, hoverIndex));
+    if (!childNodes.length) return 0;
+
+    if (childNodes.length === 1) {
+      const cardTop = childNodes[0].offsetTop;
+      const cardHeight = childNodes[0].offsetHeight;
+
+      // Nếu hover nằm ở phía trên thẻ duy nhất, trả về index 0
+      if (hoverClientY < cardTop + cardHeight / 2) {
+        return 0;
+      }
+
+      // Nếu hover nằm ở phía dưới thẻ duy nhất, trả về index 1 (thêm vào cuối)
+      return 1;
+    }
+
+    let cumulativeHeight = 0;
+    for (let i = 0; i < childNodes.length; i++) {
+      const cardHeight = childNodes[i].offsetHeight;
+
+      if (
+        hoverClientY >= cumulativeHeight &&
+        hoverClientY < cumulativeHeight + cardHeight
+      ) {
+        return i; // Vị trí chuột nằm trong thẻ này
+      }
+
+      cumulativeHeight += cardHeight;
+    }
+
+    // Nếu vượt qua chiều cao của tất cả các thẻ, trả về cardCount
+    return cardCount;
   };
 
   const [, drop] = useDrop(() => ({
     accept: ItemTypes.CARD,
     hover: (item, monitor) => {
       if (!monitor.isOver()) return;
-      if (item.index === hoverIndex && item.columnId === props.column_id)
+      if (
+        item.index === hoverIndexRef.current &&
+        item.columnId === props.column_id
+      )
         return;
 
       const calculatedHoverIndex = getHoverIndex(
@@ -146,9 +184,17 @@ export default function Column(props) {
         columnRef,
         tasks.length
       );
-      if (calculatedHoverIndex >= 0 && calculatedHoverIndex !== hoverIndex) {
+
+      if (
+        calculatedHoverIndex !== hoverIndex ||
+        item.columnId !== props.column_id
+      ) {
         setHoverIndex(calculatedHoverIndex);
+        hoverIndexRef.current = calculatedHoverIndex; // Cập nhật giá trị ref ngay lập tức
       }
+
+      console.log('hover index', calculatedHoverIndex);
+      console.log('Hover index', hoverIndexRef.current);
     },
     drop: (item, monitor) => {
       if (!item || monitor.didDrop() || !monitor.isOver()) return undefined;
@@ -163,8 +209,8 @@ export default function Column(props) {
 
       setTasks((pre) => {
         const updatedTasks = [...pre];
-        updatedTasks.splice(hoverIndex, 0, item);
-        item.index = hoverIndex;
+        updatedTasks.splice(hoverIndexRef.current, 0, item);
+        item.index = hoverIndexRef.current;
         return updatedTasks;
       });
 
@@ -172,7 +218,7 @@ export default function Column(props) {
         'moveCard',
         item._id,
         props.column_id.toString(),
-        parseInt(hoverIndex)
+        parseInt(hoverIndexRef.current)
       );
 
       return { columnId: props.column_id };
