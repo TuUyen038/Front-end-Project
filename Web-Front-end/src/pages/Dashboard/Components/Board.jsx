@@ -40,7 +40,8 @@ export default function Board({ board_id, member }) {
   useEffect(() => {
     const handleAdd = (newColumn) => {
       if (newColumn.boardId === board_id) {
-        setColumns((prev) => [...prev, newColumn]);
+        // setColumns((prev) => [...prev, newColumn]);
+        getColumnList(board_id).then((data) => setColumns(data));
         console.log('BE emit col added');
       }
     };
