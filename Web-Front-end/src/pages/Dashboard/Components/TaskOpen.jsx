@@ -10,6 +10,7 @@ import ButtonContainer from './TaskOpenComponents/ButtonContainer';
 import CloseX from '../../../components/SmallCom/CloseX';
 import Save from '../../../components/SmallCom/Save';
 import { getMemberOfCard } from '../service/user_service';
+import { stringAvatar } from '../avatarExe/avatar';
 
 const TaskOpen = forwardRef(
   ({ task, onClose, onDelete, member, onAddMemLs }, ref) => {
@@ -106,11 +107,11 @@ const TaskOpen = forwardRef(
                 {task.userOrderIds && task.userOrderIds.length > 0 && (
                   <div>
                     Member:
-                    <div>
+                    <Stack direction="row" spacing={2}>
                       {cardMem.map((mem, index) => (
-                        <p key={index}>{mem.name}</p>
+                        <Avatar key={index} {...stringAvatar(`${mem.name}`)} />
                       ))}
-                    </div>
+                    </Stack>
                   </div>
                 )}
                 {task.deadline && (
@@ -174,7 +175,8 @@ const TaskOpen = forwardRef(
                   direction="row"
                   sx={{ height: '0.8rem', width: '40rem' }}
                 >
-                  <Avatar>{user.name}</Avatar>
+                  <Avatar {...stringAvatar(`${user.name}`)} />
+
                   <TextField
                     variant="outlined"
                     onChange={(e) => setMess(e.target.value)}
