@@ -138,20 +138,8 @@ export default function Column({ col, index, onDelete, member }) {
 
     if (!childNodes.length) return 0;
 
-    if (childNodes.length === 1) {
-      const cardTop = childNodes[0].offsetTop;
-      const cardHeight = childNodes[0].offsetHeight;
-
-      // Nếu hover nằm ở phía trên thẻ duy nhất, trả về index 0
-      if (hoverClientY < cardTop + cardHeight / 2) {
-        return 0;
-      }
-
-      // Nếu hover nằm ở phía dưới thẻ duy nhất, trả về index 1 (thêm vào cuối)
-      return 1;
-    }
-
-    let cumulativeHeight = 0;
+    let cumulativeHeight = 16;
+    const gap = 0;
     for (let i = 0; i < childNodes.length; i++) {
       const cardHeight = childNodes[i].offsetHeight;
 
@@ -162,7 +150,7 @@ export default function Column({ col, index, onDelete, member }) {
         return i; // Vị trí chuột nằm trong thẻ này
       }
 
-      cumulativeHeight += cardHeight;
+      cumulativeHeight += cardHeight + gap;
     }
 
     // Nếu vượt qua chiều cao của tất cả các thẻ, trả về cardCount
@@ -193,20 +181,20 @@ export default function Column({ col, index, onDelete, member }) {
     drop: (item, monitor) => {
       if (!item || monitor.didDrop() || !monitor.isOver()) return undefined;
 
-      if (col._id === item.columnId) {
-        setTasks((pre) => {
-          const updatedTasks = [...pre];
-          updatedTasks.splice(item.index, 1);
-          return updatedTasks;
-        });
-      }
+      // if (col._id === item.columnId) {
+      //   setTasks((pre) => {
+      //     const updatedTasks = [...pre];
+      //     updatedTasks.splice(item.index, 1);
+      //     return updatedTasks;
+      //   });
+      // }
 
-      setTasks((pre) => {
-        const updatedTasks = [...pre];
-        updatedTasks.splice(hoverIndexRef.current, 0, item);
-        item.index = hoverIndexRef.current;
-        return updatedTasks;
-      });
+      // setTasks((pre) => {
+      //   const updatedTasks = [...pre];
+      //   updatedTasks.splice(hoverIndexRef.current, 0, item);
+      //   item.index = hoverIndexRef.current;
+      //   return updatedTasks;
+      // });
 
       socket.emit(
         'moveCard',
@@ -214,7 +202,7 @@ export default function Column({ col, index, onDelete, member }) {
         col._id.toString(),
         parseInt(hoverIndexRef.current)
       );
-
+      setHoverIndex(0);
       return { columnId: col._id };
     },
   }));
@@ -222,10 +210,9 @@ export default function Column({ col, index, onDelete, member }) {
   useEffect(() => {
     const handleCardMoved = (oldCol, newCol) => {
       if (col._id === oldCol._id) {
-        getCardList(oldCol._id).then(setTasks);
-      }
-      if (col._id === newCol._id) {
-        getCardList(newCol._id).then(setTasks);
+        getCardList(col._id).then((data) => setTasks(data));
+      } else if (col._id === newCol._id) {
+        getCardList(col._id).then((data) => setTasks(data));
       }
     };
 

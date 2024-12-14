@@ -1,10 +1,12 @@
 import { Button, Stack } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Column from './Column';
 import AddIcon from '@mui/icons-material/Add';
 import PropTypes from 'prop-types';
 import { getColumnList } from '../service/column_service';
 import { socket } from '../../../../setting/socket';
+import { useDrop } from 'react-dnd';
+import { ItemTypes } from '../dnd/constants';
 
 export default function Board({ board_id, member }) {
   const [columns, setColumns] = useState([]);
@@ -61,9 +63,102 @@ export default function Board({ board_id, member }) {
       socket.off('columnDeleted', handleDelete);
     };
   }, []);
+
+  // xử lý drop với column
+  useEffect(() => {
+    const handleMove = (col) => {
+      // if (col.boardId === board_id) setColumns(col);
+      console.log('BE emit move col: ', col);
+      getColumnList(board_id).then((data) => setColumns(data));
+    };
+    socket.on('columnMoved', handleMove);
+    return () => {
+      socket.off('columnMoved', handleMove);
+    };
+  }, []);
+
+  const [hoverIndex, setHoverIndex] = useState(0);
+  const boardRef = useRef();
+  const hoverIndexRef = useRef(hoverIndex);
+
+  useEffect(() => {
+    hoverIndexRef.current = hoverIndex; // Cập nhật ref khi hoverIndex thay đổi
+  }, [hoverIndex]);
+
+  const getHoverIndex = (monitor, ref, colCount) => {
+    if (!ref.current) return colCount;
+
+    const hoverBoundingRect = ref.current.getBoundingClientRect(); // Kích thước container
+    const clientOffset = monitor.getClientOffset(); // Tọa độ con trỏ chuột
+
+    if (!clientOffset) return colCount;
+
+    const hoverClientX =
+      clientOffset.x - hoverBoundingRect.left + ref.current.scrollLeft;
+
+    const childNodes = ref.current.children;
+
+    if (!childNodes.length) return 0;
+
+    let cumulativeWidth = 0;
+    const gap = 40;
+    for (let i = 0; i < childNodes.length; i++) {
+      const cardWidth = childNodes[i].offsetWidth;
+
+      if (
+        hoverClientX >= cumulativeWidth &&
+        hoverClientX < cumulativeWidth + cardWidth
+      ) {
+        return i; // Vị trí chuột nằm trong thẻ này
+      }
+
+      cumulativeWidth += cardWidth + gap;
+    }
+
+    // Nếu vượt qua chiều cao của tất cả các thẻ, trả về colCount
+    return colCount;
+  };
+
+  const [, drop] = useDrop(() => ({
+    accept: ItemTypes.COLUMN,
+    hover: (item, monitor) => {
+      let caculatedIndex = getHoverIndex(monitor, boardRef, columns.length);
+      if (caculatedIndex !== hoverIndex) {
+        setHoverIndex(caculatedIndex);
+        hoverIndexRef.current = caculatedIndex;
+        console.log('HOVER COL INDEX: ', caculatedIndex); // In giá trị mới được tính toán
+      }
+    },
+    drop: (item, monitor) => {
+      if (!item || monitor.didDrop() || !monitor.isOver()) return undefined;
+      // setColumns((pre) => {
+      //   const updatedCol = [...pre];
+      //   updatedCol.splice(item.index, 1);
+      //   updatedCol.splice(hoverIndexRef.current, 0, item);
+      //   item.index = hoverIndexRef.current;
+      //   return updatedCol;
+      // });
+      console.log('ID: ', item._id);
+      console.log('INDEX: ', hoverIndex);
+      socket.emit(
+        'moveColumn',
+        item._id.toString(),
+        parseInt(hoverIndexRef.current)
+      );
+      setHoverIndex(0);
+    },
+  }));
+
   return (
     <Stack direction="column" className="Board">
-      <Stack direction="row" className="Main">
+      <Stack
+        direction="row"
+        className="Main"
+        ref={(node) => {
+          boardRef.current = node;
+          drop(node);
+        }}
+      >
         {columns.map((column, index) => {
           return (
             <Column
