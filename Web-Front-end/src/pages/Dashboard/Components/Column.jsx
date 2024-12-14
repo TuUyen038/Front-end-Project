@@ -85,7 +85,7 @@ export default function Column({ col, index, onDelete, member }) {
       socket.off('cardAdded', addCard);
       socket.off('cardDeleted', deleteCard);
     };
-  });
+  }, []);
 
   const handleAddCard = (payload) => {
     let newCard = {
@@ -96,8 +96,6 @@ export default function Column({ col, index, onDelete, member }) {
     socket.emit('addCard', newCard, (response) => {
       if (response.success) {
         console.log('da emit add card thanh cong');
-        // const cardData = response.data;
-        // setTasks(cardData);
       } else {
         console.log('COLUMN: Fail to add card, Error: ' + response.error);
       }

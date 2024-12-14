@@ -39,11 +39,13 @@ export default function Board({ board_id, member }) {
 
   useEffect(() => {
     const handleAdd = (newColumn) => {
-      setColumns((prev) => [...prev, newColumn]);
+      if (newColumn.boardId === board_id) {
+        setColumns((prev) => [...prev, newColumn]);
+        console.log('BE emit col added');
+      }
     };
 
     const handleUpdate = (id, payload) => {
-      console.log('BE emit lai: update column');
       setColumns((prev) =>
         prev.map((col) => (col._id === id ? { ...col, ...payload } : col))
       );
@@ -67,7 +69,6 @@ export default function Board({ board_id, member }) {
   // xử lý drop với column
   useEffect(() => {
     const handleMove = (col) => {
-      // if (col.boardId === board_id) setColumns(col);
       console.log('BE emit move col: ', col);
       getColumnList(board_id).then((data) => setColumns(data));
     };
