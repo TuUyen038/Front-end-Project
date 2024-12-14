@@ -47,6 +47,6 @@
     align-items: center;
     justify-content: center;
 }
-.css-1of3z4j-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track {
-    background-color: none;
+.css-1b00i0p-MuiSwitch-root .Mui-checked+.MuiSwitch-track{
+    background-color: #fff;
 }

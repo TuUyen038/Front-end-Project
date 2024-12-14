@@ -25,11 +25,11 @@ export default function Setting({ checked, onChange }) {
             <Switch
             sx={{
               '& .MuiSwitch-track': {
-                backgroundColor: '#fff', // Hoặc màu khác
+                backgroundColor: '#fff', 
               },
               '& .Mui-checked + .MuiSwitch-track': {
-                backgroundColor: '#fff', // Xóa màu khi checked
-              },
+                backgroundColor: 'black!important', 
+              }
             }}
               checked={checked}
               onChange={onChange}
