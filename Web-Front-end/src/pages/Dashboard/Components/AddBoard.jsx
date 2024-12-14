@@ -29,7 +29,6 @@ export default function AddBoard({ open, onClose, onSave, onChange }) {
           <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>Add new board</p>
           <Stack direction="row">
             <input onChange={onChange} placeholder="Board name ..." />
-            <button>Add</button>
           </Stack>
           <Stack
             direction="row"

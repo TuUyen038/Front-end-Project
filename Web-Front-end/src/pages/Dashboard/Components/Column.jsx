@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import DeletePopUp from '../../../components/DeletePopUp/DeletePopUp';
 import AddNewTask from './AddNewTask';
 import { getCardList } from '../service/card_service';
-import { v4 as uuidv4 } from 'uuid';
 import { socket } from '../../../../setting/socket';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../dnd/constants';
@@ -21,31 +20,40 @@ export default function Column(props) {
   const [tempTask, setTempTask] = useState({});
   const ref = useRef();
 
-  const handleOutsideClick = (event) => {
-    if (ref.current && !ref.current.contains(event.target)) {
-      props.onUpdate(props.column_id, { title: tempTask });
-      socket.emit('updateColumn', props.column_id, { title: tempTask });
-      setTempTask('');
-    }
-  };
-
   useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        if (title.trim() && title !== props.title) {
+          console.log(title);
+          socket.emit('updateColumn', props.column_id, { title });
+          console.log('emit update column title');
+        } else if (!title.trim()) {
+          // toast
+          setTitle(props.title);
+        }
+      }
+    };
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        console.log(title);
+        if (title.trim() && title !== props.title) {
+          socket.emit('updateColumn', props.column_id, { title });
+          console.log('emit update column title');
+        } else if (!title.trim()) {
+          // toast
+          setTitle(props.title);
+        }
+      }
+    };
     document.addEventListener('mousedown', handleOutsideClick);
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick);
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
-
-  useEffect(() => {
-    const handleUpdate = (id, payload) => {
-      if (props.column_id === id) props.onUpdate(id, payload);
-    };
-    socket.on('columnUpdated', handleUpdate);
-    return () => {
-      socket.off('columnUpdated', handleUpdate);
-    };
-  }, []);
+  }, [title, props.title]);
 
   useEffect(() => {
     getCardList(props.column_id)
@@ -189,6 +197,7 @@ export default function Column(props) {
 
   return (
     <Stack
+      ref={ref}
       className="Column"
       sx={{
         display: 'flex',
@@ -201,7 +210,10 @@ export default function Column(props) {
         <Stack className="Title" direction="row">
           <Input
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              console.log(title);
+              setTitle(e.target.value);
+            }}
             sx={{ fontSize: '1.6rem' }}
           />
           <MoreIcon sx={{ fontSize: '2.4rem' }} />
