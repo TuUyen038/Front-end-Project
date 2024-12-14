@@ -105,18 +105,26 @@ const TaskOpen = forwardRef(
               )}
               <div className="member-deadline-info">
                 {task.userOrderIds && task.userOrderIds.length > 0 && (
-                  <div>
-                    Member:
-                    <Stack direction="row" spacing={2}>
-                      {cardMem.map((mem, index) => (
-                        <Avatar key={index} {...stringAvatar(`${mem.name}`)} />
-                      ))}
-                    </Stack>
-                  </div>
+                  <Stack direction="row" spacing={2}>
+                    <label>Member:</label>
+                    {cardMem.map((mem, index) => (
+                      <Avatar
+                        key={index}
+                        {...stringAvatar(`${mem.name}`)}
+                        sx={{
+                          ...stringAvatar(`${mem.name}`).sx,
+                          width: 20,
+                          height: 20,
+                          fontSize: 10,
+                        }}
+                      />
+                    ))}
+                  </Stack>
                 )}
                 {task.deadline && (
                   <div>
-                    Deadline: {task.deadline}, Done:
+                    <label>Deadline: </label>
+                    {task.deadline}, Done:
                     {task.deadlinestatus !== 'late' && (
                       <input
                         type="checkbox"
@@ -136,6 +144,7 @@ const TaskOpen = forwardRef(
                   </div>
                 )}
               </div>
+              <br />
             </Stack>
             <Stack
               className="task-body"
