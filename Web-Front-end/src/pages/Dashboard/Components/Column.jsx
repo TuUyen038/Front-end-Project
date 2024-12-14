@@ -85,7 +85,7 @@ export default function Column({ col, index, onDelete, member }) {
       socket.off('cardAdded', addCard);
       socket.off('cardDeleted', deleteCard);
     };
-  }, []);
+  }, [col._id]);
 
   const handleAddCard = (payload) => {
     let newCard = {

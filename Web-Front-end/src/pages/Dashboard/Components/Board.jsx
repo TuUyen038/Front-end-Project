@@ -40,8 +40,7 @@ export default function Board({ board_id, member }) {
   useEffect(() => {
     const handleAdd = (newColumn) => {
       if (newColumn.boardId === board_id) {
-        // setColumns((prev) => [...prev, newColumn]);
-        getColumnList(board_id).then((data) => setColumns(data));
+        setColumns((prev) => [...prev, newColumn]);
         console.log('BE emit col added');
       }
     };
@@ -65,7 +64,7 @@ export default function Board({ board_id, member }) {
       socket.off('columnUpdated', handleUpdate);
       socket.off('columnDeleted', handleDelete);
     };
-  }, []);
+  }, [board_id]);
 
   // xử lý drop với column
   useEffect(() => {
@@ -77,7 +76,7 @@ export default function Board({ board_id, member }) {
     return () => {
       socket.off('columnMoved', handleMove);
     };
-  }, []);
+  }, [board_id]);
 
   const [hoverIndex, setHoverIndex] = useState(0);
   const boardRef = useRef();

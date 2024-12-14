@@ -124,7 +124,7 @@ export default function Dashboard() {
       socket.off('boardUpdated', handleEdit);
       socket.off('boardDeleted', handleDelete);
     };
-  }, []);
+  }, [projectSlug]);
 
   const handleChange = (e) => {
     setBoardId(e.target.value);
