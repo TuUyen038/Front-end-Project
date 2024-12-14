@@ -21,7 +21,7 @@ export default function Setting({ checked, onChange }) {
               alignItems: "center",
             }}
           >
-            <p style={{ fontSize: "1.5rem", color: "#fff" }}>DARK MODE</p>
+            <p style={{ fontSize: "1.4rem", color: "#fff", textAlign: "base line"}}>Dark Mode</p>
             <Switch
             sx={{
               '& .MuiSwitch-track': {
