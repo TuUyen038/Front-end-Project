@@ -75,17 +75,9 @@ export default function Dashboard() {
       description: 'none',
       projectId: project._id,
     };
-    let tmpId = uuidv4();
-    let tmpBoard = { ...newBoard, _id: tmpId };
-    console.log(newBoard);
-    setBoards((prev) => [...prev, tmpBoard]);
-    console.log('add a new board ' + newBoard);
+
     socket.emit('addBoard', newBoard, (respone) => {
       if (respone.success) {
-        const boardData = respone.data;
-        setBoards((prev) =>
-          prev.map((board) => (board._id === tmpId ? boardData : board))
-        );
         console.log(boards);
       } else {
         console.log('Dashboard: Error when work with id');
@@ -95,9 +87,6 @@ export default function Dashboard() {
     setNewBoard('');
   };
   const handleEditBoard = (id, payload) => {
-    setBoards((prev) =>
-      prev.map((board) => (board._id === id ? { ...board, ...payload } : board))
-    );
     socket.emit('updateBoard', id, payload);
     console.log('Dashboard: edit board with id ' + id);
 

@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import DeletePopUp from '../../../components/DeletePopUp/DeletePopUp';
 import AddNewTask from './AddNewTask';
 import { getCardList } from '../service/card_service';
-import { v4 as uuidv4 } from 'uuid';
 import { socket } from '../../../../setting/socket';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../dnd/constants';
@@ -21,51 +20,40 @@ export default function Column(props) {
   const [tempTask, setTempTask] = useState({});
   const ref = useRef();
 
-  const handleOutsideClick = (event) => {
-    if (ref.current && !ref.current.contains(event.target)) {
-      props.onUpdate(props.column_id, { title: tempTask });
-      socket.emit('updateColumn', props.column_id, { title: tempTask });
-      setTempTask('');
-    }
-  };
-
   useEffect(() => {
-    const handleCardMoved = (oldCol, newCol) => {
-      console.log('oldCol: ', oldCol);
-      console.log('newCol: ', newCol);
-      if (props.column_id === oldCol._id) {
-        getCardList(oldCol._id).then((data) => {
-          setTasks(data);
-        });
-      } else if (props.column_id === newCol) {
-        getCardList(newCol._id).then((data) => {
-          setTasks(data);
-        });
+    const handleOutsideClick = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        if (title.trim() && title !== props.title) {
+          console.log(title);
+          socket.emit('updateColumn', props.column_id, { title });
+          console.log('emit update column title');
+        } else if (!title.trim()) {
+          // toast
+          setTitle(props.title);
+        }
       }
     };
-    socket.on('cardMoved', handleCardMoved);
-    return () => {
-      socket.off('cardMoved', handleCardMoved);
-    };
-  }, []);
 
-  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        console.log(title);
+        if (title.trim() && title !== props.title) {
+          socket.emit('updateColumn', props.column_id, { title });
+          console.log('emit update column title');
+        } else if (!title.trim()) {
+          // toast
+          setTitle(props.title);
+        }
+      }
+    };
     document.addEventListener('mousedown', handleOutsideClick);
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick);
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
-
-  useEffect(() => {
-    const handleUpdate = (id, payload) => {
-      if (props.column_id === id) props.onUpdate(id, payload);
-    };
-    socket.on('columnUpdated', handleUpdate);
-    return () => {
-      socket.off('columnUpdated', handleUpdate);
-    };
-  }, []);
+  }, [title, props.title]);
 
   useEffect(() => {
     getCardList(props.column_id)
@@ -82,7 +70,9 @@ export default function Column(props) {
 
   useEffect(() => {
     const addCard = (newCard) => {
-      setTasks((prev) => [...prev, newCard]);
+      console.log('BE emit lai');
+      if (newCard.columnId === props.column_id)
+        setTasks((prev) => [...prev, newCard]);
     };
 
     const deleteCard = (id) => {
@@ -104,16 +94,11 @@ export default function Column(props) {
       columnId: props.column_id,
       boardId: props.board_id,
     };
-    let tmpId = uuidv4();
-    let tmpCard = { ...newCard, _id: tmpId };
-    setTasks((prev) => [...prev, tmpCard]);
-
     socket.emit('addCard', newCard, (response) => {
       if (response.success) {
-        const cardData = response.data;
-        setTasks((prev) =>
-          prev.map((card) => (card._id === tmpId ? cardData : card))
-        );
+        console.log('da emit add card thanh cong');
+        // const cardData = response.data;
+        // setTasks(cardData);
       } else {
         console.log('COLUMN: Fail to add card, Error: ' + response.error);
       }
@@ -131,72 +116,134 @@ export default function Column(props) {
   };
 
   const columnRef = useRef(null);
-  const [hoverIndex, setHoverIndex] = useState();
+  const [hoverIndex, setHoverIndex] = useState(0);
+  const hoverIndexRef = useRef(hoverIndex);
+
+  useEffect(() => {
+    hoverIndexRef.current = hoverIndex; // Cập nhật ref khi hoverIndex thay đổi
+  }, [hoverIndex]);
+
   const getHoverIndex = (monitor, ref, cardCount) => {
     if (!ref.current) return cardCount;
 
-    const hoverBoundingRect = ref.current.getBoundingClientRect(); // Lấy kích thước của container
-    const clientOffset = monitor.getClientOffset(); // Lấy tọa độ của con trỏ chuột
+    const hoverBoundingRect = ref.current.getBoundingClientRect(); // Kích thước container
+    const clientOffset = monitor.getClientOffset(); // Tọa độ con trỏ chuột
 
-    // Tính toán vị trí Y tương đối so với container
+    if (!clientOffset) return cardCount;
+
     const hoverClientY =
       clientOffset.y - hoverBoundingRect.top + ref.current.scrollTop;
 
-    const CARD_HEIGHT = 34; // Chiều cao của mỗi card (giả định)
-    const hoverIndex = Math.floor(hoverClientY / CARD_HEIGHT);
+    const childNodes = ref.current.children;
 
-    // Trả về vị trí hợp lệ (trong khoảng [0, cardCount])
-    return Math.max(0, Math.min(cardCount, hoverIndex));
+    if (!childNodes.length) return 0;
+
+    if (childNodes.length === 1) {
+      const cardTop = childNodes[0].offsetTop;
+      const cardHeight = childNodes[0].offsetHeight;
+
+      // Nếu hover nằm ở phía trên thẻ duy nhất, trả về index 0
+      if (hoverClientY < cardTop + cardHeight / 2) {
+        return 0;
+      }
+
+      // Nếu hover nằm ở phía dưới thẻ duy nhất, trả về index 1 (thêm vào cuối)
+      return 1;
+    }
+
+    let cumulativeHeight = 0;
+    for (let i = 0; i < childNodes.length; i++) {
+      const cardHeight = childNodes[i].offsetHeight;
+
+      if (
+        hoverClientY >= cumulativeHeight &&
+        hoverClientY < cumulativeHeight + cardHeight
+      ) {
+        return i; // Vị trí chuột nằm trong thẻ này
+      }
+
+      cumulativeHeight += cardHeight;
+    }
+
+    // Nếu vượt qua chiều cao của tất cả các thẻ, trả về cardCount
+    return cardCount;
   };
 
   const [, drop] = useDrop(() => ({
     accept: ItemTypes.CARD,
     hover: (item, monitor) => {
-      console.log('Hovering card:', item);
-      console.log('Current hover index:', hoverIndex);
-      console.log('Tasks before update:', tasks);
-      if (!monitor.isOver) return;
-      if (item.index === hoverIndex && item.columnId === props.column_id)
+      if (!monitor.isOver()) return;
+      if (
+        item.index === hoverIndexRef.current &&
+        item.columnId === props.column_id
+      )
         return;
-      if (monitor.isOver()) {
-        const calculatedHoverIndex = getHoverIndex(
-          monitor,
-          columnRef,
-          tasks.length
-        );
 
+      const calculatedHoverIndex = getHoverIndex(
+        monitor,
+        columnRef,
+        tasks.length
+      );
+
+      if (
+        calculatedHoverIndex !== hoverIndex ||
+        item.columnId !== props.column_id
+      ) {
         setHoverIndex(calculatedHoverIndex);
+        hoverIndexRef.current = calculatedHoverIndex; // Cập nhật giá trị ref ngay lập tức
       }
+
+      console.log('hover index', calculatedHoverIndex);
+      console.log('Hover index', hoverIndexRef.current);
     },
     drop: (item, monitor) => {
-      console.log('Dropped card:', item);
-      console.log(
-        'Tasks after drop of column:' + props.column_id + 'is: ',
-        tasks
-      );
-      if (monitor.didDrop()) {
-        console.log('Da dc xu ly o drop con');
-        return undefined;
-      }
+      if (!item || monitor.didDrop() || !monitor.isOver()) return undefined;
+
       if (props.column_id === item.columnId) {
         setTasks((pre) => {
-          const updateTasks = pre.splice(item.index, 1);
-          return updateTasks;
+          const updatedTasks = [...pre];
+          updatedTasks.splice(item.index, 1);
+          return updatedTasks;
         });
       }
+
+      setTasks((pre) => {
+        const updatedTasks = [...pre];
+        updatedTasks.splice(hoverIndexRef.current, 0, item);
+        item.index = hoverIndexRef.current;
+        return updatedTasks;
+      });
+
       socket.emit(
         'moveCard',
         item._id,
         props.column_id.toString(),
-        parseInt(hoverIndex)
+        parseInt(hoverIndexRef.current)
       );
-      console.log('emit move card done');
+
       return { columnId: props.column_id };
     },
   }));
 
+  useEffect(() => {
+    const handleCardMoved = (oldCol, newCol) => {
+      if (props.column_id === oldCol._id) {
+        getCardList(oldCol._id).then(setTasks);
+      }
+      if (props.column_id === newCol._id) {
+        getCardList(newCol._id).then(setTasks);
+      }
+    };
+
+    socket.on('cardMoved', handleCardMoved);
+    return () => {
+      socket.off('cardMoved', handleCardMoved);
+    };
+  }, [props.column_id]);
+
   return (
     <Stack
+      ref={ref}
       className="Column"
       sx={{
         display: 'flex',
@@ -209,7 +256,10 @@ export default function Column(props) {
         <Stack className="Title" direction="row">
           <Input
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              console.log(title);
+              setTitle(e.target.value);
+            }}
             sx={{ fontSize: '1.6rem' }}
           />
           <MoreIcon sx={{ fontSize: '2.4rem' }} />

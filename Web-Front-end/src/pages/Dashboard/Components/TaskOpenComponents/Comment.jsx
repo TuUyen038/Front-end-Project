@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getUser } from '../../service/user_service';
 import { Avatar } from '@mui/material';
 import PropTypes from 'prop-types';
+import { stringAvatar } from '../../avatarExe/avatar';
 
 export default function Comment({ comment }) {
   const [username, setUsername] = useState('');
@@ -18,8 +19,11 @@ export default function Comment({ comment }) {
 
   return (
     <div className="comment">
-      <Avatar>{username}</Avatar>
-      <span>{comment.description}</span>
+      <Avatar {...stringAvatar(`${username}`)} />
+      <span>
+        <p className="cmt-username">{username}</p>
+        <p>{comment.description}</p>
+      </span>
     </div>
   );
 }

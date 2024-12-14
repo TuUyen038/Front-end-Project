@@ -9,11 +9,15 @@ import Comment from './TaskOpenComponents/Comment';
 import ButtonContainer from './TaskOpenComponents/ButtonContainer';
 import CloseX from '../../../components/SmallCom/CloseX';
 import Save from '../../../components/SmallCom/Save';
+import { getMemberOfCard } from '../service/user_service';
+import { stringAvatar } from '../avatarExe/avatar';
 
 const TaskOpen = forwardRef(
   ({ task, onClose, onDelete, member, onAddMemLs }, ref) => {
     const [comments, setComments] = useState([]);
     const [user, setUser] = useState({});
+    const [cardMem, setCardMem] = useState([]);
+    const [checked, setChecked] = useState(task.deadlinestatus === 'on_time');
     const [mess, setMess] = useState('');
     const [editing, setEditing] = useState(false);
     const [editPayload, setEditPayload] = useState({
@@ -29,11 +33,15 @@ const TaskOpen = forwardRef(
     };
 
     const handleSave = () => {
+      console.log(task.deadlinestatus);
+      console.log(checked);
       if (
         task.title !== editPayload.title ||
-        task.description !== editPayload.description
+        task.description !== editPayload.description ||
+        task.deadline !== editPayload.deadline
       )
-        socket.emit('updateCard', task._id, editPayload);
+        console.log('edit pay load : ', editPayload);
+      socket.emit('updateCard', task._id, editPayload);
       onClose();
     };
 
@@ -50,8 +58,12 @@ const TaskOpen = forwardRef(
     }, []);
 
     useEffect(() => {
+      getMemberOfCard(task).then((data) => setCardMem(data));
+    }, []);
+
+    useEffect(() => {
       const handleAdd = (newComment) => {
-        console.log('You got comment from the socket');
+        console.log('You got comment from the socket ', newComment);
         if (!Array.isArray(comments)) {
           console.error('State is not an array:', comments);
         } else setComments((prev) => [...prev, newComment]);
@@ -80,7 +92,7 @@ const TaskOpen = forwardRef(
               padding: '1rem 4rem 0 4rem',
             }}
           >
-            <Stack className="props-header" direction="row">
+            <Stack className="props-header">
               {!editing ? (
                 <h1>{task.title}</h1>
               ) : (
@@ -91,6 +103,48 @@ const TaskOpen = forwardRef(
                   }
                 />
               )}
+              <div className="member-deadline-info">
+                {task.userOrderIds && task.userOrderIds.length > 0 && (
+                  <Stack direction="row" spacing={2}>
+                    <label>Member:</label>
+                    {cardMem.map((mem, index) => (
+                      <Avatar
+                        key={index}
+                        {...stringAvatar(`${mem.name}`)}
+                        sx={{
+                          ...stringAvatar(`${mem.name}`).sx,
+                          width: 20,
+                          height: 20,
+                          fontSize: 10,
+                        }}
+                      />
+                    ))}
+                  </Stack>
+                )}
+                {task.deadline && (
+                  <div>
+                    <label>Deadline: </label>
+                    {task.deadline}, Done:
+                    {task.deadlinestatus !== 'late' && (
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        value={checked}
+                        onChange={(e) => {
+                          setChecked(!checked);
+                          setEditPayload((prev) => ({
+                            ...prev,
+                            deadlinestatus: e.target.checked
+                              ? 'on_time'
+                              : 'not_done',
+                          }));
+                        }}
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+              <br />
             </Stack>
             <Stack
               className="task-body"
@@ -130,7 +184,8 @@ const TaskOpen = forwardRef(
                   direction="row"
                   sx={{ height: '0.8rem', width: '40rem' }}
                 >
-                  <Avatar>{user.name}</Avatar>
+                  <Avatar {...stringAvatar(`${user.name}`)} />
+
                   <TextField
                     variant="outlined"
                     onChange={(e) => setMess(e.target.value)}
@@ -145,15 +200,19 @@ const TaskOpen = forwardRef(
                   />
                 </Stack>
                 {/* <label>Discuss</label> */}
-                <div>
+                <br /> <br />
+                <Stack className="discuss-area">
                   {comments
-                    ? comments.map((com) =>
-                        com.cardId === task._id ? (
-                          <Comment key={com._id} comment={com} />
-                        ) : null
-                      )
+                    ? comments
+                        .slice()
+                        .reverse()
+                        .map((com) =>
+                          com.cardId === task._id ? (
+                            <Comment key={com._id} comment={com} />
+                          ) : null
+                        )
                     : null}
-                </div>
+                </Stack>
               </Stack>
               <Stack>
                 <ButtonContainer

@@ -213,3 +213,29 @@ body {
 .task-join-in .member-list {
   height: 10rem;
 }
+
+/* -----------------COMMENTS-------------- */
+.comment {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.discuss-area {
+  gap: 2rem;
+  max-height: 24rem;
+  width: 50rem;
+  overflow-y: auto;
+}
+
+.cmt-username {
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+
+/* ---------------TASK OPEN----------------- */
+label {
+  font-weight: bold;
+  font-size: small;
+  font-family: 'Roboto Flex';
+}

@@ -9,9 +9,12 @@ import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../dnd/constants';
 import { socket } from '../../../../setting/socket';
 import { getCard } from '../service/card_service';
+import { stringAvatar } from '../avatarExe/avatar';
+import { getMemberOfCard } from '../service/user_service';
 
 export default function Task({ task, index, onDelete, member }) {
   const [Task, setTask] = useState(task);
+  const [cardMem, setCardMem] = useState([]);
   const [isOpened, setIsOpened] = useState(false);
   const OpenTask = () => {
     setIsOpened(true);
@@ -25,6 +28,28 @@ export default function Task({ task, index, onDelete, member }) {
   const handleAddUserToCard = (users) => {
     users.forEach((user) => socket.emit('addUserCard', Task._id, user.id));
     console.log('emit add user id to card');
+  };
+
+  const deadlineBGColor = () => {
+    switch (Task.deadlinestatus) {
+      case 'not_done':
+        return 'rgba(236, 244, 214, 1)';
+      case 'late':
+        return 'red';
+      case 'on_time':
+        return '#2D9596';
+      default:
+        return 'blue';
+    }
+  };
+
+  const deadlineTextColor = () => {
+    switch (Task.deadlinestatus) {
+      case 'not_done':
+        return '#2D9596';
+      default:
+        return 'white';
+    }
   };
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -85,6 +110,11 @@ export default function Task({ task, index, onDelete, member }) {
     };
   }, []);
 
+  useEffect(() => {
+    getMemberOfCard(Task).then((data) => setCardMem(data));
+    console.log('cardMem : ', cardMem);
+  }, []);
+
   return (
     <>
       <div className="Task" draggable onClick={OpenTask} ref={drag}>
@@ -110,7 +140,7 @@ export default function Task({ task, index, onDelete, member }) {
             <Box className="deadline-discuss" sx={{ display: 'flex', gap: 1 }}>
               {Task.deadline ? (
                 <Box
-                  backgroundColor="#2D9596"
+                  backgroundColor={deadlineBGColor}
                   borderRadius={0.3}
                   sx={{
                     display: 'flex',
@@ -120,8 +150,10 @@ export default function Task({ task, index, onDelete, member }) {
                     padding: 0.2,
                   }}
                 >
-                  <DeadlineIcon sx={{ color: 'white', fontSize: '10px' }} />
-                  <Typography color="white" fontSize={8}>
+                  <DeadlineIcon
+                    sx={{ color: { deadlineTextColor }, fontSize: '10px' }}
+                  />
+                  <Typography color={deadlineTextColor} fontSize={8}>
                     {Task.deadline.slice(0, 10)}
                   </Typography>
                 </Box>
@@ -137,18 +169,17 @@ export default function Task({ task, index, onDelete, member }) {
 
             {Task.userOrderIds ? (
               <AvatarGroup className="menbers" max={3} spacing={5}>
-                {Task.userOrderIds.map((member, index) => (
+                {cardMem?.map((member, index) => (
                   <Avatar
                     key={index}
+                    {...stringAvatar(`${member.name}`)}
                     sx={{
-                      backgroundColor: member.color,
+                      ...stringAvatar(`${member.name}`).sx,
                       width: 12,
                       height: 12,
                       fontSize: 8,
                     }}
-                  >
-                    {member.name}
-                  </Avatar>
+                  />
                 ))}
               </AvatarGroup>
             ) : null}

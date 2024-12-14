@@ -2,9 +2,7 @@ import { Button, Stack } from '@mui/material';
 import AddPersonIcon from '@mui/icons-material/PersonAddAlt';
 import DeadlineIcon from '@mui/icons-material/AccessAlarm';
 import AttachIcon from '@mui/icons-material/Attachment';
-import ShareIcon from '@mui/icons-material/Share';
 import EditIcon from '@mui/icons-material/Edit';
-import FollowIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { useState } from 'react';
@@ -30,12 +28,7 @@ export default function ButtonContainer({
   const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDelete = () => {
-    //   console.log(task);
     setOpenDelete(true);
-  };
-  const handleDeadline = () => {
-    onSetPayLoad({ deadline: selectedDate });
-    setOpenDatePicker(false);
   };
 
   const saveDelete = () => {
@@ -68,7 +61,10 @@ export default function ButtonContainer({
         {openJoinIn ? (
           <JoinIn
             member={member}
-            onClose={() => setOpenJoinIn(false)}
+            onClose={() => {
+              setOpenJoinIn(false);
+              onClose();
+            }}
             onAddMemLs={onAddMemLs}
           />
         ) : null}
@@ -76,7 +72,7 @@ export default function ButtonContainer({
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Button
           className="task-button"
-          onClick={() => setOpenDatePicker(!openDatePicker)}
+          onClick={() => setOpenDatePicker(true)}
           variant="contained"
           startIcon={<DeadlineIcon />}
           color="rgba(217, 217, 217, 217, 0.7)"
@@ -89,15 +85,21 @@ export default function ButtonContainer({
           Deadline
         </Button>
         {openDatePicker && (
-          <>
-            <DatePicker
-              label="Pick Up Deadline"
-              value={selectedDate}
-              onChange={(newDate) => setSelectedDate(newDate)}
-            />
-            <button onClick={handleDeadline}>OK</button>
-          </>
+          <DatePicker
+            label="Pick Up Deadline"
+            value={selectedDate}
+            onChange={(newDate) => {
+              setSelectedDate(newDate);
+              console.log('new date: ', newDate);
+              onSetPayLoad({
+                deadline: newDate.format('YYYY-MM-DD'),
+                deadlinestatus: 'not_done',
+              });
+              setOpenDatePicker(false);
+            }}
+          />
         )}
+        {selectedDate && <p>Deadline: {selectedDate.format('YYYY-MM-DD')}</p>}
       </LocalizationProvider>
 
       <Button
@@ -113,19 +115,7 @@ export default function ButtonContainer({
       >
         Attach
       </Button>
-      <Button
-        className="task-button"
-        variant="contained"
-        startIcon={<ShareIcon />}
-        color="rgba(217, 217, 217, 217, 0.7)"
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-        }}
-      >
-        Share
-      </Button>
+
       <br />
       <label>Others</label>
       <Button
@@ -142,19 +132,7 @@ export default function ButtonContainer({
       >
         Edit
       </Button>
-      <Button
-        className="task-button"
-        variant="contained"
-        startIcon={<FollowIcon />}
-        color="rgba(217, 217, 217, 217, 0.7)"
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-        }}
-      >
-        Follow
-      </Button>
+
       <Button
         className="task-button"
         variant="contained"
