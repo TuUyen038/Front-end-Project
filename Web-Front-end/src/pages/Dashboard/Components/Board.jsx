@@ -64,14 +64,13 @@ export default function Board({ board_id, member }) {
   return (
     <Stack direction="column" className="Board">
       <Stack direction="row" className="Main">
-        {columns.map((column) => {
+        {columns.map((column, index) => {
           return (
             <Column
-              title={column.title}
+              col={column}
+              index={index}
               key={column._id}
-              board_id={board_id}
-              column_id={column._id}
-              delete={() => handleDeleteColumn(column._id)}
+              onDelete={() => handleDeleteColumn(column._id)}
               member={member}
             ></Column>
           );

@@ -9,11 +9,11 @@ import DeletePopUp from '../../../components/DeletePopUp/DeletePopUp';
 import AddNewTask from './AddNewTask';
 import { getCardList } from '../service/card_service';
 import { socket } from '../../../../setting/socket';
-import { useDrop } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from '../dnd/constants';
 
-export default function Column(props) {
-  const [title, setTitle] = useState(props.title || 'New');
+export default function Column({ col, index, onDelete, member }) {
+  const [title, setTitle] = useState(col.title || 'New');
   const [tasks, setTasks] = useState([]);
   const [openDeletePopUp, setOpenDeletePopUp] = useState(false);
   const [openTaskPopUp, setOpenTaskPopUp] = useState(false);
@@ -23,13 +23,13 @@ export default function Column(props) {
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (ref.current && !ref.current.contains(event.target)) {
-        if (title.trim() && title !== props.title) {
+        if (title.trim() && title !== col.title) {
           console.log(title);
-          socket.emit('updateColumn', props.column_id, { title });
+          socket.emit('updateColumn', col._id, { title });
           console.log('emit update column title');
         } else if (!title.trim()) {
           // toast
-          setTitle(props.title);
+          setTitle(col.title);
         }
       }
     };
@@ -37,12 +37,12 @@ export default function Column(props) {
     const handleKeyDown = (e) => {
       if (e.key === 'Enter') {
         console.log(title);
-        if (title.trim() && title !== props.title) {
-          socket.emit('updateColumn', props.column_id, { title });
+        if (title.trim() && title !== col.title) {
+          socket.emit('updateColumn', col._id, { title });
           console.log('emit update column title');
         } else if (!title.trim()) {
           // toast
-          setTitle(props.title);
+          setTitle(col.title);
         }
       }
     };
@@ -53,10 +53,10 @@ export default function Column(props) {
       document.removeEventListener('mousedown', handleOutsideClick);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [title, props.title]);
+  }, [title, col.title]);
 
   useEffect(() => {
-    getCardList(props.column_id)
+    getCardList(col._id)
       .then((data) => {
         if (!data) console.log('COLUMN: can get card list');
         else {
@@ -66,13 +66,12 @@ export default function Column(props) {
       .catch((error) => {
         console.log(error.message);
       });
-  }, [props.column_id]);
+  }, [col._id]);
 
   useEffect(() => {
     const addCard = (newCard) => {
       console.log('BE emit lai');
-      if (newCard.columnId === props.column_id)
-        setTasks((prev) => [...prev, newCard]);
+      if (newCard.columnId === col._id) setTasks((prev) => [...prev, newCard]);
     };
 
     const deleteCard = (id) => {
@@ -91,8 +90,8 @@ export default function Column(props) {
   const handleAddCard = (payload) => {
     let newCard = {
       ...payload,
-      columnId: props.column_id,
-      boardId: props.board_id,
+      columnId: col._id,
+      boardId: col.boardId,
     };
     socket.emit('addCard', newCard, (response) => {
       if (response.success) {
@@ -115,6 +114,7 @@ export default function Column(props) {
     socket.emit('deleteCard', id);
   };
 
+  // xử lý di chuyển, drop card
   const columnRef = useRef(null);
   const [hoverIndex, setHoverIndex] = useState(0);
   const hoverIndexRef = useRef(hoverIndex);
@@ -173,10 +173,7 @@ export default function Column(props) {
     accept: ItemTypes.CARD,
     hover: (item, monitor) => {
       if (!monitor.isOver()) return;
-      if (
-        item.index === hoverIndexRef.current &&
-        item.columnId === props.column_id
-      )
+      if (item.index === hoverIndexRef.current && item.columnId === col._id)
         return;
 
       const calculatedHoverIndex = getHoverIndex(
@@ -185,10 +182,7 @@ export default function Column(props) {
         tasks.length
       );
 
-      if (
-        calculatedHoverIndex !== hoverIndex ||
-        item.columnId !== props.column_id
-      ) {
+      if (calculatedHoverIndex !== hoverIndex || item.columnId !== col._id) {
         setHoverIndex(calculatedHoverIndex);
         hoverIndexRef.current = calculatedHoverIndex; // Cập nhật giá trị ref ngay lập tức
       }
@@ -199,7 +193,7 @@ export default function Column(props) {
     drop: (item, monitor) => {
       if (!item || monitor.didDrop() || !monitor.isOver()) return undefined;
 
-      if (props.column_id === item.columnId) {
+      if (col._id === item.columnId) {
         setTasks((pre) => {
           const updatedTasks = [...pre];
           updatedTasks.splice(item.index, 1);
@@ -217,20 +211,20 @@ export default function Column(props) {
       socket.emit(
         'moveCard',
         item._id,
-        props.column_id.toString(),
+        col._id.toString(),
         parseInt(hoverIndexRef.current)
       );
 
-      return { columnId: props.column_id };
+      return { columnId: col._id };
     },
   }));
 
   useEffect(() => {
     const handleCardMoved = (oldCol, newCol) => {
-      if (props.column_id === oldCol._id) {
+      if (col._id === oldCol._id) {
         getCardList(oldCol._id).then(setTasks);
       }
-      if (props.column_id === newCol._id) {
+      if (col._id === newCol._id) {
         getCardList(newCol._id).then(setTasks);
       }
     };
@@ -239,16 +233,41 @@ export default function Column(props) {
     return () => {
       socket.off('cardMoved', handleCardMoved);
     };
-  }, [props.column_id]);
+  }, [col._id]);
+
+  // xử lý di chuyển column
+
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: ItemTypes.COLUMN,
+    item: { ...col, index },
+    end: (item, monitor) => {
+      if (!monitor.didDrop()) {
+        const dropResult = monitor.getDropResult();
+        if (!dropResult) {
+          console.log(`Card ${item._id} was dropped outside`);
+          //reset here
+          return;
+        }
+        console.log(`Card dropped into column: ${dropResult.columnId}`);
+      }
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
 
   return (
     <Stack
-      ref={ref}
+      ref={(node) => {
+        ref.current = node;
+        drag(node);
+      }}
       className="Column"
       sx={{
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
+        opacity: isDragging ? 0.5 : 1,
         /* dang dung theo thong so tren may, can dieu chinh lai */
       }} // not this one
     >
@@ -284,8 +303,7 @@ export default function Column(props) {
                 index={index}
                 className="Task"
                 onDelete={() => handleDeleteCard(task._id)}
-                member={props.member}
-                // onSetTasks={setTasks}
+                member={member}
               ></Task>
             );
           })}
@@ -314,7 +332,7 @@ export default function Column(props) {
       <DeletePopUp
         open={openDeletePopUp}
         onClose={() => setOpenDeletePopUp(false)}
-        onDelete={props.delete}
+        onDelete={onDelete}
       />
       <AddNewTask
         open={openTaskPopUp}
@@ -334,11 +352,8 @@ export default function Column(props) {
 }
 
 Column.propTypes = {
-  title: PropTypes.string,
-  column_id: PropTypes.string,
-  board_id: PropTypes.string,
-  delete: PropTypes.func,
-  moveCard: PropTypes.func,
+  col: PropTypes.object,
+  index: PropTypes.number,
+  onDelete: PropTypes.func,
   member: PropTypes.array,
-  onUpdate: PropTypes.func,
 };
