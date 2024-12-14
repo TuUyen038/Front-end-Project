@@ -15,7 +15,7 @@ export const getCommentList = async (cardId) => {
   });
 
   if (!res.ok) {
-    alert('can not get comment list');
+    console.log('can not get comment list');
   }
 
   const data = await res.json();
@@ -40,7 +40,7 @@ export const getComment = async (commentId) => {
   });
 
   if (!res.ok) {
-    alert('can not get this comment data', commentId);
+    console.log('can not get this comment data', commentId);
   }
 
   const data = await res.json();

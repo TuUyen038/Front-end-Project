@@ -15,7 +15,7 @@ export const getColumnList = async (boardId) => {
   });
 
   if (!res.ok) {
-    alert('can not get board list');
+    console.log('can not get board list');
   }
 
   const data = await res.json();
@@ -40,7 +40,7 @@ export const getColumn = async (columnId) => {
   });
 
   if (!res.ok) {
-    alert('can not get this column data');
+    console.log('can not get this column data');
   }
 
   const data = await res.json();

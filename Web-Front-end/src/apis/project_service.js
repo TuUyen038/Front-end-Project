@@ -11,7 +11,8 @@ export const getProjectBySlug = async (slug) => {
   });
 
   if (!res.ok) {
-    alert('res not ok');
+    // alert('res not ok');
+    console.log('fetch project from slug is not ok');
   }
 
   // const data = await res.json();

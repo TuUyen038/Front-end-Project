@@ -4,7 +4,6 @@ import { MenuItem, Select, Stack } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { getBoardList } from './service/board_service';
 import { getProjectBySlug } from '../../apis/project_service';
-import { v4 as uuidv4 } from 'uuid';
 import { socket } from '../../../setting/socket';
 import AddBoard from './Components/AddBoard';
 import EditBoard from './Components/EditBoard';
