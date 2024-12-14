@@ -17,7 +17,6 @@ import "react-toastify/dist/ReactToastify.css";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import zIndex from "@mui/material/styles/zIndex";
 import { Link } from "react-router-dom";
-
 // eslint-disable-next-line react/prop-types
 
 function Workspace() {
@@ -43,7 +42,7 @@ function Workspace() {
           deadlineIds.map((id) => getDeadline(id))
         );
         const listDl = deadlines.filter(
-          (item) => new Date(item.deadline) >= currentDay
+          (item) => new Date(item.deadline) >= currentDay && item.deadlinestatus == "not_done"
         );
         setDl(listDl);
       } catch (error) {

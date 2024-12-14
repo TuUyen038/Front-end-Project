@@ -74,21 +74,9 @@ function Header({ checked, onChange }) {
           <div className={style.Setting}>
             <Setting checked={checked} onChange={onChange} />
           </div>
-          <Button
-            className={style.Notifications}
-            style={{
-              fontSize: "1.5rem",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#fff",
-              maxWidth: "10px",
-            }}
-          >
-            <i className="fa-regular fa-bell"></i>
-          </Button>
+          
           <div className={style.Account}>
-            {/* <p>M</p> */}
+            
             <AuthenticationContext.Provider value={authentication}>
               <SessionContext.Provider value={localStorageAuth}>
                 <Account />
