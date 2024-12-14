@@ -40,8 +40,13 @@ const getAvatar = (username) => {
     firstLetter.charCodeAt(0) <= "T".charCodeAt(0)
   ) {
     return "/images/katty.jpg";
-  } else {
+  } else if (
+    "U".charCodeAt(0) <= firstLetter.charCodeAt(0) &&
+    firstLetter.charCodeAt(0) <= "Y".charCodeAt(0)
+  ) {
     return "/images/thomas.jpg";
+  } else {
+    return "/images/z_avt.jpg";
   }
 };
 
