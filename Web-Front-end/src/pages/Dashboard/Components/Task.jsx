@@ -78,22 +78,20 @@ export default function Task({ task, index, onDelete, member }) {
   }, [isOpened, task._id]);
 
   useEffect(() => {
-    const handleAdd = (userId) => {
-      console.log('get update from socket');
-      setTask((prev) => ({
-        ...prev,
-        userOrderIds: [...prev.userOrderIds, userId],
-      }));
+    const handleAdd = (cardId, userId) => {
+      if (cardId === task._id) {
+        console.log('get update from socket');
+        setTask((prev) => ({
+          ...prev,
+          userOrderIds: [...prev.userOrderIds, userId],
+        }));
+      }
     };
-    socket.on('userCardAdded', (cardId, userId) => {
-      if (cardId === task._id) handleAdd(userId);
-    });
+    socket.on('userCardAdded', handleAdd);
     return () => {
-      socket.off('userCardAdded', (cardId, userId) => {
-        if (cardId === task._id) handleAdd(userId);
-      });
+      socket.off('userCardAdded', handleAdd);
     };
-  }, []);
+  }, [task._id]);
 
   useEffect(() => {
     const updateCard = (cardId, data) => {

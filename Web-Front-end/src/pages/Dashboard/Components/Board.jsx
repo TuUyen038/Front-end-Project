@@ -41,7 +41,7 @@ export default function Board({ board_id, member }) {
     const handleAdd = (newColumn) => {
       if (newColumn.boardId === board_id) {
         setColumns((prev) => [...prev, newColumn]);
-        console.log('BE emit col added');
+        console.log('BE emit col added: ', newColumn);
       }
     };
 
@@ -55,11 +55,15 @@ export default function Board({ board_id, member }) {
       setColumns((prev) => prev.filter((col) => col._id !== id));
     };
 
+    console.log('BOARD dc dang ky lang nghe su kien tren COLUMN :', board_id);
+    console.log('BOARD: ', socket);
+
     socket.on('columnAdded', handleAdd);
     socket.on('columnUpdated', handleUpdate);
     socket.on('columnDeleted', handleDelete);
 
     return () => {
+      console.log('BOARD đã bị unmount');
       socket.off('columnAdded', handleAdd);
       socket.off('columnUpdated', handleUpdate);
       socket.off('columnDeleted', handleDelete);
