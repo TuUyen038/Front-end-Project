@@ -9,6 +9,7 @@ import {
 } from "../../services";
 import { useEffect, useState } from "react";
 import { Button, Input } from "@mui/material";
+import { toast } from "react-toastify";
 
 export default function Admin({
   item,
@@ -22,7 +23,8 @@ export default function Admin({
   const [showForm, setShowForm] = useState(false);
   const currentUser = localStorage.getItem("id");
   const isAdmin = idAdmins.filter((id) => id === currentUser).length;
-  const [emails, setEmails] = useState([]);
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({ ...item });
 
   useEffect(() => {
@@ -45,29 +47,37 @@ export default function Admin({
   }, [idAdmins, idUsers]);
 
   const handleUpdate = async () => {
-    const kq = await Promise.all(
-      emails.map((email) => {
-        AddFriend(formData._id, email);
-      })
-    );
+    
+      const kq=  AddFriend(formData._id, email);
+ 
     if (!kq) return;
     await getProject(item._id);
     setIdUsers(item.userOrderIds);
   };
-  const handleChangeE = (e, index) => {
-    const newEmails = [...emails];
-    newEmails[index] = e.target.value;
-    setEmails(newEmails);
-  };
-  const handleAddE = () => {
-    setEmails([...emails, ""]);
-  };
+  const handleChangeE = (e) => {
+    const newEmails = e.target.value
+  
+    setEmail(newEmails);
 
+    // Kiểm tra email hợp lệ
+    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.target.value);
+    if (!isValidEmail) {
+      setError(`Email không hợp lệ`);
+    }
+  };
   const handleSubmitUpdate = (e) => {
     e.preventDefault();
-    handleUpdate(formData);
-    console.log("formData: ", formData);
-    setEmails([]);
+    
+    if(!email.trim()){
+      toast.error("Email cannot be blank!")
+      return
+    }
+    if(!error.trim()){
+      toast.error(error)
+      return
+    }
+    handleUpdate(email);
+    setEmail([]);
   };
   const handleOpen = (e) => {
     e.preventDefault();
@@ -197,7 +207,7 @@ export default function Admin({
 
               <p className="addFriend">Invite your friends (via Email): </p>
               <div className="ListEmail">
-                {emails.map((email, index) => (
+                
                   <div
                     style={{
                       display: "flex",
@@ -205,13 +215,13 @@ export default function Admin({
                       justifyContent: "center",
                     }}
                     className="rowOfEmail"
-                    key={index}
+                   
                   >
                     <Input
                       className="input"
-                      onChange={(e) => handleChangeE(e, index)}
-                      type="text"
-                      name={`email-${index}`}
+                      onChange={(e) => handleChangeE(e)}
+                      type="email"
+                      name={`email`}
                       value={email}
                       placeholder="Email"
                       sx={{ marginBottom: "10px", fontSize: "1rem" }}
@@ -226,13 +236,9 @@ export default function Admin({
                       invite
                     </Button>
                   </div>
-                ))}
+                
               </div>
-              <div>
-                <button className="BAdd" onClick={handleAddE}>
-                  +
-                </button>
-              </div>
+              
             </div>
           </div>
         </div>
