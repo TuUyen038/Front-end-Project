@@ -31,10 +31,8 @@
 }
 
 .main-content input {
-    width: 500px;
-    display: block;
-    margin: 10px 0;
-    font-size: 1.8rem;
+    width: 400px;
+    font-size: 1.5rem;
     border: none;
 }
 

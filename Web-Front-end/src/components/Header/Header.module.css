@@ -36,12 +36,7 @@
     display: flex;
     gap: 16px;
 }
-.Setting, .Notifications {
-    font-size: 1.47em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+
 .Account {
     width: 28px;
     height: 28px;
@@ -51,4 +46,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.css-1of3z4j-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track {
+    background-color: none;
 }

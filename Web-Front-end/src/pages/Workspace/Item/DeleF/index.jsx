@@ -9,7 +9,8 @@ export default function Delete({ setLs, item, idAdmins }) {
     ev.preventDefault();
     const e = window.confirm("Do you want to delete this project?");
     if (e === false) return;
-    await deleteProject(id);
+    const kq = await deleteProject(id);
+    if(!kq) return
     const projectIds = await getListProject();
     const updatedProjects = await Promise.all(
       projectIds.map((projectId) => getProject(projectId))

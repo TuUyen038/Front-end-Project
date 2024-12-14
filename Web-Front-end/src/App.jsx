@@ -61,6 +61,7 @@ function App() {
   // ];
   const toggleDarkTheme = () => {
     setToggleDarkMode(!toggleDarkMode);
+    
   };
   const darkTheme = createTheme({
     palette: {
@@ -104,7 +105,7 @@ function App() {
           <Routes>
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<Workspace/>} />
-              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/calendar" element={<Calendar dark={toggleDarkMode} />} />
               <Route path="/:projectSlug/*" element={<AppBar users={users} />}>
                 <Route index element={<Dashboard />} />
                 <Route path="meeting" element={<Meeting />}></Route>

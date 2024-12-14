@@ -41,8 +41,27 @@ export const exitProject = async (id) => {
     return false;
   }
   const updatedProject = await res.json();
-
-  toast.success(updateProject.resultMessage)
+  toast.success("Exit project successfully!")
+  return updatedProject;
+  
+}
+export const removeUser = async (prjId, userId) => {
+  const Token = localStorage.token;
+  const url = "http://localhost:8017/v1/projects/" + prjId +"/" + userId;
+  const res = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${Token}`,
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok) {
+    const errorData = await res.json();
+    toast.error(errorData.errors);
+    return false;
+  }
+  const updatedProject = await res.json();
+  toast.success("Remove user successfully!")
   return updatedProject;
 }
 
@@ -230,6 +249,7 @@ export const AddFriend = async (id, email) => {
     toast.error(errorData.errors);
     return;
   }
+  toast.success("Your friend has been added")
   return await getProject(id);
 };
 
@@ -283,6 +303,5 @@ export const deleteProject = async (id) => {
     return;
   }
   toast.success("Delete project successfully! 😉");
-  const arr = await getListProject();
-  const newProject = await getProject(arr[arr.length - 1]);
+  return await getListProject();
 };

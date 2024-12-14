@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./FullDeadline.css";
 import Checkbox from "@mui/material/Checkbox";
 import { updateDeadline } from "../../Workspace/services";
-export default function FullDeadline({ title, time, initialStatus, id }) {
+export default function FullDeadline({ title, time, initialStatus, id, dark }) {
   const [status, setStatus] = useState(initialStatus)
   const [isChecked, setIsChecked] = useState(status === "on_time");
 
@@ -21,9 +21,9 @@ export default function FullDeadline({ title, time, initialStatus, id }) {
 
   const changStyle = (status) => {
     switch (status) {
-      case "late": return { border: "1px solid red" }
-      case "on_time" : return {border: "1px solid green" }
-      default: return {border: "none"}
+      case "late": return {  background: "hsla(0, 95.00%, 76.50%, 0.42)" }
+      case "on_time" : return { background:"hsla(163, 55.30%, 70.20%, 0.29)" }
+      default: return {}
     }
   }
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
@@ -38,9 +38,9 @@ export default function FullDeadline({ title, time, initialStatus, id }) {
       />
       <div className="mainD" style={changStyle(status)}>
         <div className="name">
-          <p>{title}</p>
+          <p >{title}</p>
         </div>
-        <div className="time">
+        <div style={{color: dark? "#222" : "#999"}} className="time">
           <p>{time}</p>
         </div>
       </div>
