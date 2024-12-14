@@ -61,7 +61,10 @@ export default function ButtonContainer({
         {openJoinIn ? (
           <JoinIn
             member={member}
-            onClose={() => setOpenJoinIn(false)}
+            onClose={() => {
+              setOpenJoinIn(false);
+              onClose();
+            }}
             onAddMemLs={onAddMemLs}
           />
         ) : null}

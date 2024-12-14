@@ -103,7 +103,7 @@ const TaskOpen = forwardRef(
                 />
               )}
               <div className="member-deadline-info">
-                {task.userOrderIds && (
+                {task.userOrderIds && task.userOrderIds.length > 0 && (
                   <div>
                     Member:
                     <div>
