@@ -15,7 +15,6 @@ import { toast } from 'react-toastify';
 
 import { stringAvatar } from '../avatarExe/avatar';
 
-
 const TaskOpen = forwardRef(
   ({ task, onClose, onDelete, member, onAddMemLs }, ref) => {
     const [comments, setComments] = useState([]);
@@ -128,7 +127,7 @@ const TaskOpen = forwardRef(
                 {task.deadline && (
                   <div>
                     <label>Deadline: </label>
-                    {task.deadline}, Done:
+                    {task.deadline.slice(0, 10)}, Done:
                     {task.deadlinestatus !== 'late' && (
                       <input
                         type="checkbox"
