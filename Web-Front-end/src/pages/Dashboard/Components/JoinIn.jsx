@@ -1,22 +1,36 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-export default function JoinIn({ member, onAddMemLs, onClose }) {
+export default function JoinIn({ member, cardMem, onAddMemLs, onClose }) {
   console.log('Props member: ', member);
 
   const [searchInput, setSearchInput] = useState('');
   const [tmpLs, setTmpLs] = useState([]);
-
-  const filteredMembers = member.filter((mem) => {
-    console.log('member: ', member);
-    return (
-      mem.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-      mem.email.toLowerCase().includes(searchInput.toLowerCase())
-    );
-  });
+  const [filteredMembers, setFilteredMembers] = useState([]);
 
   // Kiểm tra thành viên đã được chọn chưa
-  const isSelected = (mem) => tmpLs.some((item) => item.id === mem.id);
+  const isSelected = (mem) => tmpLs.some((item) => item.name === mem.name);
+
+  useEffect(() => {
+    const notInCardMem = cardMem
+      ? member.filter(
+          (mem) =>
+            !cardMem.some((cm) => cm.id === mem.id) &&
+            !tmpLs.some((tm) => tm.id === mem.id)
+        )
+      : member.filter((mem) => !tmpLs.some((tm) => tm.id === mem.id));
+
+    setFilteredMembers(
+      notInCardMem.filter((mem) => {
+        console.log('NOT in card member: ', notInCardMem);
+        return (
+          !isSelected(mem) &&
+          (mem.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+            mem.email.toLowerCase().includes(searchInput.toLowerCase()))
+        );
+      })
+    );
+  }, [searchInput, tmpLs]);
 
   return (
     <div className="task-join-in">
@@ -26,13 +40,15 @@ export default function JoinIn({ member, onAddMemLs, onClose }) {
         onChange={(e) => setSearchInput(e.target.value)}
       />
       <div className="member-list">
+        <>Mem just added: </>
         {tmpLs.map((i) => (
-          <>{i.name}</>
+          <p key={i}>{i.name}</p>
         ))}
+        <br />
+        <>Search result: </>
         {filteredMembers.map((mem) => (
           <p
             key={mem.id}
-            className={`member-item ${isSelected(mem) ? 'selected' : ''}`}
             onClick={() => {
               if (!isSelected(mem)) {
                 setTmpLs((prev) => [...prev, mem]);
@@ -58,6 +74,7 @@ export default function JoinIn({ member, onAddMemLs, onClose }) {
 
 JoinIn.propTypes = {
   member: PropTypes.array.isRequired,
+  cardMem: PropTypes.array,
   onAddMemLs: PropTypes.func,
   onClose: PropTypes.func.isRequired,
 };

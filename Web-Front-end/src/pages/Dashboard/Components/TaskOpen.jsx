@@ -209,6 +209,7 @@ const TaskOpen = forwardRef(
                   onClose={onClose}
                   setEditing={setEditing}
                   member={member}
+                  cardMem={cardMem}
                   onAddMemLs={onAddMemLs}
                   onSetPayLoad={(payload) =>
                     setEditPayload((pre) => ({ ...pre, ...payload }))

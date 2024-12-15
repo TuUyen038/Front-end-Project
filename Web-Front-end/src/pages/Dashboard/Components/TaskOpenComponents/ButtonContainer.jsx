@@ -19,6 +19,7 @@ export default function ButtonContainer({
   onClose,
   setEditing,
   member,
+  cardMem,
   onAddMemLs,
   onSetPayLoad,
 }) {
@@ -61,6 +62,7 @@ export default function ButtonContainer({
         {openJoinIn ? (
           <JoinIn
             member={member}
+            cardMem={cardMem}
             onClose={() => {
               setOpenJoinIn(false);
               onClose();
@@ -162,5 +164,6 @@ ButtonContainer.propTypes = {
   setEditing: PropTypes.func,
   onAddMemLs: PropTypes.func,
   member: PropTypes.array,
+  cardMem: PropTypes.array,
   onSetPayLoad: PropTypes.func,
 };
