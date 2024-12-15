@@ -13,6 +13,7 @@ const ListItem = ({ list, setLs, searchKey, setDl }) => {
         {filteredList.length > 0 ? (
           filteredList.map((item) => (
             <li key={item._id}>
+              {console.log(item.slug)}
               <Link to={`${item.slug}`} className={style.link}>
               <Item setLs={setLs} item={item} setDl={setDl}/>
               </Link>

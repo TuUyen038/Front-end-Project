@@ -181,7 +181,7 @@ const TaskOpen = forwardRef(
                     }}
                   />
                 )}
-                <br />
+                
                 <label>Discuss</label>
                 <Stack
                   direction="row"
@@ -209,7 +209,7 @@ const TaskOpen = forwardRef(
                   />
                 </Stack>
                 {/* <label>Discuss</label> */}
-                <br /> <br />
+                <br />
                 <Stack className="discuss-area">
                   {comments
                     ? comments

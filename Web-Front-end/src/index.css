@@ -154,6 +154,16 @@ body {
   /* padding: 20rem; */
 }
 
+/* description */
+.css-7ctihp-MuiTypography-root {
+  overflow-wrap: anywhere;
+  padding-right: 2rem;
+  max-height: 6rem;    
+  overflow-y: auto;
+  width: 50rem;
+  font-size: 1.1rem !important;
+}
+
 /* --------------------FILE COMPONENT---------------------- */
 
 .File {
@@ -263,7 +273,7 @@ body {
 
 .discuss-area {
   gap: 1rem;
-  max-height: 22rem;
+  max-height: 20rem;
   width: 50rem;
   overflow-y: auto;
 }
