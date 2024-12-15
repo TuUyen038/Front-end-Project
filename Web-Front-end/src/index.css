@@ -204,7 +204,7 @@ body {
   z-index: 1;
   position: absolute;
   left: -6rem;
-  top: 3.2rem;
+  top: 100%;
   background-color: white;
   border: 0.2px solid black;
   border-radius: 1rem;
@@ -220,6 +220,13 @@ body {
 
 .task-join-in button {
   margin-bottom: 1rem;
+}
+
+.task-join-in .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 1rem;
 }
 
 .cus-btn {
@@ -262,7 +269,7 @@ body {
   font-size: 1.1rem;
   color: #333;
 }
- 
+
 .MuiStack-root.css-1k0k4vv-MuiStack-root {
   display: flex;
   align-items: center;
@@ -284,7 +291,7 @@ body {
   font-size: 2rem;
   cursor: pointer;
   transition: transform 0.3s ease;
-  color: #2D9596;
+  color: #2d9596;
 }
 
 .comment p {

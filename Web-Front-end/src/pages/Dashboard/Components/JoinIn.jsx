@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-export default function JoinIn({ member, cardMem, onAddMemLs, onClose }) {
+export default function JoinIn({
+  member,
+  cardMem,
+  onAddMemLs,
+  onClose,
+  CloseJoinIn,
+}) {
   console.log('Props member: ', member);
 
   const [searchInput, setSearchInput] = useState('');
@@ -31,43 +37,51 @@ export default function JoinIn({ member, cardMem, onAddMemLs, onClose }) {
       })
     );
   }, [searchInput, tmpLs]);
-  var dark = localStorage.getItem("darkMode") === "true";
-    return (
-    <div style={{background: dark ? "#999" : "white"}} className="task-join-in">
+  var dark = localStorage.getItem('darkMode') === 'true';
+  return (
+    <div
+      style={{ background: dark ? '#999' : 'white' }}
+      className="task-join-in"
+    >
       <input
         placeholder="Search member"
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
       />
-      <div className="member-list">
-        <>Mem just added: </>
-        {tmpLs.map((i) => (
-          <p key={i}>{i.name}</p>
-        ))}
-        <br />
-        <>Search result: </>
-        {filteredMembers.map((mem) => (
-          <p
-            key={mem.id}
-            onClick={() => {
-              if (!isSelected(mem)) {
-                setTmpLs((prev) => [...prev, mem]);
-              }
-            }}
-          >
-            {mem.name}
-          </p>
-        ))}
+      <div className="container">
+        <div className="member-list">
+          <>Mem just added: </>
+          {tmpLs.map((i) => (
+            <p key={i}>{i.name}</p>
+          ))}
+          <br />
+          <>Search result: </>
+          {filteredMembers.map((mem) => (
+            <p
+              key={mem.id}
+              onClick={() => {
+                if (!isSelected(mem)) {
+                  setTmpLs((prev) => [...prev, mem]);
+                }
+              }}
+            >
+              {mem.name}
+            </p>
+          ))}
+        </div>
+        <button
+          className="cus-btn"
+          onClick={() => {
+            onAddMemLs(tmpLs);
+            onClose();
+          }}
+        >
+          Add
+        </button>
+        <button className="cus-btn" onClick={CloseJoinIn}>
+          Cancel
+        </button>
       </div>
-      <button
-        className="cus-btn"
-        onClick={() => {
-          onAddMemLs(tmpLs);
-          onClose();
-        }}
-      >
-        Add
-      </button>
     </div>
   );
 }
@@ -77,4 +91,5 @@ JoinIn.propTypes = {
   cardMem: PropTypes.array,
   onAddMemLs: PropTypes.func,
   onClose: PropTypes.func.isRequired,
+  CloseJoinIn: PropTypes.func,
 };

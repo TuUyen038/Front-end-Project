@@ -47,20 +47,25 @@ export default function ButtonContainer({
         gap: '1.5rem',
       }}
     >
-      <Button
-        className="task-button"
-        variant="contained"
-        startIcon={<AddPersonIcon />}
-        onClick={() => setOpenJoinIn(true)}
-        color="rgba(217, 217, 217, 217, 0.7)"
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          position: 'relative',
-        }}
-      >
-        Join in
+      <div style={{ position: 'relative' }}>
+        <Button
+          className="task-button"
+          variant="contained"
+          startIcon={<AddPersonIcon />}
+          onClick={() => {
+            setOpenJoinIn(true);
+            if (openRemoveMem) setOpenRemoveMem(false);
+          }}
+          color="rgba(217, 217, 217, 217, 0.7)"
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            // position: 'relative',
+          }}
+        >
+          Join in
+        </Button>
         {openJoinIn ? (
           <JoinIn
             member={member}
@@ -70,22 +75,28 @@ export default function ButtonContainer({
               onClose();
             }}
             onAddMemLs={onAddMemLs}
+            CloseJoinIn={() => setOpenJoinIn(false)}
           />
         ) : null}
-      </Button>
-      <Button
-        className="task-button"
-        variant="contained"
-        startIcon={<RemovePersonIcon />}
-        onClick={() => setOpenRemoveMem(true)}
-        color="rgba(217, 217, 217, 217, 0.7)"
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-        }}
-      >
-        Remove
+      </div>
+      <div style={{ position: 'relative' }}>
+        <Button
+          className="task-button"
+          variant="contained"
+          startIcon={<RemovePersonIcon />}
+          onClick={() => {
+            setOpenRemoveMem(true);
+            if (openJoinIn) setOpenJoinIn(false);
+          }}
+          color="rgba(217, 217, 217, 217, 0.7)"
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+          }}
+        >
+          Remove
+        </Button>
         {openRemoveMem ? (
           <RemoveMem
             cardMem={cardMem}
@@ -94,15 +105,18 @@ export default function ButtonContainer({
               onClose();
             }}
             onRemoveMem={onRemoveMem}
+            CloseRemoveMem={() => setOpenRemoveMem(false)}
           />
         ) : null}
-      </Button>
+      </div>
+
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Button
           className="task-button"
           onClick={() => setOpenDatePicker(true)}
           variant="contained"
           startIcon={<DeadlineIcon />}
+          disabled={openJoinIn || openRemoveMem}
           color="rgba(217, 217, 217, 217, 0.7)"
           sx={{
             display: 'flex',
