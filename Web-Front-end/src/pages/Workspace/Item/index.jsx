@@ -15,6 +15,7 @@ const Item = ({ setLs, item, setDl }) => {
     e.preventDefault();
     setShow(!show);
   };
+
   return (
     <div className={style.Item}>
       <div className={style.GroupImg}>

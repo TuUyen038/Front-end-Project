@@ -16,7 +16,7 @@ export const FilteredList = ({ list}) => {
             const formattedDeadline = deadline.toLocaleDateString("vi-VN");
             return (
               <li key={item._id}>
-                <FullDeadline title={item.title} time={formattedDeadline} initialStatus={item.deadlinestatus} id={item._id}/>
+                <FullDeadline item={item} time={formattedDeadline} initialStatus={item.deadlinestatus} id={item._id}/>
               </li>
             );
           }
