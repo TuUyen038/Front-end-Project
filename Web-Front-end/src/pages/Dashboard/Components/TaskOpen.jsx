@@ -34,16 +34,16 @@ const TaskOpen = forwardRef(
     };
 
     const handleSave = () => {
-      console.log(task.deadlinestatus);
-      console.log(checked);
-      if (
+      if (!editPayload.title.trim() || editPayload.title.trim().length > 50)
+        toast.warn('Your card title is too long or meaningless!');
+      else if (
         task.title !== editPayload.title ||
         task.description !== editPayload.description ||
         task.deadline !== editPayload.deadline
-      )
-        console.log('edit pay load : ', editPayload);
-      socket.emit('updateCard', task._id, editPayload);
-      onClose();
+      ) {
+        socket.emit('updateCard', task._id, editPayload);
+        onClose();
+      }
     };
 
     //useEffect
