@@ -238,6 +238,10 @@ body {
   text-align: center;
 }
 
+.cus-btn:hover {
+  cursor: pointer;
+}
+
 .task-join-in .member-list {
   height: 10rem;
 }

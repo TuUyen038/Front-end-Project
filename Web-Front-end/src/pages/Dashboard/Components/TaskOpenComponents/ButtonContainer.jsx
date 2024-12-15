@@ -4,15 +4,17 @@ import DeadlineIcon from '@mui/icons-material/AccessAlarm';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RemovePersonIcon from '@mui/icons-material/PersonRemoveAlt1Outlined';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import DeletePopUp from '../../../../components/DeletePopUp/DeletePopUp';
 import JoinIn from '../JoinIn';
-
+import { toast } from 'react-toastify';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import RemoveMem from '../RemoveMem';
+import dayjs from 'dayjs';
+import { debounce } from 'lodash';
 
 export default function ButtonContainer({
   onDelete,
@@ -30,6 +32,8 @@ export default function ButtonContainer({
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
 
+  const today = dayjs();
+
   const handleDelete = () => {
     setOpenDelete(true);
   };
@@ -39,6 +43,24 @@ export default function ButtonContainer({
     setOpenDelete(false);
     onClose();
   };
+
+  const handleDateChange = useCallback(
+    debounce((newDate) => {
+      if (newDate && newDate.isBefore(today, 'day')) {
+        toast.error('Selected date is the past!');
+      } else if (newDate && newDate.isValid()) {
+        setSelectedDate(newDate);
+        onSetPayLoad({
+          deadline: newDate.format('YYYY-MM-DD'),
+          deadlinestatus: 'not_done',
+        });
+        setOpenDatePicker(false);
+      } else {
+        toast.warn('Invalid date selected. Please choose a valid date.');
+      }
+    }, 1000),
+    []
+  );
 
   return (
     <Stack
@@ -54,14 +76,15 @@ export default function ButtonContainer({
           startIcon={<AddPersonIcon />}
           onClick={() => {
             setOpenJoinIn(true);
+            if (openDatePicker) setOpenDatePicker(false);
             if (openRemoveMem) setOpenRemoveMem(false);
           }}
           color="rgba(217, 217, 217, 217, 0.7)"
           sx={{
             display: 'flex',
             flexDirection: 'row',
+            width: '100%',
             justifyContent: 'flex-start',
-            // position: 'relative',
           }}
         >
           Join in
@@ -87,11 +110,13 @@ export default function ButtonContainer({
           onClick={() => {
             setOpenRemoveMem(true);
             if (openJoinIn) setOpenJoinIn(false);
+            if (openDatePicker) setOpenDatePicker(false);
           }}
           color="rgba(217, 217, 217, 217, 0.7)"
           sx={{
             display: 'flex',
             flexDirection: 'row',
+            width: '100%',
             justifyContent: 'flex-start',
           }}
         >
@@ -130,15 +155,7 @@ export default function ButtonContainer({
           <DatePicker
             label="Pick Up Deadline"
             value={selectedDate}
-            onChange={(newDate) => {
-              setSelectedDate(newDate);
-              console.log('new date: ', newDate);
-              onSetPayLoad({
-                deadline: newDate.format('YYYY-MM-DD'),
-                deadlinestatus: 'not_done',
-              });
-              setOpenDatePicker(false);
-            }}
+            onChange={handleDateChange}
           />
         )}
         {selectedDate && <p>Deadline: {selectedDate.format('YYYY-MM-DD')}</p>}
