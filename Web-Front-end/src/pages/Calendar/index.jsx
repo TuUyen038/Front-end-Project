@@ -134,7 +134,7 @@ export default function Calendar() {
           {filteredLs.length !== 0 ? (
             <FilteredList list={filteredLs}/>
           ) : (
-            <p style={{ fontSize: "1.5rem", height: "540px" }}>No deadline</p>
+            <p style={{ fontSize: "1.5rem", height: "540px", marginLeft: "30px" }}>No deadline</p>
           )}
         </div>
       </div>

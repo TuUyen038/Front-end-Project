@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Button } from "@mui/material";
-import { exitProject, getListProject, getProject } from "../../services";
+import { exitProject, getDeadline, getListDeadline, getListProject, getProject } from "../../services";
 
 export default function Exit({ setLs, item, setDl }) {
   const handleExit = (id) => async (ev) => {
@@ -15,8 +15,8 @@ export default function Exit({ setLs, item, setDl }) {
     );
 
     setLs(updatedProjects);
-    const dlIds = await getListProject();
-    const updatedDl = await Promise.all(dlIds.map((id) => getProject(id)));
+    const dlIds = await getListDeadline();
+    const updatedDl = await Promise.all(dlIds.map((id) => getDeadline(id)));
     setDl(updatedDl);
   };
   return (

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Button } from "@mui/material";
-import { deleteProject, getListProject, getProject } from "../../services";
+import { deleteProject, getDeadline, getListDeadline, getListProject, getProject } from "../../services";
 
 export default function Delete({ setLs, item, idAdmins, setDl }) {
   const currentUser = localStorage.getItem("id");
@@ -17,8 +17,9 @@ export default function Delete({ setLs, item, idAdmins, setDl }) {
       projectIds.map((projectId) => getProject(projectId))
     );
     setLs(updatedProjects);
-    const dlIds = await getListProject();
-    const updatedDl = await Promise.all(dlIds.map((id) => getProject(id)));
+
+    const dlIds = await getListDeadline();
+    const updatedDl = await Promise.all(dlIds.map((id) => getDeadline(id)));
     setDl(updatedDl);
   };
 
