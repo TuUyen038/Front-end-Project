@@ -3,7 +3,7 @@ import style from './ListItem.module.css';
 import Item from '../Item';
 import { Link } from 'react-router-dom';
 
-const ListItem = ({ list, setLs, searchKey }) => {
+const ListItem = ({ list, setLs, searchKey, setDl }) => {
   const filteredList = list.filter(
     (item) => item.title?.toLowerCase().includes(searchKey?.toLowerCase() || "")
   );
@@ -14,7 +14,7 @@ const ListItem = ({ list, setLs, searchKey }) => {
           filteredList.map((item) => (
             <li key={item._id}>
               <Link to={`${item.slug}`} className={style.link}>
-                <Item setLs={setLs} item={item} />
+              <Item setLs={setLs} item={item} setDl={setDl}/>
               </Link>
             </li>
           ))

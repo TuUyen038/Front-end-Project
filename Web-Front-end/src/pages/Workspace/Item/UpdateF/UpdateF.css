@@ -106,7 +106,7 @@
     font-weight: 100;
 }
 .admin .row:hover {
-    border-bottom: 1px solid #2D9596;
+    background: #2d949618;
 }
 .users {
     min-width: 500px;

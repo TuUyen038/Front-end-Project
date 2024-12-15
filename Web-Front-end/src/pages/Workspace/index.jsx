@@ -41,7 +41,6 @@ function Workspace() {
           deadlineIds.map((id) => getDeadline(id))
         );
         const listDl = deadlines.filter(
-          
           (item) =>
             new Date(item.deadline) >= currentDay &&
             item.deadlinestatus == "not_done"
@@ -85,8 +84,14 @@ function Workspace() {
             <Search setKeySearch={setKeySearch} />
           </div>
           <section>
-            <ListItem list={ls} setLs={setLs} searchKey={keySearch} />
+            <ListItem
+              list={ls}
+              setLs={setLs}
+              searchKey={keySearch}
+              setDl={setDl}
+            />
           </section>
+
           <div className={style.groupDl}>
             <Badge
               badgeContent={dl.length}
@@ -112,7 +117,6 @@ function Workspace() {
                     color: "#999",
                   }}
                 >
-                  
                   <p style={{ color: "#999" }}>See more</p>
 
                   <ReadMoreIcon sx={{ fontSize: "2.5rem" }} />

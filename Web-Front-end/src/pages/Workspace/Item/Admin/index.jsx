@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import {
   addAdmin,
@@ -47,36 +48,35 @@ export default function Admin({
   }, [idAdmins, idUsers]);
 
   const handleUpdate = async () => {
-    
-      const kq=  AddFriend(formData._id, email);
- 
+    const kq = await AddFriend(formData._id, email);
     if (!kq) return;
     const updatedProject = await getProject(item._id);
-      setIdAdmins(updatedProject.adminOrderIds);
-      setIdUsers(updatedProject.userOrderIds);
-    
+    setIdAdmins(updatedProject.adminOrderIds);
+    setIdUsers(updatedProject.userOrderIds);
   };
   const handleChangeE = (e) => {
-    const newEmails = e.target.value
-  
+    const newEmails = e.target.value.trim();
     setEmail(newEmails);
 
-    // Kiểm tra email hợp lệ
-    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.target.value);
+    const isValidEmail =
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(newEmails);
     if (!isValidEmail) {
-      setError(`Email không hợp lệ`);
+      setError("Invalid email");
+    } else {
+      setError("");
     }
   };
+
   const handleSubmitUpdate = (e) => {
     e.preventDefault();
-    
-    if(!email.trim()){
-      toast.error("Email cannot be blank!")
-      return
+
+    if (!email || !email[0]) {
+      toast.error("Email cannot be blank!");
+      return;
     }
-    if(!error.trim()){
-      toast.error(error)
-      return
+    if (error.trim()) {
+      toast.error(error);
+      return;
     }
     handleUpdate(email);
     setEmail([]);
@@ -207,40 +207,45 @@ export default function Admin({
                 ))}
               </div>
 
-              <p className="addFriend">Invite your friends (via Email): </p>
-              <div className="ListEmail">
-                
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                    className="rowOfEmail"
-                   
-                  >
-                    <Input
-                      className="input"
-                      onChange={(e) => handleChangeE(e)}
-                      type="email"
-                      name={`email`}
-                      value={email}
-                      placeholder="Email"
-                      sx={{ marginBottom: "10px", fontSize: "1rem", borderBottom: "1px solid #9999", color: "#111"}}
-                    />
-                    <Button
-                      sx={{
-                        marginLeft: "30px",
+              {isAdmin ? (
+                <div>
+                  <p className="addFriend">Invite your friends (via Email): </p>
+                  <div className="ListEmail">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
-                      onClick={handleSubmitUpdate}
-                      variant="outlined"
+                      className="rowOfEmail"
                     >
-                      invite
-                    </Button>
+                      <Input
+                        className="input"
+                        onChange={(e) => handleChangeE(e)}
+                        type="email"
+                        name={`email`}
+                        value={email}
+                        placeholder="Email"
+                        sx={{
+                          marginBottom: "10px",
+                          fontSize: "1rem",
+                          borderBottom: "1px solid #9999",
+                          color: "#111",
+                        }}
+                      />
+                      <Button
+                        sx={{
+                          marginLeft: "30px",
+                        }}
+                        onClick={handleSubmitUpdate}
+                        variant="outlined"
+                      >
+                        invite
+                      </Button>
+                    </div>
                   </div>
-                
-              </div>
-              
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

@@ -7,7 +7,7 @@ import MoreHorizTwoToneIcon from "@mui/icons-material/MoreHorizTwoTone";
 import Admin from "./Admin"
 import Exit from "./Exit";
 
-const Item = ({ setLs, item }) => {
+const Item = ({ setLs, item, setDl }) => {
   const [idUsers, setIdUsers] = useState(item.userOrderIds);
   const [idAdmins, setIdAdmins] = useState(item.adminOrderIds);
   const [show, setShow] = useState(false);
@@ -43,9 +43,9 @@ const Item = ({ setLs, item }) => {
         {show && (
           <div className={style.formTool}>
             <Update setLs={setLs} item={item} setShow={setShow} idAdmins={idAdmins} setIdUsers={setIdUsers}/>
-            <Delete setLs={setLs} item={item} idAdmins={idAdmins} setShow={setShow} />
+            <Delete setLs={setLs} item={item} idAdmins={idAdmins} setShow={setShow} setDl={setDl} />
             <Admin item={item} idAdmins={idAdmins} setIdAdmins={setIdAdmins} setShow={setShow} idUsers={idUsers} setIdUsers={setIdUsers} />
-            <Exit setLs={setLs} item={item} />
+            <Exit setLs={setLs} item={item} setDl={setDl}/>
           </div>
         )}
       </div>

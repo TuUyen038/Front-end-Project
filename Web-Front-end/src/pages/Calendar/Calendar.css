@@ -33,18 +33,21 @@
     padding-left: 0 !important;
     padding-right: 0px !important;
   }
+
   .calendar {
     display: flex;
-    font-size: 4rem!important;
+    font-size: 4rem !important;
   }
+
   .calendar-content {
     background: rgb(243, 239, 239);
     width: 70%;
-    
+
 
   }
+
   .css-cyfsxc-MuiPickersCalendarHeader-labelContainer {
-    font-size: 2rem!important;
+    font-size: 2rem !important;
   }
 
   .titleC {
@@ -53,28 +56,29 @@
     margin-top: 20px;
     font-size: 2.5rem;
   }
+
   .calendar-content {
     display: flex;
     flex-direction: column;
-    height: 100%; /* Đảm bảo rằng chiều cao của container không bị tràn */
+    height: 100%;
   }
-  
+
   .calender-main-content {
-    flex: 1; /* Chiếm không gian còn lại */
-    overflow-y: auto; /* Cho phép cuộn theo chiều dọc */
-    height: calc(100vh - 45px);; /* Đặt chiều cao tối đa để giới hạn cuộn */
+    flex: 1;
+    overflow-y: auto;
+    height: calc(100vh - 45px);
+    ;
     padding: 1rem;
     margin-top: 2rem;
     border-top: 1px solid #ddd;
-    background-color: inherit; /* Theo theme hiện tại */
+    background-color: inherit;
   }
-  
+
   .calender-main-content::-webkit-scrollbar {
     width: 8px;
   }
-  
+
   .calender-main-content::-webkit-scrollbar-thumb {
     background-color: #999;
     border-radius: 4px;
   }
-  
