@@ -33,6 +33,7 @@ body {
   align-items: center;
   gap: 1rem;
   justify-content: start;
+  font-size: 1.4rem;
 }
 
 .AppBar .LeftSide .Others .MeetLink,
@@ -54,6 +55,14 @@ body {
   align-items: center;
   justify-content: flex-end;
   gap: 1rem; /* Khoảng cách giữa các avatar */
+}
+
+.board-icon-container {
+  align-content: center;
+}
+
+.cus-btn {
+  margin-right: 1rem;
 }
 
 /* --------------------BOARD COMPONENT---------------------- */
@@ -103,16 +112,20 @@ body {
 .Column .Top .Main {
   display: flex;
   flex-direction: column;
-  margin: 0px;
-  gap: 0px;
+  margin: 0rem;
+  gap: 11px;
   overflow: auto;
   /* flex-grow: 1; not this one */
 }
 
-.Task {
-  /* border: black solid 1px; */
-  min-height: 5rem;
+.css-1irks5c-MuiStack-root {
+  box-shadow: none;
 }
+
+/* .Task {
+  border: black solid 1px;
+  min-height: 5rem;
+} */
 /* --------------------POP UP COMPONENT---------------------- */
 
 .PopUp {
@@ -247,9 +260,6 @@ body {
 }
 
 .MuiAvatar-root.MuiAvatar-circular {
-  width: 2.8rem;
-  height: 2.8rem;
-  font-size: 1rem;
   color: white;
   display: flex;
   justify-content: center;
@@ -270,6 +280,7 @@ body {
   font-size: 2rem;
   cursor: pointer;
   transition: transform 0.3s ease;
+  color: #2D9596;
 }
 
 .comment p {
@@ -287,6 +298,6 @@ body {
 /* ---------------TASK OPEN----------------- */
 label {
   font-weight: bold;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-family: 'Roboto Flex';
 }
