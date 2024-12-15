@@ -30,6 +30,11 @@ export default function Task({ task, index, onDelete, member }) {
     console.log('emit add user id to card');
   };
 
+  const handleRemoveUserFromCard = (users) => {
+    users.forEach((user) => socket.emit('removeUserCard', Task._id, user.id));
+    console.log('emit remove user from card');
+  };
+
   const deadlineBGColor = () => {
     switch (Task.deadlinestatus) {
       case 'not_done':
@@ -90,9 +95,22 @@ export default function Task({ task, index, onDelete, member }) {
         }));
       }
     };
+
+    const handleRemove = (cardId, userId) => {
+      if (cardId === task._id) {
+        console.log('get update from socket');
+        setTask((prev) => ({
+          ...prev,
+          userOrderIds: prev.userOrderIds.filter((uid) => uid !== userId),
+        }));
+      }
+    };
+
     socket.on('userCardAdded', handleAdd);
+    socket.on('userCardRemoved', handleRemove);
     return () => {
       socket.off('userCardAdded', handleAdd);
+      socket.off('userCardRemoved', handleRemove);
     };
   }, [task._id]);
 
@@ -109,7 +127,8 @@ export default function Task({ task, index, onDelete, member }) {
   }, []);
 
   useEffect(() => {
-    getMemberOfCard(Task).then((data) => setCardMem(data));
+    if (Task && Task.userOrderIds)
+      getMemberOfCard(Task).then((data) => setCardMem(data));
     console.log('cardMem : ', cardMem);
   }, [Task]);
   var dark = localStorage.getItem('darkMode') === 'true';
@@ -167,18 +186,20 @@ export default function Task({ task, index, onDelete, member }) {
 
             {Task.userOrderIds ? (
               <AvatarGroup className="menbers" max={3} spacing={5}>
-                {cardMem?.map((member, index) => (
-                  <Avatar
-                    key={index}
-                    {...stringAvatar(`${member.name}`)}
-                    sx={{
-                      ...stringAvatar(`${member.name}`).sx,
-                      width: 12,
-                      height: 12,
-                      fontSize: 8,
-                    }}
-                  />
-                ))}
+                {cardMem.length > 0
+                  ? cardMem.map((member, index) => (
+                      <Avatar
+                        key={index}
+                        {...stringAvatar(`${member.name}`)}
+                        sx={{
+                          ...stringAvatar(`${member.name}`).sx,
+                          width: 12,
+                          height: 12,
+                          fontSize: 8,
+                        }}
+                      />
+                    ))
+                  : null}
               </AvatarGroup>
             ) : null}
           </Stack>
@@ -196,14 +217,13 @@ export default function Task({ task, index, onDelete, member }) {
         }}
       >
         <TaskOpen
-          delete={task.delete}
           onClose={Close}
           task={Task}
           onDelete={onDelete}
           sx={{ position: 'relative' }}
-          handleAddUserToCard={handleAddUserToCard}
           member={member}
           onAddMemLs={handleAddUserToCard}
+          onRemoveMem={handleRemoveUserFromCard}
         />
       </Modal>
     </>

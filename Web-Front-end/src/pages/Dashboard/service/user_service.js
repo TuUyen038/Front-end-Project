@@ -31,7 +31,7 @@ export const getUsersOfProject = async (project) => {
 
 export const getMemberOfCard = async (card) => {
   if (card.userOrderIds.length === 0) {
-    return;
+    return [];
   }
   const users = await Promise.all(card.userOrderIds.map((id) => getUser(id)));
   return users;

@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 import { stringAvatar } from '../avatarExe/avatar';
 
 const TaskOpen = forwardRef(
-  ({ task, onClose, onDelete, member, onAddMemLs }, ref) => {
+  ({ task, onClose, onDelete, member, onAddMemLs, onRemoveMem }, ref) => {
     const [comments, setComments] = useState([]);
     const [user, setUser] = useState({});
     const [cardMem, setCardMem] = useState([]);
@@ -231,6 +231,7 @@ const TaskOpen = forwardRef(
                   member={member}
                   cardMem={cardMem}
                   onAddMemLs={onAddMemLs}
+                  onRemoveMem={onRemoveMem}
                   onSetPayLoad={(payload) =>
                     setEditPayload((pre) => ({ ...pre, ...payload }))
                   }
@@ -253,6 +254,7 @@ TaskOpen.propTypes = {
   handleAddUserToCard: PropTypes.func,
   member: PropTypes.array,
   onAddMemLs: PropTypes.func,
+  onRemoveMem: PropTypes.func,
 };
 TaskOpen.displayName = 'TaskOpen';
 

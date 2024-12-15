@@ -1,7 +1,6 @@
 import { Button, Stack } from '@mui/material';
 import AddPersonIcon from '@mui/icons-material/PersonAddAlt';
 import DeadlineIcon from '@mui/icons-material/AccessAlarm';
-import AttachIcon from '@mui/icons-material/Attachment';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RemovePersonIcon from '@mui/icons-material/PersonRemoveAlt1Outlined';
@@ -13,6 +12,7 @@ import JoinIn from '../JoinIn';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import RemoveMem from '../RemoveMem';
 
 export default function ButtonContainer({
   onDelete,
@@ -21,10 +21,12 @@ export default function ButtonContainer({
   member,
   cardMem,
   onAddMemLs,
+  onRemoveMem,
   onSetPayLoad,
 }) {
   const [openDelete, setOpenDelete] = useState(false);
   const [openJoinIn, setOpenJoinIn] = useState(false);
+  const [openRemoveMem, setOpenRemoveMem] = useState(false);
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
 
@@ -75,6 +77,7 @@ export default function ButtonContainer({
         className="task-button"
         variant="contained"
         startIcon={<RemovePersonIcon />}
+        onClick={() => setOpenRemoveMem(true)}
         color="rgba(217, 217, 217, 217, 0.7)"
         sx={{
           display: 'flex',
@@ -83,6 +86,16 @@ export default function ButtonContainer({
         }}
       >
         Remove
+        {openRemoveMem ? (
+          <RemoveMem
+            cardMem={cardMem}
+            onClose={() => {
+              setOpenRemoveMem(false);
+              onClose();
+            }}
+            onRemoveMem={onRemoveMem}
+          />
+        ) : null}
       </Button>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Button
@@ -162,6 +175,7 @@ ButtonContainer.propTypes = {
   onClose: PropTypes.func,
   setEditing: PropTypes.func,
   onAddMemLs: PropTypes.func,
+  onRemoveMem: PropTypes.func,
   member: PropTypes.array,
   cardMem: PropTypes.array,
   onSetPayLoad: PropTypes.func,
