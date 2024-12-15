@@ -6,14 +6,12 @@ import Input from "@mui/material/Input";
 import { Button } from "@mui/material";
 
 // eslint-disable-next-line react/prop-types
-export default function Update({ setLs, item, setShow, idAdmins, setIdUsers}) {
+export default function Update({ setLs, item, setShow, idAdmins, setIdUsers }) {
   const [formData, setFormData] = useState({ ...item });
   const [showForm, setShowForm] = useState(false);
   const [emails, setEmails] = useState([]);
   const currentUser = localStorage.getItem("id");
   const isAdmin = idAdmins.filter((id) => id === currentUser).length;
-
-
 
   const handleOpen = (e) => {
     e.preventDefault();
@@ -41,9 +39,9 @@ export default function Update({ setLs, item, setShow, idAdmins, setIdUsers}) {
         AddFriend(formData._id, email);
       })
     );
-    if(!kq) return
-    await getProject(item._id)
-    setIdUsers(item.userOrderIds)
+    if (!kq) return;
+    await getProject(item._id);
+    setIdUsers(item.userOrderIds);
     setLs((prevProjects) =>
       prevProjects.map((p) =>
         p._id === updatedProject._id ? updatedProject : p
@@ -88,7 +86,7 @@ export default function Update({ setLs, item, setShow, idAdmins, setIdUsers}) {
                   onChange={handleInputChange}
                   type="text"
                   name="title"
-                  sx={{borderBottom: "1px solid #999", color: '#111'}}
+                  sx={{ borderBottom: "1px solid #999", color: "#111" }}
                 />
               </div>
               <div className="row">
@@ -98,22 +96,19 @@ export default function Update({ setLs, item, setShow, idAdmins, setIdUsers}) {
                   onChange={handleInputChange}
                   type="text"
                   name="description"
-                  sx={{borderBottom: "1px solid #999", color: '#111'}}
-
+                  sx={{ borderBottom: "1px solid #999", color: "#111" }}
                 />
               </div>
               <Button
-                      sx={{
-                        marginTop: "30px",
-                        fontSize: "1.5rem"
-
-                      }}
-                      onClick={handleSubmitUpdate}
-                      variant="outlined"
-
-                    >
-                      update
-                    </Button>
+                sx={{
+                  marginTop: "30px",
+                  fontSize: "1.5rem",
+                }}
+                onClick={handleSubmitUpdate}
+                variant="outlined"
+              >
+                update
+              </Button>
             </div>
           </div>
         </div>

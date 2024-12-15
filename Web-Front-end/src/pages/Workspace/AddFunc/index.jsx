@@ -7,7 +7,7 @@ import Input from "@mui/material/Input";
 import { Button } from "@mui/material";
 
 export default function Add({ setLs, open, setOpen }) {
-  var dark = localStorage.getItem("darkMode")
+  var dark = localStorage.getItem("darkMode") === "true"
   const refInput = useRef({});
   const [formData, setFormData] = useState({
     title: "",
