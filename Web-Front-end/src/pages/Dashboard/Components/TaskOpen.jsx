@@ -98,6 +98,7 @@ const TaskOpen = forwardRef(
                 <h1>{task.title}</h1>
               ) : (
                 <input
+                  className="title-input"
                   value={editPayload.title}
                   onChange={(e) =>
                     setEditPayload((pre) => ({ ...pre, title: e.target.value }))
@@ -115,8 +116,8 @@ const TaskOpen = forwardRef(
                             {...stringAvatar(`${mem.name}`)}
                             sx={{
                               ...stringAvatar(`${mem.name}`).sx,
-                              width: 20,
-                              height: 20,
+                              width: 22,
+                              height: 22,
                               fontSize: 10,
                             }}
                           />
@@ -127,7 +128,8 @@ const TaskOpen = forwardRef(
                 {task.deadline && (
                   <div>
                     <label>Deadline: </label>
-                    {task.deadline.slice(0, 10)}, Done:
+                    <p>{task.deadline.slice(0, 10)} </p> <br />
+                    <span>Done:</span>
                     {task.deadlinestatus !== 'late' && (
                       <input
                         type="checkbox"
@@ -159,7 +161,7 @@ const TaskOpen = forwardRef(
               }}
             >
               <Stack className="task-main" sx={{ gap: '1.2rem' }}>
-                <label>Description</label>
+                <label>Description:</label>
                 {!editing ? (
                   <Typography variant="body2">
                     {task.description ? task.description : '<No description>'}
@@ -168,20 +170,22 @@ const TaskOpen = forwardRef(
                   <TextField
                     variant="outlined"
                     value={editPayload.description}
+                    placeholder="enter description ..."
                     onChange={(e) =>
                       setEditPayload((pre) => ({
                         ...pre,
                         description: e.target.value,
                       }))
                     }
+                    multiline
+                    maxRows={5}
                     sx={{
-                      height: '2rem',
-                      width: '40rem',
+                      width: '45rem',
                       backgroundColor: 'rgba(217, 217, 217, 217, 0.7)',
                     }}
                   />
                 )}
-                
+
                 <label>Discuss</label>
                 <Stack
                   direction="row"
@@ -191,7 +195,10 @@ const TaskOpen = forwardRef(
 
                   <TextField
                     variant="outlined"
+                    placeholder="add comment ..."
                     value={mess}
+                    multiline
+                    maxRows={3}
                     onChange={(e) => setMess(e.target.value)}
                     sx={{
                       backgroundColor: 'rgba(217, 217, 217, 217, 0.7)',

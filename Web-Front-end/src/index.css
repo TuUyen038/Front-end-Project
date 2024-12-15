@@ -348,3 +348,64 @@ label {
   font-size: 1.5rem;
   font-family: 'Roboto Flex';
 }
+
+.TaskOpen h1 {
+  color: #2d9596;
+}
+
+.TaskOpen .title-input {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  border: none;
+  border-bottom: black 0.05rem solid;
+}
+
+.TaskOpen .title-input:hover {
+  border-bottom: #2d9596 solid;
+}
+
+.TaskOpen .member-deadline-info label {
+  font-size: 1.3rem;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #555;
+  margin-bottom: 0.8rem;
+}
+
+.TaskOpen .member-deadline-info p {
+  display: inline;
+  font-size: 1.4rem;
+  color: #2d9596;
+  margin-bottom: 0.8rem;
+}
+
+.TaskOpen .member-deadline-info span {
+  margin-left: 4rem;
+  font-size: 1.2rem;
+}
+
+.TaskOpen .member-deadline-info input {
+  transform: translate(0.2rem, 0.6rem);
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.TaskOpen .member-deadline-info input:checked {
+  border: #2d9596 1px solid;
+  background-color: #2d9596;
+  position: relative;
+}
+
+.TaskOpen .member-deadline-info input:checked::after {
+  content: '✓';
+  font-size: 14px;
+  color: white;
+  position: absolute;
+  top: -1px;
+  left: 4px;
+}
