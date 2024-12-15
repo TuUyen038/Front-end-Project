@@ -161,9 +161,16 @@ body {
   max-height: 6rem;    
   overflow-y: auto;
   width: 50rem;
-  font-size: 1.1rem !important;
+  font-size: 1.2rem !important;
 }
 
+.css-pl8gqh-MuiStack-root {
+  margin-top: 1rem;
+}
+
+.css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input {
+  padding: 0.8rem 0.8rem !important;
+}
 /* --------------------FILE COMPONENT---------------------- */
 
 .File {
@@ -309,7 +316,7 @@ body {
 }
 
 .comment p {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #555;
   line-height: 1.5;
   word-wrap: break-word;
