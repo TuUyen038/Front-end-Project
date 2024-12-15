@@ -39,12 +39,12 @@ export default function RemoveMem({
       />
       <div className="container">
         <div className="member-list">
-          <>Mem just removed: </>
+          <div className="mem-css">Mem just removed: </div>
           {tmpLs.map((i) => (
             <p key={i}>{i.name}</p>
           ))}
           <br />
-          <>Search result: </>
+          <div className="mem-css">Search result: </div>
           {filteredMembers.map((mem) => (
             <p
               key={mem.id}

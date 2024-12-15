@@ -158,7 +158,7 @@ body {
 .css-7ctihp-MuiTypography-root {
   overflow-wrap: anywhere;
   padding-right: 2rem;
-  max-height: 6rem;    
+  max-height: 6rem;
   overflow-y: auto;
   width: 50rem;
   font-size: 1.2rem !important;
@@ -225,6 +225,8 @@ body {
   background-color: white;
   border: 0.2px solid black;
   border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .task-join-in input {
@@ -244,6 +246,19 @@ body {
   flex-direction: column;
   justify-content: center;
   padding-left: 1rem;
+}
+
+.task-join-in .container .member-list .mem-css {
+  font-size: 1.4rem;
+  color: #2d9596;
+}
+
+.task-join-in .container .member-list p {
+  font-size: 1.2rem;
+  border: 0.1px #2d9596 solid;
+  padding-left: 1rem;
+  margin-bottom: 0.01rem;
+  cursor: pointer;
 }
 
 .cus-btn {

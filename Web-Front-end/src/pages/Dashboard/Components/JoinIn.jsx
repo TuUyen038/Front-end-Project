@@ -50,12 +50,12 @@ export default function JoinIn({
       />
       <div className="container">
         <div className="member-list">
-          <>Mem just added: </>
+          <div className="mem-css">Mem just added: </div>
           {tmpLs.map((i) => (
             <p key={i}>{i.name}</p>
           ))}
           <br />
-          <>Search result: </>
+          <div className="mem-css">Search result: </div>
           {filteredMembers.map((mem) => (
             <p
               key={mem.id}
