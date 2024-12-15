@@ -133,20 +133,24 @@ export default function Column({ col, index, onDelete, member }) {
     const hoverClientY =
       clientOffset.y - hoverBoundingRect.top + ref.current.scrollTop;
 
+    console.log('HoverClientY : ', hoverClientY);
     const childNodes = ref.current.children;
 
     if (!childNodes.length) return 0;
 
-    let cumulativeHeight = 16;
-    const gap = 0;
+    let cumulativeHeight = 0;
+    const gap = 11;
     for (let i = 0; i < childNodes.length; i++) {
       const cardHeight = childNodes[i].offsetHeight;
-
+      console.log('i: ', i);
+      console.log('cardHeight: ', cardHeight);
+      console.log('cumulativeHeight: ', cumulativeHeight);
       if (
         hoverClientY >= cumulativeHeight &&
         hoverClientY < cumulativeHeight + cardHeight
       ) {
-        return i; // Vị trí chuột nằm trong thẻ này
+        console.log('this position');
+        return i;
       }
 
       cumulativeHeight += cardHeight + gap;
@@ -156,55 +160,42 @@ export default function Column({ col, index, onDelete, member }) {
     return cardCount;
   };
 
-  const [, drop] = useDrop(() => ({
-    accept: ItemTypes.CARD,
-    hover: (item, monitor) => {
-      if (!monitor.isOver()) return;
-      if (item.index === hoverIndexRef.current && item.columnId === col._id)
-        return;
+  const [, drop] = useDrop(
+    () => ({
+      accept: ItemTypes.CARD,
+      hover: (item, monitor) => {
+        if (!monitor.isOver()) return;
 
-      const calculatedHoverIndex = getHoverIndex(
-        monitor,
-        columnRef,
-        tasks.length
-      );
+        const calculatedHoverIndex = getHoverIndex(
+          monitor,
+          columnRef,
+          tasks.length
+        );
 
-      if (calculatedHoverIndex !== hoverIndex || item.columnId !== col._id) {
-        setHoverIndex(calculatedHoverIndex);
-        hoverIndexRef.current = calculatedHoverIndex; // Cập nhật giá trị ref ngay lập tức
-      }
+        if (calculatedHoverIndex !== hoverIndex || item.columnId !== col._id) {
+          setHoverIndex(calculatedHoverIndex);
+          hoverIndexRef.current = calculatedHoverIndex;
+        }
 
-      console.log('hover index', calculatedHoverIndex);
-      console.log('Hover index', hoverIndexRef.current);
-    },
-    drop: (item, monitor) => {
-      if (!item || monitor.didDrop() || !monitor.isOver()) return undefined;
+        console.log('hover index caculate: ', calculatedHoverIndex);
+        console.log('Hover index', hoverIndexRef.current);
+      },
+      drop: (item, monitor) => {
+        if (!item || monitor.didDrop() || !monitor.isOver()) return undefined;
 
-      // if (col._id === item.columnId) {
-      //   setTasks((pre) => {
-      //     const updatedTasks = [...pre];
-      //     updatedTasks.splice(item.index, 1);
-      //     return updatedTasks;
-      //   });
-      // }
-
-      // setTasks((pre) => {
-      //   const updatedTasks = [...pre];
-      //   updatedTasks.splice(hoverIndexRef.current, 0, item);
-      //   item.index = hoverIndexRef.current;
-      //   return updatedTasks;
-      // });
-
-      socket.emit(
-        'moveCard',
-        item._id,
-        col._id.toString(),
-        parseInt(hoverIndexRef.current)
-      );
-      setHoverIndex(0);
-      return { columnId: col._id };
-    },
-  }));
+        console.log('move index: ', hoverIndexRef.current);
+        socket.emit(
+          'moveCard',
+          item._id,
+          col._id.toString(),
+          parseInt(hoverIndexRef.current)
+        );
+        setHoverIndex(0);
+        return { columnId: col._id };
+      },
+    }),
+    [hoverIndex]
+  );
 
   useEffect(() => {
     const handleCardMoved = (oldCol, newCol) => {
