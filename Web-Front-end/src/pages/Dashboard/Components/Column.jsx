@@ -139,7 +139,7 @@ export default function Column({ col, index, onDelete, member }) {
     if (!childNodes.length) return 0;
 
     let cumulativeHeight = 0;
-    const gap = 0;
+    const gap = 11;
     for (let i = 0; i < childNodes.length; i++) {
       const cardHeight = childNodes[i].offsetHeight;
       console.log('i: ', i);
@@ -149,7 +149,8 @@ export default function Column({ col, index, onDelete, member }) {
         hoverClientY >= cumulativeHeight &&
         hoverClientY < cumulativeHeight + cardHeight
       ) {
-        return i; // Vị trí chuột nằm trong thẻ này
+        console.log('this position');
+        return i;
       }
 
       cumulativeHeight += cardHeight + gap;
