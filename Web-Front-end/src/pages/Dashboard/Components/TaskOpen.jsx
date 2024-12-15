@@ -76,12 +76,12 @@ const TaskOpen = forwardRef(
         socket.off('commentAdded', handleAdd);
       };
     }, []);
-
-    return (
+    var dark = localStorage.getItem("darkMode") === "true";
+        return (
       <div className="TaskOpen" ref={ref} tabIndex={-1}>
         <Box
           sx={{
-            backgroundColor: 'white',
+            backgroundColor: dark ? "#333" : "white",
             borderRadius: '10px',
             height: '56rem',
             width: '72rem',

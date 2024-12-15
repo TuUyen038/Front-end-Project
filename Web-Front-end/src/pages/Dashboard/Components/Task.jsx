@@ -112,13 +112,13 @@ export default function Task({ task, index, onDelete, member }) {
     getMemberOfCard(Task).then((data) => setCardMem(data));
     console.log('cardMem : ', cardMem);
   }, [Task]);
-
+  var dark = localStorage.getItem("darkMode") === "true";
   return (
     <>
       <div className="Task" draggable onClick={OpenTask} ref={drag}>
         <Stack
           sx={{
-            backgroundColor: 'white',
+            backgroundColor: dark ? "rgba(236, 244, 214, 0.5)" : 'white',
             width: '19.6rem',
             padding: '0.2rem 0.4rem 0.2rem 0.4rem',
             borderRadius: '1rem',

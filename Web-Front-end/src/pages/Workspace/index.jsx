@@ -15,7 +15,6 @@ import Badge from "@mui/material/Badge";
 import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
-import zIndex from "@mui/material/styles/zIndex";
 import { Link } from "react-router-dom";
 // eslint-disable-next-line react/prop-types
 
@@ -37,20 +36,16 @@ function Workspace() {
         console.error("Lỗi khi lấy dữ liệu project: ", error);
       }
       try {
-        console.log("00000000000")
         const deadlineIds = await getListDeadline();
-        console.log("dl id neeeeeeeeeeeeee:", deadlineIds)
         const deadlines = await Promise.all(
           deadlineIds.map((id) => getDeadline(id))
         );
-        console.log(deadlines)
         const listDl = deadlines.filter(
           
           (item) =>
             new Date(item.deadline) >= currentDay &&
             item.deadlinestatus == "not_done"
         );
-        console.log("2222222222")
 
         setDl(listDl);
       } catch (error) {

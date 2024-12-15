@@ -31,9 +31,9 @@ export default function JoinIn({ member, cardMem, onAddMemLs, onClose }) {
       })
     );
   }, [searchInput, tmpLs]);
-
-  return (
-    <div className="task-join-in">
+  var dark = localStorage.getItem("darkMode") === "true";
+    return (
+    <div style={{background: "#999"}} className="task-join-in">
       <input
         placeholder="Search member"
         value={searchInput}

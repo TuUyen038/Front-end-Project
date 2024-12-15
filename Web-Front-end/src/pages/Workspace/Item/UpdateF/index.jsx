@@ -88,6 +88,7 @@ export default function Update({ setLs, item, setShow, idAdmins, setIdUsers}) {
                   onChange={handleInputChange}
                   type="text"
                   name="title"
+                  sx={{borderBottom: "1px solid #999", color: '#111'}}
                 />
               </div>
               <div className="row">
@@ -97,6 +98,8 @@ export default function Update({ setLs, item, setShow, idAdmins, setIdUsers}) {
                   onChange={handleInputChange}
                   type="text"
                   name="description"
+                  sx={{borderBottom: "1px solid #999", color: '#111'}}
+
                 />
               </div>
               <Button

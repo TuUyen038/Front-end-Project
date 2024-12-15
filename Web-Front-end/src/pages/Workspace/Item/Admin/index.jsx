@@ -51,8 +51,10 @@ export default function Admin({
       const kq=  AddFriend(formData._id, email);
  
     if (!kq) return;
-    await getProject(item._id);
-    setIdUsers(item.userOrderIds);
+    const updatedProject = await getProject(item._id);
+      setIdAdmins(updatedProject.adminOrderIds);
+      setIdUsers(updatedProject.userOrderIds);
+    
   };
   const handleChangeE = (e) => {
     const newEmails = e.target.value
@@ -224,7 +226,7 @@ export default function Admin({
                       name={`email`}
                       value={email}
                       placeholder="Email"
-                      sx={{ marginBottom: "10px", fontSize: "1rem" }}
+                      sx={{ marginBottom: "10px", fontSize: "1rem", borderBottom: "1px solid #9999", color: "#111"}}
                     />
                     <Button
                       sx={{

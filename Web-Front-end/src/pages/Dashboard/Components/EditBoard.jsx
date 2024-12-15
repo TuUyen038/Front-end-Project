@@ -32,7 +32,7 @@ export default function EditBoard({
             justifyContent: 'space-between',
           }}
         >
-          <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>Edit board</p>
+          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: "black" }}>Edit board</p>
           <Stack direction="row">
             <input onChange={onChange} placeholder={initTitle + '...'} />
           </Stack>

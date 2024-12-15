@@ -11,7 +11,6 @@ import { red } from "@mui/material/colors";
 import "./Calendar.css";
 import { getDeadline, getListDeadline } from "../Workspace/services";
 import { FilteredList } from "./FilteredList";
-import { useTheme } from "@mui/material/styles";
 
 const initialValue = dayjs();
 
@@ -56,7 +55,8 @@ function ServerDay(props) {
   );
 }
 
-export default function Calendar(darktheme) {
+export default function Calendar() {
+  var dark = localStorage.getItem("darkMode")
   const selectedDate = initialValue;
   const [highlightedDays, setHighlightedDays] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(dayjs().month());
@@ -66,7 +66,6 @@ export default function Calendar(darktheme) {
     setSelectedMonth(newDate.month());
     setSelectedYear(newDate.year());
   };
-  const theme = useTheme();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -123,7 +122,7 @@ export default function Calendar(darktheme) {
       <div
         className="calendar-content"
         style={{
-          backgroundColor: darktheme.dark
+          backgroundColor: dark
             ? "hsla(163, 36%, 71%, 0.288)"
             : "rgb(243, 239, 239)",
         }}
@@ -133,9 +132,9 @@ export default function Calendar(darktheme) {
         </div>
         <div className="calender-main-content">
           {filteredLs.length !== 0 ? (
-            <FilteredList list={filteredLs} dark={darktheme.dark} />
+            <FilteredList list={filteredLs}/>
           ) : (
-            <p style={{ fontSize: "1.5rem" }}>No deadline</p>
+            <p style={{ fontSize: "1.5rem", height: "540px" }}>No deadline</p>
           )}
         </div>
       </div>
