@@ -84,6 +84,11 @@ body {
   align-items: flex-start;
   /* cai nay fix bug loi scale height ne */
 }
+
+.css-13gravj-MuiAvatar-root {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+}
 /* --------------------DASH BOARD COMPONENT---------------------- */
 .BoardSelect {
   margin-left: 4rem;
@@ -227,6 +232,10 @@ body {
   height: 10rem;
 }
 
+.css-pih5lo-MuiAvatar-root {
+  width: 2.4rem !important;
+  height: 2.4rem !important;
+}
 /* -----------------COMMENTS-------------- */
 .comment {
   display: flex;
@@ -257,14 +266,6 @@ body {
   gap: 1rem;
   padding: 1rem;
   margin-top: 1.8rem;
-}
-
-.MuiAvatar-root.MuiAvatar-circular {
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
 }
 
 .MuiFormControl-root.MuiTextField-root {

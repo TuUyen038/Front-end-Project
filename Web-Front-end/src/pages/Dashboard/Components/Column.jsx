@@ -258,7 +258,6 @@ export default function Column({ col, index, onDelete, member }) {
             }}
             sx={{ fontSize: '1.6rem' }}
           />
-          <MoreIcon sx={{ fontSize: '2.4rem' }} />
         </Stack>
         <Stack
           className="Main"
