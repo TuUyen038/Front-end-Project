@@ -91,7 +91,16 @@ function Header({ checked, onChange }) {
     <>
       <header className={style.Header}>
         <div className={style.Logo}>
-          <p>Logo</p>
+          <p
+            style={{
+              fontWeight: "900",
+              letterSpacing: "1.6px",
+              fontSize: "1.7rem",
+              fontFamily: "Agu Display, serif",
+            }}
+          >
+            KanBan
+          </p>
         </div>
         <nav className={style.Navigation}>
           <ul>
@@ -111,9 +120,8 @@ function Header({ checked, onChange }) {
           <div className={style.Setting}>
             <Setting checked={checked} onChange={onChange} />
           </div>
-          
+
           <div className={style.Account}>
-            
             <AuthenticationContext.Provider value={authentication}>
               <SessionContext.Provider value={localStorageAuth}>
                 <Account

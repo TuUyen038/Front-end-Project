@@ -212,7 +212,7 @@ export const addProject = async (payload) => {
   });
   if (!res.ok) {
     if (res.status === 422 || res.status === 500) {
-      toast.error("Data is not correct!");
+      toast.error("Title must contain at least 3 characters and Description cannot be empty!");
     } else {
       toast.error("Other error occurred: " + res.status);
     }

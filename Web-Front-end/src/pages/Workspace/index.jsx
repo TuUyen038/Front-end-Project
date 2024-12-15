@@ -95,10 +95,10 @@ function Workspace() {
           <div className={style.groupDl}>
             <Badge
               badgeContent={dl.length}
-              sx={{ width: "110px" }}
+              sx={{ width: "143px" }}
               color="primary"
             >
-              <h1 className={style.AllDeadline}>DEADLINES</h1>
+              <h1 className={style.AllDeadline}>UNDONE TASK</h1>
             </Badge>
             {dl.length > 3 ? (
               <Link to="/calendar">
