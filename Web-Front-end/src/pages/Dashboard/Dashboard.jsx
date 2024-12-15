@@ -9,7 +9,7 @@ import AddBoard from './Components/AddBoard';
 import EditBoard from './Components/EditBoard';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { ToastContainer, Bounce } from 'react-toastify';
+import { ToastContainer, Bounce, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getUsersOfProject } from './service/user_service';
 
@@ -81,7 +81,7 @@ export default function Dashboard() {
 
     socket.emit('addBoard', newBoard, (respone) => {
       if (respone.success) {
-        console.log(boards);
+        toast.success('Create new board successfully');
       } else {
         console.log('Dashboard: Error when work with id');
       }
@@ -92,7 +92,7 @@ export default function Dashboard() {
   const handleEditBoard = (id, payload) => {
     socket.emit('updateBoard', id, payload);
     console.log('Dashboard: edit board with id ' + id);
-
+    toast.success('Update board successfully');
     setOpenEditBoardPopUp(false);
     setNewBoard('');
   };
@@ -202,14 +202,22 @@ export default function Dashboard() {
         <AddBoard
           open={openAddBoardPopUp}
           onClose={() => setOpenAddBoardPopUp(false)}
-          onSave={() => handleAddBoard({ title: newBoard })}
+          onSave={() => {
+            if (newBoard.trim() && newBoard.trim().length > 2)
+              handleAddBoard({ title: newBoard });
+            else toast.warn('Board name is not valid');
+          }}
           onChange={(e) => setNewBoard(e.target.value)}
         />
 
         <EditBoard
           open={openEditBoardPopUp}
           onClose={() => setOpenEditBoardPopUp(false)}
-          onSave={() => handleEditBoard(boardId, { title: newBoard })}
+          onSave={() => {
+            if (newBoard.trim() && newBoard.trim().length > 2)
+              handleEditBoard(boardId, { title: newBoard });
+            else toast.warn('Board name is not valid');
+          }}
           onChange={(e) => setNewBoard(e.target.value)}
           initTitle={
             boards[boards.findIndex((board) => board._id === boardId)].title
