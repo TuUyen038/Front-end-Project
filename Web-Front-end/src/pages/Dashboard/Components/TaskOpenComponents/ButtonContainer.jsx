@@ -13,7 +13,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import RemoveMem from '../RemoveMem';
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
 import { debounce } from 'lodash';
 
 export default function ButtonContainer({
@@ -32,7 +32,7 @@ export default function ButtonContainer({
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
 
-  const today = dayjs();
+  // const today = dayjs();
 
   const handleDelete = () => {
     setOpenDelete(true);
@@ -46,9 +46,10 @@ export default function ButtonContainer({
 
   const handleDateChange = useCallback(
     debounce((newDate) => {
-      if (newDate && newDate.isBefore(today, 'day')) {
-        toast.error('Selected date is the past!');
-      } else if (newDate && newDate.isValid()) {
+      // if (newDate && newDate.isBefore(today, 'day')) {
+      //   toast.error('Selected date is the past!');
+      // } else
+      if (newDate && newDate.isValid()) {
         setSelectedDate(newDate);
         onSetPayLoad({
           deadline: newDate.format('YYYY-MM-DD'),
