@@ -227,7 +227,7 @@ body {
 
 .discuss-area {
   gap: 1rem;
-  max-height: 24rem;
+  max-height: 22rem;
   width: 50rem;
   overflow-y: auto;
 }
@@ -243,7 +243,7 @@ body {
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  margin-top: 3rem;
+  margin-top: 1.8rem;
 }
 
 .MuiAvatar-root.MuiAvatar-circular {
