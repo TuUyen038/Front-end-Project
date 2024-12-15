@@ -1,15 +1,15 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import "./UpdateF.css";
-import { AddFriend, getProject, updateProject } from "../../services";
+import { getProject, updateProject } from "../../services";
 import Input from "@mui/material/Input";
 import { Button } from "@mui/material";
+import { toast } from "react-toastify";
 
 // eslint-disable-next-line react/prop-types
-export default function Update({ setLs, item, setShow, idAdmins, setIdUsers }) {
+export default function Update({ setLs, item, setShow, idAdmins}) {
   const [formData, setFormData] = useState({ ...item });
   const [showForm, setShowForm] = useState(false);
-  const [emails, setEmails] = useState([]);
   const currentUser = localStorage.getItem("id");
   const isAdmin = idAdmins.filter((id) => id === currentUser).length;
 
@@ -28,20 +28,16 @@ export default function Update({ setLs, item, setShow, idAdmins, setIdUsers }) {
   const handleSubmitUpdate = (e) => {
     e.preventDefault();
     handleUpdate(formData);
-    setEmails([]);
     setShowForm(false);
     setShow(false);
   };
   const handleUpdate = async () => {
     const updatedProject = await updateProject(formData);
-    const kq = await Promise.all(
-      emails.map((email) => {
-        AddFriend(formData._id, email);
-      })
-    );
-    if (!kq) return;
+    if(!updatedProject) {
+      toast.error("Name must contain at least 3 characters and Description cannot be empty!")
+      return
+    }
     await getProject(item._id);
-    setIdUsers(item.userOrderIds);
     setLs((prevProjects) =>
       prevProjects.map((p) =>
         p._id === updatedProject._id ? updatedProject : p

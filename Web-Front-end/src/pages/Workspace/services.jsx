@@ -272,8 +272,6 @@ export const updateProject = async (payload) => {
   });
 
   if (!res.ok) {
-    const errorData = await res.json();
-    toast.error(errorData.errors);
     return;
   }
 

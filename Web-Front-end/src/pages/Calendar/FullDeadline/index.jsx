@@ -3,11 +3,11 @@ import { useState } from "react";
 import "./FullDeadline.css";
 import Checkbox from "@mui/material/Checkbox";
 import { updateDeadline } from "../../Workspace/services";
-export default function FullDeadline({ title, time, initialStatus, id }) {
+
+export default function FullDeadline({ item, time, initialStatus, id }) {
   const [status, setStatus] = useState(initialStatus);
   const [isChecked, setIsChecked] = useState(status === "on_time");
   var dark = localStorage.getItem("darkMode");
-
   const handleChange = async (event) => {
     const checked = event.target.checked;
     setIsChecked(checked);
@@ -42,7 +42,7 @@ export default function FullDeadline({ title, time, initialStatus, id }) {
       />
       <div className="mainD" style={changStyle(status)}>
         <div className="name">
-          <p>{title}</p>
+          <p>{item.title}</p>
         </div>
         <div style={{ color: dark ? "#222" : "#999" }} className="time">
           <p>{time}</p>
