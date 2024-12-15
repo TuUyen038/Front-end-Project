@@ -7,6 +7,7 @@ import Input from "@mui/material/Input";
 import { Button } from "@mui/material";
 
 export default function Add({ setLs, open, setOpen }) {
+  var dark = localStorage.getItem("darkMode")
   const refInput = useRef({});
   const [formData, setFormData] = useState({
     title: "",
@@ -38,7 +39,7 @@ export default function Add({ setLs, open, setOpen }) {
     <div>
       <div className="AddF">
         <button onClick={() => setOpen(false)} className="blur"></button>
-        <div className="mainContent">
+        <div className="mainContent" style={{background: dark? "black":"#fff"}}>
           <div className="row">
             <Input
               onChange={handleChange}
@@ -46,7 +47,7 @@ export default function Add({ setLs, open, setOpen }) {
               name="title"
               value={formData.title}
               placeholder="Project name"
-              sx={{ marginBottom: "15px" }}
+              sx={{ marginBottom: "15px"}}
             />
           </div>
           <div className="row">
@@ -56,7 +57,7 @@ export default function Add({ setLs, open, setOpen }) {
               name="description"
               value={formData.description}
               placeholder="Description"
-              sx={{ marginBottom: "15px" }}
+              sx={{ marginBottom: "15px"}}
             />
           </div>
 

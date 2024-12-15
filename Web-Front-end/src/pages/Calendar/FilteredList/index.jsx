@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import FullDeadline from "../FullDeadline";
 
-export const FilteredList = ({ list, dark }) => {
+export const FilteredList = ({ list}) => {
+  var dark = localStorage.getItem("darkMode")
   const check = list.filter((item) => item)
   if (list.length === 0 || !list || check.length === 0) {
     return <p style={{fontSize: "1.5rem", height: "540px", marginLeft: "30px"}}>No deadlines available.</p>;
@@ -16,7 +17,7 @@ export const FilteredList = ({ list, dark }) => {
             const formattedDeadline = deadline.toLocaleDateString("vi-VN");
             return (
               <li key={item._id}>
-                <FullDeadline title={item.title} time={formattedDeadline} initialStatus={item.deadlinestatus} id={item._id} dark={dark}/>
+                <FullDeadline title={item.title} time={formattedDeadline} initialStatus={item.deadlinestatus} id={item._id}/>
               </li>
             );
           }

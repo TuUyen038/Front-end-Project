@@ -26,7 +26,7 @@ export default function AddNewTask({ open, onClose, onSave, setTempTask }) {
             justifyContent: 'space-between',
           }}
         >
-          <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>Add new task</p>
+          <p style={{ fontSize: '2rem', fontWeight: 'bold',color: "black" }}>Add new task</p>
           <Stack direction="row">
             <input
               onChange={(e) => setTempTask({ title: e.target.value })}
@@ -35,7 +35,7 @@ export default function AddNewTask({ open, onClose, onSave, setTempTask }) {
             {/* <button>add</button> */}
           </Stack>
           <Stack direction="row">
-            <p>Add desciption: </p>
+            <p style={{color: "black"}}>Add desciption: </p>
             <input
               onChange={(e) => setTempTask({ description: e.target.value })}
             />

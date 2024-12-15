@@ -26,7 +26,7 @@ export default function AddBoard({ open, onClose, onSave, onChange }) {
             justifyContent: 'space-between',
           }}
         >
-          <p style={{ fontSize: '2rem', fontWeight: 'bold' }}>Add new board</p>
+          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: "black" }}>Add new board</p>
           <Stack direction="row">
             <input onChange={onChange} placeholder="Board name ..." />
           </Stack>

@@ -47,21 +47,15 @@ function App() {
   ];
 
 
-  const [toggleDarkMode, setToggleDarkMode] = useState(false);
-  // const tasks = [
-  //   {
-  //     id: 1,
-  //     description: 'doind somthing before this one',
-  //     comments: [],
-  //     members: [],
-  //     deadline: '21/06/2024',
-  //     attaches: [],
-  //     doFollow: false,
-  //   },
-  // ];
+  const [toggleDarkMode, setToggleDarkMode] = useState(
+    localStorage.getItem("darkMode") === "true"
+  );
   const toggleDarkTheme = () => {
-    setToggleDarkMode(!toggleDarkMode);
-    
+    setToggleDarkMode((prev) => {
+      const newMode = !prev;
+      localStorage.setItem("darkMode", newMode); 
+      return newMode;
+    });
   };
   const darkTheme = createTheme({
     palette: {
@@ -105,7 +99,7 @@ function App() {
           <Routes>
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<Workspace/>} />
-              <Route path="/calendar" element={<Calendar dark={toggleDarkMode} />} />
+              <Route path="/calendar" element={<Calendar/>} />
               <Route path="/:projectSlug/*" element={<AppBar users={users} />}>
                 <Route index element={<Dashboard />} />
                 <Route path="meeting" element={<Meeting />}></Route>
