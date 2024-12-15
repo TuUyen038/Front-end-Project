@@ -40,9 +40,8 @@ export default function Board({ board_id, member }) {
   useEffect(() => {
     const handleAdd = (newColumn) => {
       if (newColumn.boardId === board_id) {
-        // setColumns((prev) => [...prev, newColumn]);
-        getColumnList(board_id).then((data) => setColumns(data));
-        console.log('BE emit col added');
+        setColumns((prev) => [...prev, newColumn]);
+        console.log('BE emit col added: ', newColumn);
       }
     };
 
@@ -56,16 +55,20 @@ export default function Board({ board_id, member }) {
       setColumns((prev) => prev.filter((col) => col._id !== id));
     };
 
+    console.log('BOARD dc dang ky lang nghe su kien tren COLUMN :', board_id);
+    console.log('BOARD: ', socket);
+
     socket.on('columnAdded', handleAdd);
     socket.on('columnUpdated', handleUpdate);
     socket.on('columnDeleted', handleDelete);
 
     return () => {
+      console.log('BOARD đã bị unmount');
       socket.off('columnAdded', handleAdd);
       socket.off('columnUpdated', handleUpdate);
       socket.off('columnDeleted', handleDelete);
     };
-  }, []);
+  }, [board_id]);
 
   // xử lý drop với column
   useEffect(() => {
@@ -77,7 +80,7 @@ export default function Board({ board_id, member }) {
     return () => {
       socket.off('columnMoved', handleMove);
     };
-  }, []);
+  }, [board_id]);
 
   const [hoverIndex, setHoverIndex] = useState(0);
   const boardRef = useRef();

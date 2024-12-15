@@ -78,6 +78,7 @@ export default function Column({ col, index, onDelete, member }) {
       setTasks((prev) => prev.filter((card) => card._id !== id));
     };
 
+    console.log('COL: ', socket);
     socket.on('cardAdded', addCard);
     socket.on('cardDeleted', deleteCard);
 
@@ -85,7 +86,7 @@ export default function Column({ col, index, onDelete, member }) {
       socket.off('cardAdded', addCard);
       socket.off('cardDeleted', deleteCard);
     };
-  }, []);
+  }, [col._id]);
 
   const handleAddCard = (payload) => {
     let newCard = {

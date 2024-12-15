@@ -46,8 +46,10 @@ export default function Dashboard() {
         })
         .catch((error) => console.log(error.message));
     };
-
     fetchData();
+    return () => {
+      socket.emit('leaveRoom');
+    };
   }, [projectSlug]);
 
   useEffect(() => {
@@ -114,6 +116,7 @@ export default function Dashboard() {
       setBoards((prev) => prev.filter((board) => board._id !== id));
     };
 
+    console.log('DASHBOARD socket: ', socket);
     socket.on('boardAdded', handleAdd);
     socket.on('boardUpdated', handleEdit);
     socket.on('boardDeleted', handleDelete);
@@ -123,8 +126,9 @@ export default function Dashboard() {
       socket.off('boardAdded', handleAdd);
       socket.off('boardUpdated', handleEdit);
       socket.off('boardDeleted', handleDelete);
+      console.log('DASHBOARD socket: ', socket);
     };
-  }, []);
+  }, [projectSlug]);
 
   const handleChange = (e) => {
     setBoardId(e.target.value);
