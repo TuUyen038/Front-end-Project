@@ -13,14 +13,7 @@ export default function Update({ setLs, item, setShow, idAdmins, setIdUsers}) {
   const currentUser = localStorage.getItem("id");
   const isAdmin = idAdmins.filter((id) => id === currentUser).length;
 
-  const handleChangeE = (e, index) => {
-    const newEmails = [...emails];
-    newEmails[index] = e.target.value;
-    setEmails(newEmails);
-  };
-  const handleAddE = () => {
-    setEmails([...emails, ""]);
-  };
+
 
   const handleOpen = (e) => {
     e.preventDefault();
@@ -106,38 +99,18 @@ export default function Update({ setLs, item, setShow, idAdmins, setIdUsers}) {
                   name="description"
                 />
               </div>
-              <p className="addFriend">Invite your friends (via Email): </p>
-              <div className="ListEmail">
-                {emails.map((email, index) => (
-                  <div className="rowOfEmail" key={index}>
-                    <Input
-                      className="input"
-                      onChange={(e) => handleChangeE(e, index)}
-                      type="text"
-                      name={`email-${index}`}
-                      value={email}
-                      placeholder="Email"
-                      sx={{ marginBottom: "10px" }}
-                    />
-                  </div>
-                ))}
-              </div>
-              <div className="row">
-                <button className="BAdd" onClick={handleAddE}>
-                  +
-                </button>
-              </div>
               <Button
-                sx={{
-                  fontSize: "1.5rem",
-                  marginTop: "27px",
-                  marginLeft: "-1px",
-                }}
-                onClick={handleSubmitUpdate}
-                variant="outlined"
-              >
-                Change
-              </Button>
+                      sx={{
+                        marginTop: "30px",
+                        fontSize: "1.5rem"
+
+                      }}
+                      onClick={handleSubmitUpdate}
+                      variant="outlined"
+
+                    >
+                      update
+                    </Button>
             </div>
           </div>
         </div>

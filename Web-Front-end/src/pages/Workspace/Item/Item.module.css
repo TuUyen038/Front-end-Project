@@ -23,12 +23,11 @@
 
 .GroupImg {
     margin: 0 auto;
-    margin-top: 10px;
+    margin-top: 30px;
     border-radius: 12px;
     width: 210px;
     height: 166px;
     background-color: #9999;
-    margin-top: 10px;
 }
 
 .GroupName {
@@ -69,21 +68,20 @@
 }
 
 .tools .more {
-    width: 40px;
+    width: 35px;
+    height: 35px;
     margin-top: 4px;
     border: none;
     border-radius: 999px;
-    margin-top: -4px;
-    margin-left: -2px;
-    padding: 0 10px;
     padding-top: 3px;
-    position: relative;
+    top:0px;
+    left: 192px;
+    position: absolute
 }
-.more:hover {
-    background: red;
-}
+
 .more:hover .formTool {
-    display: block;
+    background: red;
+    display: block!important;
 }
 .tools button:hover {
     background: #d5edf3;
@@ -91,7 +89,8 @@
 
 .formTool {
     position: absolute;
-    margin-top: 2px;
+    left: 140px;
+    top: 45px;
     width: 102px;
     border: 1px solid #2D9596;
     border-radius: 2px;

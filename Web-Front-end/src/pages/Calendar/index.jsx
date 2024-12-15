@@ -11,8 +11,9 @@ import { red } from "@mui/material/colors";
 import "./Calendar.css";
 import { getDeadline, getListDeadline } from "../Workspace/services";
 import { FilteredList } from "./FilteredList";
-const initialValue = dayjs();
+import { useTheme } from "@mui/material/styles";
 
+const initialValue = dayjs();
 
 function ServerDay(props) {
   const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
@@ -55,16 +56,17 @@ function ServerDay(props) {
   );
 }
 
-export default function Calendar() {
+export default function Calendar(darktheme) {
   const selectedDate = initialValue;
   const [highlightedDays, setHighlightedDays] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(dayjs().month());
   const [selectedYear, setSelectedYear] = useState(dayjs().year());
-  const [filteredLs, setFilteredLs] = useState([])
+  const [filteredLs, setFilteredLs] = useState([]);
   const handleMonthChange = (newDate) => {
     setSelectedMonth(newDate.month());
     setSelectedYear(newDate.year());
   };
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,12 +75,18 @@ export default function Calendar() {
         const deadlines = await Promise.all(
           deadlineIds.map((id) => getDeadline(id))
         );
-        
-        setFilteredLs(deadlines.sort((a,b) => new Date(a.deadline)-new Date(b.deadline)))
+
+        setFilteredLs(
+          deadlines.sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+        );
         const highlighted = deadlines
           .filter((item) => {
             const dl = dayjs(item.deadline);
-            return dl.year() === selectedYear && dl.month() === selectedMonth && initialValue <= dl;
+            return (
+              dl.year() === selectedYear &&
+              dl.month() === selectedMonth &&
+              initialValue <= dl
+            );
           })
           .map((item) => dayjs(item.deadline).date());
         setHighlightedDays(highlighted);
@@ -91,7 +99,7 @@ export default function Calendar() {
 
   return (
     <div className="calendar">
-      <LocalizationProvider dateAdapter={AdapterDayjs} className="calendar">
+      <LocalizationProvider dateAdapter={AdapterDayjs} className="calen">
         <DateCalendar
           value={selectedDate}
           onMonthChange={handleMonthChange}
@@ -112,11 +120,23 @@ export default function Calendar() {
           }}
         />
       </LocalizationProvider>
-      <div className="calendar-content">
-        <div className="calender-main-content">
+      <div
+        className="calendar-content"
+        style={{
+          backgroundColor: darktheme.dark
+            ? "hsla(163, 36%, 71%, 0.288)"
+            : "rgb(243, 239, 239)",
+        }}
+      >
+        <div className="name">
           <p className="titleC"> List Deadline</p>
-          {(filteredLs.length !== 0) ? <FilteredList  list={filteredLs}/>
-          : <p style={{fontSize: "1.5rem"}}>No deadline</p>}
+        </div>
+        <div className="calender-main-content">
+          {filteredLs.length !== 0 ? (
+            <FilteredList list={filteredLs} dark={darktheme.dark} />
+          ) : (
+            <p style={{ fontSize: "1.5rem" }}>No deadline</p>
+          )}
         </div>
       </div>
     </div>
