@@ -100,6 +100,7 @@ export default function Board({ board_id, member }) {
 
     const hoverClientX =
       clientOffset.x - hoverBoundingRect.left + ref.current.scrollLeft;
+    console.log('HoverClientX : ', hoverClientX);
 
     const childNodes = ref.current.children;
 
@@ -109,7 +110,9 @@ export default function Board({ board_id, member }) {
     const gap = 40;
     for (let i = 0; i < childNodes.length; i++) {
       const cardWidth = childNodes[i].offsetWidth;
-
+      console.log('i: ', i);
+      console.log('cardWidth: ', cardWidth);
+      console.log('cumulativeWidth: ', cumulativeWidth);
       if (
         hoverClientX >= cumulativeWidth &&
         hoverClientX < cumulativeWidth + cardWidth
@@ -124,35 +127,38 @@ export default function Board({ board_id, member }) {
     return colCount;
   };
 
-  const [, drop] = useDrop(() => ({
-    accept: ItemTypes.COLUMN,
-    hover: (item, monitor) => {
-      let caculatedIndex = getHoverIndex(monitor, boardRef, columns.length);
-      if (caculatedIndex !== hoverIndex) {
-        setHoverIndex(caculatedIndex);
-        hoverIndexRef.current = caculatedIndex;
-        console.log('HOVER COL INDEX: ', caculatedIndex); // In giá trị mới được tính toán
-      }
-    },
-    drop: (item, monitor) => {
-      if (!item || monitor.didDrop() || !monitor.isOver()) return undefined;
-      // setColumns((pre) => {
-      //   const updatedCol = [...pre];
-      //   updatedCol.splice(item.index, 1);
-      //   updatedCol.splice(hoverIndexRef.current, 0, item);
-      //   item.index = hoverIndexRef.current;
-      //   return updatedCol;
-      // });
-      console.log('ID: ', item._id);
-      console.log('INDEX: ', hoverIndex);
-      socket.emit(
-        'moveColumn',
-        item._id.toString(),
-        parseInt(hoverIndexRef.current)
-      );
-      setHoverIndex(0);
-    },
-  }));
+  const [, drop] = useDrop(
+    () => ({
+      accept: ItemTypes.COLUMN,
+      hover: (item, monitor) => {
+        let caculatedIndex = getHoverIndex(monitor, boardRef, columns.length);
+        if (caculatedIndex !== hoverIndex) {
+          setHoverIndex(caculatedIndex);
+          hoverIndexRef.current = caculatedIndex;
+          console.log('HOVER COL INDEX: ', caculatedIndex); // In giá trị mới được tính toán
+        }
+      },
+      drop: (item, monitor) => {
+        if (!item || monitor.didDrop() || !monitor.isOver()) return undefined;
+        // setColumns((pre) => {
+        //   const updatedCol = [...pre];
+        //   updatedCol.splice(item.index, 1);
+        //   updatedCol.splice(hoverIndexRef.current, 0, item);
+        //   item.index = hoverIndexRef.current;
+        //   return updatedCol;
+        // });
+        console.log('ID: ', item._id);
+        console.log('INDEX: ', hoverIndexRef.current);
+        socket.emit(
+          'moveColumn',
+          item._id.toString(),
+          parseInt(hoverIndexRef.current)
+        );
+        setHoverIndex(0);
+      },
+    }),
+    [hoverIndex]
+  );
 
   return (
     <Stack direction="column" className="Board">

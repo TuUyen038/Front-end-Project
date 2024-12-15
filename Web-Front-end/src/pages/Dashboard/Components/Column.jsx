@@ -149,7 +149,8 @@ export default function Column({ col, index, onDelete, member }) {
         hoverClientY >= cumulativeHeight &&
         hoverClientY < cumulativeHeight + cardHeight
       ) {
-        return i; // Vị trí chuột nằm trong thẻ này
+        console.log('this position');
+        return i;
       }
 
       cumulativeHeight += cardHeight + gap;
