@@ -274,6 +274,7 @@ export default function Column({ col, index, onDelete, member }) {
           {tasks.map((task, index) => {
             return (
               <Task
+              sx={{background: "black"}}
                 key={task._id}
                 task={task}
                 index={index}
@@ -306,6 +307,7 @@ export default function Column({ col, index, onDelete, member }) {
         </Button>
       </Stack>
       <DeletePopUp
+      
         open={openDeletePopUp}
         onClose={() => setOpenDeletePopUp(false)}
         onDelete={onDelete}
