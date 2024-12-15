@@ -4,7 +4,7 @@ import DeadlineIcon from '@mui/icons-material/AccessAlarm';
 import AttachIcon from '@mui/icons-material/Attachment';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import RemovePersonIcon from '@mui/icons-material/PersonRemoveAlt1Outlined';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import DeletePopUp from '../../../../components/DeletePopUp/DeletePopUp';
@@ -71,6 +71,19 @@ export default function ButtonContainer({
           />
         ) : null}
       </Button>
+      <Button
+        className="task-button"
+        variant="contained"
+        startIcon={<RemovePersonIcon />}
+        color="rgba(217, 217, 217, 217, 0.7)"
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
+        }}
+      >
+        Remove
+      </Button>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Button
           className="task-button"
@@ -103,20 +116,6 @@ export default function ButtonContainer({
         )}
         {selectedDate && <p>Deadline: {selectedDate.format('YYYY-MM-DD')}</p>}
       </LocalizationProvider>
-
-      <Button
-        className="task-button"
-        variant="contained"
-        startIcon={<AttachIcon />}
-        color="rgba(217, 217, 217, 217, 0.7)"
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-        }}
-      >
-        Attach
-      </Button>
 
       <br />
       <label>Others</label>

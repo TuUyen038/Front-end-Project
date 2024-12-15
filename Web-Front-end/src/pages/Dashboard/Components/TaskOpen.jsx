@@ -10,9 +10,7 @@ import ButtonContainer from './TaskOpenComponents/ButtonContainer';
 import CloseX from '../../../components/SmallCom/CloseX';
 import Save from '../../../components/SmallCom/Save';
 import { getMemberOfCard } from '../service/user_service';
-
 import { toast } from 'react-toastify';
-
 import { stringAvatar } from '../avatarExe/avatar';
 
 const TaskOpen = forwardRef(
@@ -76,12 +74,12 @@ const TaskOpen = forwardRef(
         socket.off('commentAdded', handleAdd);
       };
     }, []);
-    var dark = localStorage.getItem("darkMode") === "true";
-        return (
+    var dark = localStorage.getItem('darkMode') === 'true';
+    return (
       <div className="TaskOpen" ref={ref} tabIndex={-1}>
         <Box
           sx={{
-            backgroundColor: dark ? "#333" : "white",
+            backgroundColor: dark ? '#333' : 'white',
             borderRadius: '10px',
             height: '56rem',
             width: '72rem',
@@ -110,18 +108,20 @@ const TaskOpen = forwardRef(
                 {task.userOrderIds && task.userOrderIds.length > 0 && (
                   <Stack direction="row" spacing={2}>
                     <label>Member:</label>
-                    {cardMem.map((mem, index) => (
-                      <Avatar
-                        key={index}
-                        {...stringAvatar(`${mem.name}`)}
-                        sx={{
-                          ...stringAvatar(`${mem.name}`).sx,
-                          width: 20,
-                          height: 20,
-                          fontSize: 10,
-                        }}
-                      />
-                    ))}
+                    {cardMem
+                      ? cardMem.map((mem, index) => (
+                          <Avatar
+                            key={index}
+                            {...stringAvatar(`${mem.name}`)}
+                            sx={{
+                              ...stringAvatar(`${mem.name}`).sx,
+                              width: 20,
+                              height: 20,
+                              fontSize: 10,
+                            }}
+                          />
+                        ))
+                      : null}
                   </Stack>
                 )}
                 {task.deadline && (
