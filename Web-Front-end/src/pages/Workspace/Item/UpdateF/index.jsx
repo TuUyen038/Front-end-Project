@@ -34,7 +34,7 @@ export default function Update({ setLs, item, setShow, idAdmins}) {
   const handleUpdate = async () => {
     const updatedProject = await updateProject(formData);
     if(!updatedProject) {
-      toast.error("Name must contain at least 3 characters and Description cannot be empty!")
+      toast.error("Title must contain at least 3 characters and Description cannot be empty!")
       return
     }
     await getProject(item._id);
