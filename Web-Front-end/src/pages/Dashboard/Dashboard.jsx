@@ -9,6 +9,8 @@ import AddBoard from './Components/AddBoard';
 import EditBoard from './Components/EditBoard';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { ToastContainer, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { getUsersOfProject } from './service/user_service';
 
 export default function Dashboard() {
@@ -151,6 +153,19 @@ export default function Dashboard() {
 
   return (
     <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       <div className="main">
         <Stack className="TeamThree" direction="row">
           <Select
