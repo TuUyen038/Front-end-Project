@@ -10,6 +10,7 @@ import ButtonContainer from './TaskOpenComponents/ButtonContainer';
 import CloseX from '../../../components/SmallCom/CloseX';
 import Save from '../../../components/SmallCom/Save';
 import { getMemberOfCard } from '../service/user_service';
+import { toast } from 'react-toastify';
 
 const TaskOpen = forwardRef(
   ({ task, onClose, onDelete, member, onAddMemLs }, ref) => {
@@ -177,15 +178,21 @@ const TaskOpen = forwardRef(
                   <Avatar>{user.name}</Avatar>
                   <TextField
                     variant="outlined"
+                    value={mess}
                     onChange={(e) => setMess(e.target.value)}
                     sx={{
                       backgroundColor: 'rgba(217, 217, 217, 217, 0.7)',
                     }}
                   />
                   <SendIcon
-                    onClick={() =>
-                      handleSendMess({ description: mess, cardId: task._id })
-                    }
+                    onClick={() => {
+                      if (mess.trim()) {
+                        handleSendMess({ description: mess, cardId: task._id });
+                        setMess('');
+                      } else {
+                        toast.warn('Your message should be meaningful');
+                      }
+                    }}
                   />
                 </Stack>
                 {/* <label>Discuss</label> */}
