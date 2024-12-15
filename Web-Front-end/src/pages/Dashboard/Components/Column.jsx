@@ -2,7 +2,6 @@ import { Button, Input, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import MoreIcon from '@mui/icons-material/MoreHoriz';
 import Task from './Task';
 import PropTypes from 'prop-types';
 import DeletePopUp from '../../../components/DeletePopUp/DeletePopUp';
@@ -11,6 +10,7 @@ import { getCardList } from '../service/card_service';
 import { socket } from '../../../../setting/socket';
 import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from '../dnd/constants';
+import { toast } from 'react-toastify';
 
 export default function Column({ col, index, onDelete, member }) {
   const [title, setTitle] = useState(col.title || 'New');
@@ -274,7 +274,7 @@ export default function Column({ col, index, onDelete, member }) {
           {tasks.map((task, index) => {
             return (
               <Task
-              sx={{background: "black"}}
+                sx={{ background: 'black' }}
                 key={task._id}
                 task={task}
                 index={index}
@@ -307,7 +307,6 @@ export default function Column({ col, index, onDelete, member }) {
         </Button>
       </Stack>
       <DeletePopUp
-      
         open={openDeletePopUp}
         onClose={() => setOpenDeletePopUp(false)}
         onDelete={onDelete}
@@ -315,12 +314,15 @@ export default function Column({ col, index, onDelete, member }) {
       <AddNewTask
         open={openTaskPopUp}
         onClose={() => setOpenTaskPopUp(false)}
-        onSave={() =>
-          handleAddCard({
-            title: tempTask.title,
-            description: tempTask.description,
-          })
-        }
+        onSave={() => {
+          if (!tempTask.title.trim() || tempTask.title.trim().length > 50)
+            toast.error('Your card title is too long or meangingless!');
+          else
+            handleAddCard({
+              title: tempTask.title,
+              description: tempTask.description,
+            });
+        }}
         setTempTask={(payload) =>
           setTempTask((pre) => ({ ...pre, ...payload }))
         }
