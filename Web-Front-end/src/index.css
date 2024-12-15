@@ -118,7 +118,7 @@ body {
   /* flex-grow: 1; not this one */
 }
 
-.css-1irks5c-MuiStack-root {
+.MuiStack-root .css-1irks5c-MuiStack-root {
   box-shadow: none;
 }
 
