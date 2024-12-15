@@ -111,7 +111,7 @@ export default function Task({ task, index, onDelete, member }) {
   useEffect(() => {
     getMemberOfCard(Task).then((data) => setCardMem(data));
     console.log('cardMem : ', cardMem);
-  }, []);
+  }, [Task]);
 
   return (
     <>
