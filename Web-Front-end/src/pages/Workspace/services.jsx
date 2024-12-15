@@ -5,9 +5,7 @@ import { toast } from "react-toastify";
 export const updateDeadline = async (id, payload) => {
   const Token = localStorage.getItem("token")
   const url = "http://localhost:8017/v1/cards/" + id;
-  console.log(url)
   const body = JSON.stringify({ deadlinestatus: payload });
-  console.log(body)
   const res = await fetch(url, {
     method: "PUT",
     headers: {
