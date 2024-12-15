@@ -14,6 +14,7 @@ function EmailInput({ value, onChange, error }) {
           sx={{
             fontFamily: "Roboto Flex",
             fontSize: "1.8rem",
+            padding: "0.8rem",
           }}
           type="text"
           id="email"
