@@ -12,6 +12,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ToastContainer, Bounce, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getUsersOfProject } from './service/user_service';
+import DeletePopUp from '../../components/DeletePopUp/DeletePopUp';
 
 export default function Dashboard() {
   const [boards, setBoards] = useState([]);
@@ -20,6 +21,7 @@ export default function Dashboard() {
   const [project, setProject] = useState();
   const [openAddBoardPopUp, setOpenAddBoardPopUp] = useState(false);
   const [openEditBoardPopUp, setOpenEditBoardPopUp] = useState(false);
+  const [openDeleteBoardPopUp, setOpenDeleteBoardPopUp] = useState(false);
   const [newBoard, setNewBoard] = useState('');
   const [userLs, setUserLs] = useState([]);
 
@@ -96,11 +98,24 @@ export default function Dashboard() {
     setOpenEditBoardPopUp(false);
     setNewBoard('');
   };
-  // const handleDeleteBoard = (id) => {
-  //   setBoards((prev) => prev.filter((board) => board._id !== id));
-  //   socket.emit('deleteBoard', id);
-  //   console.log('Dashboard: delete board with id ' + id);
-  // };
+  const handleDeleteBoard = (id) => {
+    socket.emit('deleteBoard', id);
+    console.log('Dashboard: delete board with id ' + id);
+  };
+
+  const handleSaveDeleteBoard = () => {
+    if (boards.length === 1) {
+      toast.error('Can not delete! Your project must have at least one board!');
+      setOpenDeleteBoardPopUp(false);
+      return;
+    }
+    const updatedBoards = boards.filter((board) => board._id !== boardId);
+    const newBoardId = updatedBoards[0]._id;
+    setBoardId(newBoardId);
+    handleDeleteBoard(boardId);
+    toast.success('Delete board successfully!');
+    setOpenDeleteBoardPopUp(false);
+  };
 
   // lang nghe cac su kien socket.io
   useEffect(() => {
@@ -141,12 +156,7 @@ export default function Dashboard() {
   // };
 
   if (boards.length === 0) {
-    return (
-      <>
-        {/* <input onChange={handleBoardNameChange} /> */}
-        <button className="cus-btn">AddBoard</button>
-      </>
-    );
+    return <>LOADING ...</>;
   }
 
   if (!boardId) return null;
@@ -197,6 +207,12 @@ export default function Dashboard() {
             >
               Edit
             </button>
+            <button
+              className="cus-btn"
+              onClick={() => setOpenDeleteBoardPopUp(true)}
+            >
+              Delete
+            </button>
           </div>
         </Stack>
         <AddBoard
@@ -205,7 +221,7 @@ export default function Dashboard() {
           onSave={() => {
             if (newBoard.trim() && newBoard.trim().length > 2)
               handleAddBoard({ title: newBoard });
-            else toast.warn('Board name is not valid');
+            else toast.warn('Board name is not valid!');
           }}
           onChange={(e) => setNewBoard(e.target.value)}
         />
@@ -216,13 +232,20 @@ export default function Dashboard() {
           onSave={() => {
             if (newBoard.trim() && newBoard.trim().length > 2)
               handleEditBoard(boardId, { title: newBoard });
-            else toast.warn('Board name is not valid');
+            else toast.warn('Board name is not valid!');
           }}
           onChange={(e) => setNewBoard(e.target.value)}
           initTitle={
             boards[boards.findIndex((board) => board._id === boardId)].title
           }
         />
+
+        <DeletePopUp
+          open={openDeleteBoardPopUp}
+          onClose={() => setOpenDeleteBoardPopUp(false)}
+          onDelete={handleSaveDeleteBoard}
+        />
+
         <DndProvider backend={HTML5Backend}>
           <Board key={boardId} board_id={boardId} member={userLs} />
         </DndProvider>
