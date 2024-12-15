@@ -10,7 +10,11 @@ import ButtonContainer from './TaskOpenComponents/ButtonContainer';
 import CloseX from '../../../components/SmallCom/CloseX';
 import Save from '../../../components/SmallCom/Save';
 import { getMemberOfCard } from '../service/user_service';
+
 import { toast } from 'react-toastify';
+
+import { stringAvatar } from '../avatarExe/avatar';
+
 
 const TaskOpen = forwardRef(
   ({ task, onClose, onDelete, member, onAddMemLs }, ref) => {
@@ -105,18 +109,26 @@ const TaskOpen = forwardRef(
               )}
               <div className="member-deadline-info">
                 {task.userOrderIds && task.userOrderIds.length > 0 && (
-                  <div>
-                    Member:
-                    <div>
-                      {cardMem.map((mem, index) => (
-                        <p key={index}>{mem.name}</p>
-                      ))}
-                    </div>
-                  </div>
+                  <Stack direction="row" spacing={2}>
+                    <label>Member:</label>
+                    {cardMem.map((mem, index) => (
+                      <Avatar
+                        key={index}
+                        {...stringAvatar(`${mem.name}`)}
+                        sx={{
+                          ...stringAvatar(`${mem.name}`).sx,
+                          width: 20,
+                          height: 20,
+                          fontSize: 10,
+                        }}
+                      />
+                    ))}
+                  </Stack>
                 )}
                 {task.deadline && (
                   <div>
-                    Deadline: {task.deadline}, Done:
+                    <label>Deadline: </label>
+                    {task.deadline}, Done:
                     {task.deadlinestatus !== 'late' && (
                       <input
                         type="checkbox"
@@ -136,6 +148,7 @@ const TaskOpen = forwardRef(
                   </div>
                 )}
               </div>
+              <br />
             </Stack>
             <Stack
               className="task-body"
@@ -175,7 +188,8 @@ const TaskOpen = forwardRef(
                   direction="row"
                   sx={{ height: '0.8rem', width: '40rem' }}
                 >
-                  <Avatar>{user.name}</Avatar>
+                  <Avatar {...stringAvatar(`${user.name}`)} />
+
                   <TextField
                     variant="outlined"
                     value={mess}

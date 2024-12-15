@@ -9,9 +9,12 @@ import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../dnd/constants';
 import { socket } from '../../../../setting/socket';
 import { getCard } from '../service/card_service';
+import { stringAvatar } from '../avatarExe/avatar';
+import { getMemberOfCard } from '../service/user_service';
 
 export default function Task({ task, index, onDelete, member }) {
   const [Task, setTask] = useState(task);
+  const [cardMem, setCardMem] = useState([]);
   const [isOpened, setIsOpened] = useState(false);
   const OpenTask = () => {
     setIsOpened(true);
@@ -105,6 +108,11 @@ export default function Task({ task, index, onDelete, member }) {
     };
   }, []);
 
+  useEffect(() => {
+    getMemberOfCard(Task).then((data) => setCardMem(data));
+    console.log('cardMem : ', cardMem);
+  }, []);
+
   return (
     <>
       <div className="Task" draggable onClick={OpenTask} ref={drag}>
@@ -159,18 +167,17 @@ export default function Task({ task, index, onDelete, member }) {
 
             {Task.userOrderIds ? (
               <AvatarGroup className="menbers" max={3} spacing={5}>
-                {Task.userOrderIds.map((member, index) => (
+                {cardMem?.map((member, index) => (
                   <Avatar
                     key={index}
+                    {...stringAvatar(`${member.name}`)}
                     sx={{
-                      backgroundColor: member.color,
+                      ...stringAvatar(`${member.name}`).sx,
                       width: 12,
                       height: 12,
                       fontSize: 8,
                     }}
-                  >
-                    {member.name}
-                  </Avatar>
+                  />
                 ))}
               </AvatarGroup>
             ) : null}

@@ -232,3 +232,10 @@ body {
   font-weight: bold;
   font-size: 0.8rem;
 }
+
+/* ---------------TASK OPEN----------------- */
+label {
+  font-weight: bold;
+  font-size: small;
+  font-family: 'Roboto Flex';
+}

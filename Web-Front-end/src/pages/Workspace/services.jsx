@@ -3,7 +3,7 @@ import { getApiProject, getApiDeadline } from "./config";
 import { toast } from "react-toastify";
 
 export const updateDeadline = async (id, payload) => {
-  const Token = localStorage.token;
+  const Token = localStorage.getItem("token")
   const url = "http://localhost:8017/v1/cards/" + id;
   console.log(url)
   const body = JSON.stringify({ deadlinestatus: payload });
@@ -18,15 +18,15 @@ export const updateDeadline = async (id, payload) => {
   });
   if (!res.ok) {
     const errorData = await res.json();
+    console.log(errorData)
     return;
   }
   const kq = await res.json()
-  console.log(kq)
   return kq;
 };
 
 export const exitProject = async (id) => {
-  const Token = localStorage.token;
+  const Token = localStorage.getItem("token")
   const url = "http://localhost:8017/v1/projects/exitproject/" + id;
   const res = await fetch(url, {
     method: "DELETE",
@@ -41,13 +41,32 @@ export const exitProject = async (id) => {
     return false;
   }
   const updatedProject = await res.json();
-
-  toast.success(updateProject.resultMessage)
+  toast.success("Exit project successfully!")
+  return updatedProject;
+  
+}
+export const removeUser = async (prjId, userId) => {
+  const Token = localStorage.getItem("token")
+  const url = "http://localhost:8017/v1/projects/" + prjId +"/" + userId;
+  const res = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${Token}`,
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok) {
+    const errorData = await res.json();
+    toast.error(errorData.errors);
+    return false;
+  }
+  const updatedProject = await res.json();
+  toast.success("Remove user successfully!")
   return updatedProject;
 }
 
 export const DeleteAdmin = async (idPrj, idAd) => {
-  const Token = localStorage.token;
+  const Token = localStorage.getItem("token")
   const url = "http://localhost:8017/v1/projects/admin/" + idPrj + "/" + idAd;
   const res = await fetch(url, {
     method: "DELETE",
@@ -70,7 +89,7 @@ export const DeleteAdmin = async (idPrj, idAd) => {
 };
 
 export const addAdmin = async (idPrj, idAd) => {
-  const Token = localStorage.token;
+  const Token = localStorage.getItem("token")
   const url = "http://localhost:8017/v1/projects/admin/" + idPrj + "/" + idAd;
   const res = await fetch(url, {
     method: "PUT",
@@ -89,7 +108,7 @@ export const addAdmin = async (idPrj, idAd) => {
   return updatedProject;
 };
 export const getDetailUser = async (id) => {
-  const Token = localStorage.token;
+  const Token = localStorage.getItem("token")
   const url = "http://localhost:8017/v1/users/" + id;
   const res = await fetch(url, {
     headers: {
@@ -103,7 +122,7 @@ export const getDetailUser = async (id) => {
   return await res.json();
 };
 export const getListProject = async () => {
-  const Token = localStorage.token;
+  const Token = localStorage.getItem("token")
   const url = "http://localhost:8017/v1/users/me";
   const res = await fetch(url, {
     headers: {
@@ -119,7 +138,7 @@ export const getListProject = async () => {
   return data.projectOrderIds;
 };
 export const getListDeadline = async () => {
-  const Token = localStorage.token;
+  const Token = localStorage.getItem("token")
   const url = "http://localhost:8017/v1/users/me";
   const res = await fetch(url, {
     headers: {
@@ -136,7 +155,7 @@ export const getListDeadline = async () => {
   return await data.involvedCardOrderIds;
 };
 export const getProject = async (id) => {
-  const Token = localStorage.token;
+  const Token = localStorage.getItem("token")
   const url = getApiProject(id);
   const res = await fetch(url, {
     headers: {
@@ -150,7 +169,7 @@ export const getProject = async (id) => {
   return res.json();
 };
 export const getDeadline = async (id) => {
-  const Token = localStorage.token;
+  const Token = localStorage.getItem("token")
   const url = getApiDeadline(id);
   const res = await fetch(url, {
     headers: {
@@ -166,7 +185,7 @@ export const getDeadline = async (id) => {
 };
 
 export const addDefaultBoard = async (id) => {
-  const Token = localStorage.token;
+  const Token = localStorage.getItem("token")
   const defaultData = {
     title: "Board 01",
     description: "Default Board",
@@ -188,7 +207,7 @@ export const addDefaultBoard = async (id) => {
 };
 
 export const addProject = async (payload) => {
-  const Token = localStorage.token;
+  const Token = localStorage.getItem("token")
   const url = getApiProject();
   const res = await fetch(url, {
     method: "POST",
@@ -214,7 +233,7 @@ export const addProject = async (payload) => {
 };
 
 export const AddFriend = async (id, email) => {
-  const Token = localStorage.token;
+  const Token = localStorage.getItem("token")
   const url = getApiProject(id) + (email ? `/${email}` : "");
   const body = email ? JSON.stringify({ email }) : undefined;
   const res = await fetch(url, {
@@ -230,11 +249,12 @@ export const AddFriend = async (id, email) => {
     toast.error(errorData.errors);
     return;
   }
+  toast.success("Your friend has been added")
   return await getProject(id);
 };
 
 export const updateProject = async (payload) => {
-  const Token = localStorage.token;
+  const Token = localStorage.getItem("token")
   const url = getApiProject(payload._id);
   const {
     _id,
@@ -269,7 +289,7 @@ export const updateProject = async (payload) => {
 };
 
 export const deleteProject = async (id) => {
-  const Token = localStorage.token;
+  const Token = localStorage.getItem("token")
   const url = getApiProject(id);
   const res = await fetch(url, {
     method: "DELETE",
@@ -283,6 +303,5 @@ export const deleteProject = async (id) => {
     return;
   }
   toast.success("Delete project successfully! 😉");
-  const arr = await getListProject();
-  const newProject = await getProject(arr[arr.length - 1]);
+  return await getListProject();
 };

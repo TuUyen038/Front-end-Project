@@ -1,27 +1,32 @@
-
 .item {
+    margin-top: 10px;
     display: flex;
-margin-bottom: 20px;
+    margin-bottom: 20px;
+    margin-left: 20px;
 }
+
 .mainD {
+    margin-top: 30px;
     line-height: 2;
     letter-spacing: 0.5px;
     font-size: 1.5rem;
     margin: 0 20px;
-    padding: 5px 25px;
+    padding: 9px 25px 4px;
     border-radius: 30px;
-    background: #fff;
-
+    background: #ffffffcb;
 }
 
 .name {
     font-weight: 500;
     color: black;
+    line-height: 1.8rem;
 }
+
 .time {
     font-size: 1.3rem;
     color: #817c7c;
 }
+
 .item .css-1umw9bq-MuiSvgIcon-root {
     font-size: 2.4rem;
 }
