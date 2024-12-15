@@ -295,7 +295,7 @@ body {
 
 .discuss-area {
   gap: 1rem;
-  max-height: 20rem;
+  max-height: 17rem;
   width: 50rem;
   overflow-y: auto;
 }

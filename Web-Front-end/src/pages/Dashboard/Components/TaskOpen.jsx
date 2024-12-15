@@ -105,51 +105,6 @@ const TaskOpen = forwardRef(
                   }
                 />
               )}
-              <div className="member-deadline-info">
-                {task.userOrderIds && task.userOrderIds.length > 0 && (
-                  <Stack direction="row" spacing={2}>
-                    <label>Member:</label>
-                    {cardMem
-                      ? cardMem.map((mem, index) => (
-                          <Avatar
-                            key={index}
-                            {...stringAvatar(`${mem.name}`)}
-                            sx={{
-                              ...stringAvatar(`${mem.name}`).sx,
-                              width: 22,
-                              height: 22,
-                              fontSize: 10,
-                            }}
-                          />
-                        ))
-                      : null}
-                  </Stack>
-                )}
-                {task.deadline && (
-                  <div>
-                    <label>Deadline: </label>
-                    <p>{task.deadline.slice(0, 10)} </p> <br />
-                    <span>Done:</span>
-                    {task.deadlinestatus !== 'late' && (
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        value={checked}
-                        onChange={(e) => {
-                          setChecked(!checked);
-                          setEditPayload((prev) => ({
-                            ...prev,
-                            deadlinestatus: e.target.checked
-                              ? 'on_time'
-                              : 'not_done',
-                          }));
-                        }}
-                      />
-                    )}
-                  </div>
-                )}
-              </div>
-              <br />
             </Stack>
             <Stack
               className="task-body"
@@ -161,6 +116,50 @@ const TaskOpen = forwardRef(
               }}
             >
               <Stack className="task-main" sx={{ gap: '1.2rem' }}>
+                <div className="member-deadline-info">
+                  {task.userOrderIds && task.userOrderIds.length > 0 && (
+                    <Stack direction="row" spacing={2}>
+                      <label>Member:</label>
+                      {cardMem
+                        ? cardMem.map((mem, index) => (
+                            <Avatar
+                              key={index}
+                              {...stringAvatar(`${mem.name}`)}
+                              sx={{
+                                ...stringAvatar(`${mem.name}`).sx,
+                                width: 22,
+                                height: 22,
+                                fontSize: 10,
+                              }}
+                            />
+                          ))
+                        : null}
+                    </Stack>
+                  )}
+                  {task.deadline && (
+                    <div>
+                      <label>Deadline: </label>
+                      <p>{task.deadline.slice(0, 10)} </p> <br />
+                      <span>Done:</span>
+                      {task.deadlinestatus !== 'late' && (
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          value={checked}
+                          onChange={(e) => {
+                            setChecked(!checked);
+                            setEditPayload((prev) => ({
+                              ...prev,
+                              deadlinestatus: e.target.checked
+                                ? 'on_time'
+                                : 'not_done',
+                            }));
+                          }}
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
                 <label>Description:</label>
                 {!editing ? (
                   <Typography variant="body2">
@@ -215,7 +214,6 @@ const TaskOpen = forwardRef(
                     }}
                   />
                 </Stack>
-                {/* <label>Discuss</label> */}
                 <br />
                 <Stack className="discuss-area">
                   {comments
