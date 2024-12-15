@@ -1,6 +1,6 @@
 // import { Avatar } from '@mui/material';
-import ShareIcon from '@mui/icons-material/ShareOutlined';
-import MoreIcon from '@mui/icons-material/MoreHoriz';
+// import ShareIcon from '@mui/icons-material/ShareOutlined';
+// import MoreIcon from '@mui/icons-material/MoreHoriz';
 import { Link, Outlet, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
@@ -30,12 +30,12 @@ export default function AppBar() {
               </Link>
             </div>
             <div className="Others">
-              <Link to="meeting" className="MeetLink">
+              {/* <Link to="meeting" className="MeetLink">
                 Meeting
               </Link>
               <Link to="filemanager" className="FileManager">
                 FileManager
-              </Link>
+              </Link> */}
             </div>
           </div>
           <div className="RightSide">
@@ -52,8 +52,8 @@ export default function AppBar() {
               })}
             </div> */}
             <div className="Icon">
-              <ShareIcon sx={{ fontSize: '2.4rem' }} />
-              <MoreIcon sx={{ fontSize: '2.4rem' }} />
+              {/* <ShareIcon sx={{ fontSize: '2.4rem' }} />
+              <MoreIcon sx={{ fontSize: '2.4rem' }} /> */}
             </div>
           </div>
         </div>
