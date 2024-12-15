@@ -218,11 +218,15 @@ body {
 .comment {
   display: flex;
   align-items: center;
-  gap: 3rem;
+  gap: 1.4rem;
+  width: 35rem;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 10px;
 }
 
 .discuss-area {
-  gap: 2rem;
+  gap: 1rem;
   max-height: 24rem;
   width: 50rem;
   overflow-y: auto;
@@ -230,12 +234,59 @@ body {
 
 .cmt-username {
   font-weight: bold;
-  font-size: 0.8rem;
+  font-size: 1.1rem;
+  color: #333;
+}
+ 
+.MuiStack-root.css-1k0k4vv-MuiStack-root {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  margin-top: 3rem;
+}
+
+.MuiAvatar-root.MuiAvatar-circular {
+  width: 2.8rem;
+  height: 2.8rem;
+  font-size: 1rem;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.MuiFormControl-root.MuiTextField-root {
+  flex-grow: 1;
+}
+
+.MuiInputBase-input {
+  font-size: 1rem;
+  color: #333;
+}
+
+.MuiSvgIcon-fontSizeMedium {
+  font-size: 2rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.comment p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.comment span {
+  display: inline-block;
+  max-width: calc(100% - 50px);
 }
 
 /* ---------------TASK OPEN----------------- */
 label {
   font-weight: bold;
-  font-size: small;
+  font-size: 1.6rem;
   font-family: 'Roboto Flex';
 }
