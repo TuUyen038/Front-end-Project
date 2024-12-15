@@ -37,13 +37,21 @@ function Workspace() {
         console.error("Lỗi khi lấy dữ liệu project: ", error);
       }
       try {
+        console.log("00000000000")
         const deadlineIds = await getListDeadline();
+        console.log("dl id neeeeeeeeeeeeee:", deadlineIds)
         const deadlines = await Promise.all(
           deadlineIds.map((id) => getDeadline(id))
         );
+        console.log(deadlines)
         const listDl = deadlines.filter(
-          (item) => new Date(item.deadline) >= currentDay && item.deadlinestatus == "not_done"
+          
+          (item) =>
+            new Date(item.deadline) >= currentDay &&
+            item.deadlinestatus == "not_done"
         );
+        console.log("2222222222")
+
         setDl(listDl);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu deadline: ", error);
@@ -92,27 +100,29 @@ function Workspace() {
             >
               <h1 className={style.AllDeadline}>DEADLINES</h1>
             </Badge>
-            {dl.length > 3 ? (<Link to="/calendar">
-              <div
-                className={style.grp}
-                style={{
-                  padding: "0px 6px",
-                  borderRadius: "5px",
-                  background: "hsla(163, 36%, 71%, 0.288)",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: "500",
-                  display: "flex",
-                  gap: "4px",
-                  fontSize: "1.2rem",
-                  color: "#999"
-                }}
-              >
-                
-                  <p style={{color: "#999", letterSpacing:"-.2px"}}>See more</p>
-                
-                <ReadMoreIcon sx={{ fontSize: "2.5rem" }} />
-              </div></Link>
+            {dl.length > 3 ? (
+              <Link to="/calendar">
+                <div
+                  className={style.grp}
+                  style={{
+                    padding: "0px 6px",
+                    borderRadius: "5px",
+                    background: "hsla(163, 36%, 71%, 0.288)",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontWeight: "500",
+                    display: "flex",
+                    gap: "4px",
+                    fontSize: "1.2rem",
+                    color: "#999",
+                  }}
+                >
+                  
+                  <p style={{ color: "#999" }}>See more</p>
+
+                  <ReadMoreIcon sx={{ fontSize: "2.5rem" }} />
+                </div>
+              </Link>
             ) : null}
           </div>
           <section>
