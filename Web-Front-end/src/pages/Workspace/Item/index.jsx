@@ -38,7 +38,7 @@ const Item = ({ setLs, item }) => {
           className={style.more}
           onClick={handleShow}
         >
-          <MoreHorizTwoToneIcon sx={{ fontSize: "2rem" }} />
+          <MoreHorizTwoToneIcon sx={{ fontSize: "2rem", color: "#333" }} />
         </button>
         {show && (
           <div className={style.formTool}>
