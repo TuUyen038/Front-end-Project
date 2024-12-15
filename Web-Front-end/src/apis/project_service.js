@@ -1,7 +1,8 @@
 import { PROJECT_ENDPOINT } from '../../setting/globalVariable';
-const Token = localStorage.token;
+
 
 export const getProjectBySlug = async (slug) => {
+  const Token = localStorage.token;
   const url = PROJECT_ENDPOINT + `${slug}`;
   const res = await fetch(url, {
     method: 'GET',
