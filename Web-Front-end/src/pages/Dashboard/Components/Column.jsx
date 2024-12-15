@@ -139,7 +139,7 @@ export default function Column({ col, index, onDelete, member }) {
     if (!childNodes.length) return 0;
 
     let cumulativeHeight = 0;
-    const gap = 0;
+    const gap = 11;
     for (let i = 0; i < childNodes.length; i++) {
       const cardHeight = childNodes[i].offsetHeight;
       console.log('i: ', i);
