@@ -2,7 +2,6 @@
 import FullDeadline from "../FullDeadline";
 
 export const FilteredList = ({ list}) => {
-  var dark = localStorage.getItem("darkMode")
   const check = list.filter((item) => item)
   if (list.length === 0 || !list || check.length === 0) {
     return <p style={{fontSize: "1.5rem", height: "540px", marginLeft: "30px"}}>No deadlines available.</p>;

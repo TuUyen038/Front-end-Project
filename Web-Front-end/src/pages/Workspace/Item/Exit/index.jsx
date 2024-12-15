@@ -2,18 +2,22 @@
 import { Button } from "@mui/material";
 import { exitProject, getListProject, getProject } from "../../services";
 
-export default function Exit({ setLs, item }) {
+export default function Exit({ setLs, item, setDl }) {
   const handleExit = (id) => async (ev) => {
     ev.preventDefault();
     const e = window.confirm("Do you want to exit this project?");
     if (e === false) return;
     const kq = await exitProject(id);
-    if(!kq) return;
+    if (!kq) return;
     const projectIds = await getListProject();
     const updatedProjects = await Promise.all(
       projectIds.map((projectId) => getProject(projectId))
     );
+
     setLs(updatedProjects);
+    const dlIds = await getListProject();
+    const updatedDl = await Promise.all(dlIds.map((id) => getProject(id)));
+    setDl(updatedDl);
   };
   return (
     <div>
