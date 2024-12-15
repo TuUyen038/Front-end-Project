@@ -191,7 +191,7 @@ export default function Board({ board_id, member }) {
             height: '3rem',
             width: '20rem',
           }}
-          onClick={() => handleAddColumn({ title: 'Test column' })}
+          onClick={() => handleAddColumn({ title: 'New' })}
         >
           New
         </Button>
