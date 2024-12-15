@@ -409,3 +409,14 @@ label {
   top: -1px;
   left: 4px;
 }
+
+/* -----------------ADD-POP-UP--------------- */
+.add-pop-up input {
+  font-size: 1.6rem;
+  border: none;
+  border-bottom: black 0.05rem solid;
+}
+
+.add-pop-up input:hover {
+  border-bottom: #2d9596 solid;
+}

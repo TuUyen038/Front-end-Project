@@ -23,20 +23,22 @@ export default function EditBoard({
         }}
       >
         <Stack
+          className="add-pop-up"
           sx={{
             backgroundColor: 'white',
             borderRadius: '10px',
             height: '24rem',
             width: '38.3rem',
-            padding: '1.2rem 2.4rem 1.2rem 2.4rem',
+            padding: '2rem 2.8rem 2rem 2.8rem',
             justifyContent: 'space-between',
           }}
         >
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: "black" }}>Edit board</p>
-          <Stack direction="row">
-            <input onChange={onChange} placeholder={initTitle + '...'} />
-          </Stack>
-
+          <p
+            style={{ fontSize: '2.2rem', fontWeight: 'bold', color: '#2d9596' }}
+          >
+            Edit board
+          </p>
+          <input onChange={onChange} placeholder={initTitle + '...'} />
           <Stack
             direction="row"
             sx={{

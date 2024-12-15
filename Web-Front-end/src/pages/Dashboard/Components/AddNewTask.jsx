@@ -17,29 +17,29 @@ export default function AddNewTask({ open, onClose, onSave, setTempTask }) {
         }}
       >
         <Stack
+          className="add-pop-up"
           sx={{
             backgroundColor: 'white',
             borderRadius: '10px',
             height: '24rem',
             width: '38.3rem',
-            padding: '1.2rem 2.4rem 1.2rem 2.4rem',
+            padding: '2rem 2.8rem 2rem 2.8rem',
             justifyContent: 'space-between',
           }}
         >
-          <p style={{ fontSize: '2rem', fontWeight: 'bold',color: "black" }}>Add new task</p>
-          <Stack direction="row">
-            <input
-              onChange={(e) => setTempTask({ title: e.target.value })}
-              placeholder="Task name ..."
-            />
-            {/* <button>add</button> */}
-          </Stack>
-          <Stack direction="row">
-            <p style={{color: "black"}}>Add desciption: </p>
-            <input
-              onChange={(e) => setTempTask({ description: e.target.value })}
-            />
-          </Stack>
+          <p
+            style={{ fontSize: '2.2rem', fontWeight: 'bold', color: '#2d9596' }}
+          >
+            Add new task
+          </p>
+          <input
+            onChange={(e) => setTempTask({ title: e.target.value })}
+            placeholder="Task name ..."
+          />
+          <input
+            onChange={(e) => setTempTask({ description: e.target.value })}
+            placeholder="Add description ..."
+          />
           <Stack
             direction="row"
             sx={{
